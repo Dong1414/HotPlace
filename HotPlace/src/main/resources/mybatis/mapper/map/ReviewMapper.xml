@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.dylim.hot.map.mapper.ReviewMapper">
+
+  <insert id="saveReview" parameterType="com.dylim.hot.map.ReviewVO">
+     <![CDATA[     	
+   		INSERT INTO map_review
+   		VALUES
+		(
+			null
+			,#{title}
+			,#{review}
+			,#{address}
+			,#{grade}
+		)
+     ]]>
+  </insert>
+
+</mapper>
