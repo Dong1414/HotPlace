@@ -1,5 +1,7 @@
 package com.dylim.hot.map.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +15,10 @@ public class ReviewServiceImpl implements ReviewService {
 	private ReviewMapper reviewMapper;
 	
 	public void saveReview(ReviewVO reviewVO) throws Exception {
-		System.out.println("vvvvvv");
 		reviewMapper.saveReview(reviewVO);
+	}
+	
+	public List<ReviewVO> getReviews() throws Exception {
+		return reviewMapper.getReviews();
 	}
 }

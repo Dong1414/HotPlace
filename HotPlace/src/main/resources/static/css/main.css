@@ -1,0 +1,47 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+  
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+}
+
+.header{
+  width:100%;
+  height:50px;
+  background-color: pink;
+  text-align: right;
+  margin:0 auto;
+}
+
+.loginBtn{
+  margin-right: 5px;
+  display: inline-block;
+  background-color: black;
+  padding: 5px 20px 5px 20px;
+  font-family: 'Anton', sans-serif;
+  color:white;
+  text-decoration: none;
+  font-size: 25px;
+  border-radius: 30px;
+  margin-top: 2px;
+}
+
+.main {
+    background-image: url('/images/mainView.png');
+    width:100%;
+    height: 100vh;
+    background-size: cover;
+ }

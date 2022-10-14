@@ -6,7 +6,8 @@ public class ReviewVO {
     String address;
     Integer grade;
     String review;
-    
+    double lon;
+    double lat;
     
 	public String getId() {
 		return id;
@@ -38,10 +39,24 @@ public class ReviewVO {
 	public void setReview(String review) {
 		this.review = review;
 	}
+	
+	public double getLon() {
+		return lon;
+	}
+	public void setLon(double lon) {
+		this.lon = lon;
+	}
+	public double getlat() {
+		return lat;
+	}
+	public void setlat(double lat) {
+		this.lat = lat;
+	}
 	@Override
 	public String toString() {
 		return "ReviewVO [id=" + id + ", title=" + title + ", address=" + address + ", grade=" + grade + ", review="
-				+ review + "]";
+				+ review + ", lon=" + lon + ", lat=" + lat + "]";
 	}
+
 	
 }

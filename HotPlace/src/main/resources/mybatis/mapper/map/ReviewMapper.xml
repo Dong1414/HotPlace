@@ -4,18 +4,25 @@
    
 <mapper namespace="com.dylim.hot.map.mapper.ReviewMapper">
 
-  <insert id="saveReview" parameterType="com.dylim.hot.map.ReviewVO">
-     <![CDATA[     	
-   		INSERT INTO map_review
-   		VALUES
-		(
-			null
-			,#{title}
-			,#{review}
-			,#{address}
-			,#{grade}
-		)
-     ]]>
-  </insert>
-
+	<insert id="saveReview" parameterType="com.dylim.hot.map.ReviewVO">
+		<![CDATA[     	
+			INSERT INTO map_review
+			VALUES
+			(
+				null
+				,#{title}
+				,#{review}
+				,#{address}
+				,#{grade}
+				,#{lon}
+				,#{lat}
+			)
+		]]>
+	</insert>
+	
+	<select id="getReviews" resultType="com.dylim.hot.map.ReviewVO">
+		<![CDATA[     	
+			SELECT * FROM map_review			
+		]]>
+	</select>
 </mapper>
