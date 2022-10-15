@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=7u0vnvduxe"></script>
+<script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=7u0vnvduxe&submodules=geocoder"></script>
+
+<div th:id="app">
+	<div id="map" style="width:100%;height:100%;"></div>
+	
+	<div th:class="side-bar-wrapper">
+		<div th:class="side-bar">
+			<div th:class="title-area">
+			  <input th:name="title" th:id="title" placeholder="제목을 입력해주세요."/>
+			</div>
+			<div th:class="image-area">
+			  <div th:class="iw-file-input">
+			    사진을 업로드 해주세요
+			  </div>
+			</div>
+			<div th:class="location-info-area">
+			  <input th:name="address" th:id="addressInfo" placeholder="위치 정보가 표시됩니다."/>
+			</div>
+			<div th:class="review-area">
+			  <textarea  th:name="review" th:id="review" placeholder="후기를 입력해주세요."></textarea>
+			</div>
+			<div th:class="bottom-btn-area">
+			  <button th:class="save-btn" th:onclick="saveReview()">
+			      저장
+			  </button>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+#app{
+	position: absolute;
+    left: 0;
+    top: 50px;
+    bottom: 0;
+    right: 0;
+}
+</style>
+
+<script th:inline="javascript">
+var mapOptions = {
+    center: new naver.maps.LatLng(37.3595704, 127.105399),
+    zoom: 10,
+    mapTypeControl: true
+};
+
+var map = new naver.maps.Map('map', mapOptions);
+
+var marker = new naver.maps.Marker({
+    position: new naver.maps.LatLng(37.3595704, 127.105399),
+    map: map
+});
+
+//위도 경도 (lat, lng)
+naver.maps.Event.addListener(map, 'click', function(e) {
+    marker.setPosition(e.latlng);
+    naver.maps.Service.reverseGeocode({
+        location: new naver.maps.LatLng(e.coord._lat, e.coord._lng),
+    }, function(status, response) {
+        if (status !== naver.maps.Service.Status.OK) {
+            return alert('Something wrong!');
+        }
+
+        var result = response.result, // 검색 결과의 컨테이너
+         	items = result.items; // 검색 결과의 배열
+         	
+        if(items.length < 1){
+        	$('#addressInfo').val(items[1].address); //도로명주
+        }else{
+        	$('#addressInfo').val(items[0].address); //지번주소
+        }
+        
+    });
+});
+
+function saveReview(){
+	
+}
+</script>
+</th:block>
+</html>

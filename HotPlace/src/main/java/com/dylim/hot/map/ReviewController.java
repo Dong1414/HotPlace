@@ -30,7 +30,7 @@ public class ReviewController {
 	public String getMyMapView() throws Exception{        
     	System.out.println("ddd");
     	
-    	return "/map/myMap";
+    	return "views/map/myMap";
     }
 	
 //    @PostMapping("/saveReview")

@@ -45,3 +45,93 @@ body {
     height: 100vh;
     background-size: cover;
  }
+ 
+<!-- 사이드바 -->
+#app{
+	position: absolute;
+    left: 0;
+    top: 50px;
+    bottom: 0;
+    right: 0;
+}
+#app .side-bar {     
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width:350px;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+.side-bar-wrapper{
+	display: flex;
+    color: #fff;
+}
+
+.side-bar-wrapper > .side-bar > .title-area {
+	padding: 20px 10px;
+}
+
+.side-bar-wrapper > .side-bar > .title-area > #title {
+	font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: none;
+    background: none;
+    border: none;
+}
+
+
+
+
+.side-bar-wrapper > .side-bar > .image-area {
+	padding: 0 10px;
+}
+
+.side-bar-wrapper > .side-bar > .image-area  > .iw-file-input {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    border: 5px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    height: 250px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.side-bar-wrapper > .side-bar > .location-info-area {
+	padding: 10px;
+}
+
+.side-bar-wrapper > .side-bar > .location-info-area > #addressInfo{
+	width:100%;
+	font-size: 1rem;
+    color: #fff;
+    box-shadow: none;
+    background: none;
+    border: none;
+}
+
+  
+
+.side-bar-wrapper > .side-bar > .review-area {
+	padding: 20px 10px;
+}
+    
+.side-bar-wrapper > .side-bar > .review-area {
+	padding: 20px 10px;
+}    
+
+.side-bar-wrapper > .side-bar > .review-area > #review {
+	width:100%;
+	min-height: 97px;
+    resize: none;
+    color: #fff;
+    background: none;
+    border: none;
+    box-shadow: none;    
+}
+.side-bar-wrapper > .side-bar > .title-area > #title::placeholder,
+.side-bar-wrapper > .side-bar > .location-info-area > #addressInfo::placeholder,
+.side-bar-wrapper > .side-bar > .review-area > #review::placeholder {
+	color: #fff;
+}

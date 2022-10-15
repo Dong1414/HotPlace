@@ -4,13 +4,19 @@
       layout:decorate="/layouts/layout">
 
 <th:block layout:fragment="content">
+	<script th:inline="javascript">
+		$(document).ready(function(){
+		
+		});
+		
+	</script>
 	<div class="main">
 		<div class="placeSch">
 			<input type="text" name="placeSch" id="placeSch" />
 			<button >검색</button>
 		</div>
 		<div class="nowLocalSch">
-			<button onclick="fnGetMyMap">현재 위치에서 검색</button>
+			<button th:onclick="location.href='/map/getMyMapView.do'">현재 위치에서 검색</button>
 	 	</div> 
 	</div>
 </th:block>
