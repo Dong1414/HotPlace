@@ -83,11 +83,6 @@ public class FileUtilServiceImpl implements FileUtilService {
 	                throw new Exception("Error on File Writing..");
 	            }
 	
-	            System.out.println("originFilename : " + originFilename);
-				System.out.println("extensionName : " + extName);
-				System.out.println("size : " + size);
-				System.out.println("saveFileName : " + saveFileName);
-				
 				writeFile(file, saveFileName);
             }
             return fileMsterId;

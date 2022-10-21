@@ -2,7 +2,10 @@ package com.dylim.hot.map;
 
 import java.util.List;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -62,7 +65,13 @@ public class ReviewController {
     //등록된 리뷰 불러오기
     @GetMapping("/map/getReviews.do")
     public List<ReviewVO> getReviews() throws Exception{        
-    	
     	return seviewService.getReviews();
     }    
+    
+    //좌표에 해당되는 리뷰 목록 불러오기
+    @GetMapping("/map/getReview.do")
+    @ResponseBody
+    public List<ReviewVO> getReview(HttpServletRequest request) throws Exception{
+    	return seviewService.getReview(Double.parseDouble(request.getParameter("lat")), Double.parseDouble(request.getParameter("lng")));
+    }  
 }

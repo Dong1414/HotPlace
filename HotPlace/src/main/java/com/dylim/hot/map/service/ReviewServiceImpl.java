@@ -21,4 +21,8 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewVO> getReviews() throws Exception {
 		return reviewMapper.getReviews();
 	}
+	
+	public List<ReviewVO> getReview(double lat, double lng) throws Exception {
+		return reviewMapper.getReview(lat, lng);
+	}
 }

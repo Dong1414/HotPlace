@@ -12,4 +12,6 @@ public interface ReviewMapper {
 	void saveReview(ReviewVO reviewVO) throws Exception;
 
 	List<ReviewVO> getReviews() throws Exception;
+
+	List<ReviewVO> getReview(double lat, double lng) throws Exception;
 }
