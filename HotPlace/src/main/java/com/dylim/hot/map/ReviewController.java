@@ -1,9 +1,18 @@
 package com.dylim.hot.map;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.ModelAndView;
 
+import com.dylim.hot.file.service.FileUtilService;
 import com.dylim.hot.map.service.ReviewService;
 
 @Controller
@@ -11,38 +20,49 @@ public class ReviewController {
 	
 	@Autowired
 	private ReviewService seviewService;
+	@Autowired
+	private FileUtilService fileUtilService;
 
 	@GetMapping("/")
 	public String main2() throws Exception{        
-    	System.out.println("aaa");
-    	
     	return "views/main";
     }
 	
 	@GetMapping("/main.do")
 	public String main() throws Exception{        
-    	System.out.println("ddd");
-    	
     	return "views/main";
     }
 	
+	//지도 보기
 	@GetMapping("/map/getMyMapView.do")
-	public String getMyMapView() throws Exception{        
-    	System.out.println("ddd");
-    	
-    	return "views/map/myMap";
+	public ModelAndView getMyMapView(ModelAndView mv) throws Exception{        
+		List<ReviewVO> resultList = getReviews();
+		mv.addObject("resultList", resultList);
+		
+		mv.setViewName("views/map/myMap");
+    	return mv;
     }
 	
-//    @PostMapping("/saveReview")
-//    public void saveReview(@RequestBody ReviewVO reviewVO) throws Exception{        
-//    	System.out.println("reviewVO: " + reviewVO.toString());
-//    	seviewService.saveReview(reviewVO);
-//    }
-//     
-//    @GetMapping("/getReviews")
-//    public List<ReviewVO> getReviews() throws Exception{        
-//    	System.out.println(seviewService.getReviews().toString());
-//    	
-//    	return seviewService.getReviews();
-//    }    
+	//저장
+    @PostMapping("/map/saveReview.do")
+	@ResponseBody
+    public List<ReviewVO> saveReview(@ModelAttribute("searchVO")ReviewVO reviewVO, @RequestParam("attachFileIds") List<MultipartFile> multipartFiles) throws Exception{        
+    	System.out.println("reviewVO: " + reviewVO.toString());
+    	
+    	if(!multipartFiles.get(0).isEmpty()) {
+    		reviewVO.setAttachFileMasterId(fileUtilService.multiFileUpload(multipartFiles));
+    	}
+    	seviewService.saveReview(reviewVO);
+    	
+    	List<ReviewVO> result = getReviews();
+    	
+    	return result;
+    }
+    
+    //등록된 리뷰 불러오기
+    @GetMapping("/map/getReviews.do")
+    public List<ReviewVO> getReviews() throws Exception{        
+    	
+    	return seviewService.getReviews();
+    }    
 }

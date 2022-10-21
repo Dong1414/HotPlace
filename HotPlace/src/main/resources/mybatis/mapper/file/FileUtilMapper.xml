@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+   
+<mapper namespace="com.dylim.hot.file.mapper.FileUtilMapper">
+
+	<insert id="saveFileMaster" parameterType="String">
+		<![CDATA[     	
+			INSERT INTO attach_file_master
+			VALUES
+			(
+				#{fileMsterId}
+			    ,"등록자"
+			    ,now()
+			    ,"수정자"
+			    ,now()
+			)
+		]]>
+	</insert>
+	
+	<insert id="saveFile" parameterType="com.dylim.hot.file.FileVO">
+		<![CDATA[     	
+			INSERT INTO attach_file
+			VALUES
+			(
+				#{attachFileId}     
+			    ,#{attachFileMaster}     
+			    ,#{saveFileName}
+			    ,#{originFileName}
+			    ,#{fileExt}
+			    ,#{fileSize}
+			    ,#{savePath}	
+			    ,#{prefixPath}
+			    ,"등록자"
+			    ,now()
+			    ,"수정자"
+			    ,now()
+			)
+		]]>
+	</insert>	
+ 	<select id="getImage" parameterType="String" resultType="com.dylim.hot.file.FileVO">
+		<![CDATA[     	
+			SELECT 
+				attach_file_id as attachFileId     
+			    ,save_file_name as saveFileName
+			    ,origin_file_name as originFileName
+				,prefix_path as prefixPath
+			FROM attach_file		
+			WHERE attach_file_id = #{attachFileId}	
+		]]>
+	</select>
+</mapper>

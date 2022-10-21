@@ -13,16 +13,35 @@
 				,#{title}
 				,#{review}
 				,#{address}
-				,#{grade}
-				,#{lon}
+				,#{rating}
 				,#{lat}
+				,#{lng}
+				,#{visitDt}
+				,"등록자"
+				,now()
+				,"수정자"
+				,now()
+				,#{attachFileMasterId}
 			)
 		]]>
 	</insert>
 	
 	<select id="getReviews" resultType="com.dylim.hot.map.ReviewVO">
 		<![CDATA[     	
-			SELECT * FROM map_review			
+			SELECT 
+				id  
+			    ,title
+			    ,review
+			    ,address
+			    ,rating
+			    ,lat
+			    ,lng
+			    ,visit_dt as visitDt
+			    ,regist_id as registId
+			    ,regist_dt as registDt
+				,attach_file_master_id as attachFileMasterId
+				,(select attach_file_id from attach_file where tb.attach_file_master_id = attach_file_master_id limit 1) as attachFileId
+			FROM map_review tb			
 		]]>
 	</select>
 </mapper>
