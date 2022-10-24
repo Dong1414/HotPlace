@@ -49,4 +49,16 @@
 			WHERE attach_file_id = #{attachFileId}	
 		]]>
 	</select>
+	
+ 	<select id="getImages" parameterType="String" resultType="com.dylim.hot.file.FileVO">
+		<![CDATA[     	
+			SELECT 
+				attach_file_id as attachFileId     
+			    ,save_file_name as saveFileName
+			    ,origin_file_name as originFileName
+				,prefix_path as prefixPath
+			FROM attach_file		
+			WHERE attach_file_master_id = #{attachFileMasterId}	
+		]]>
+	</select>	
 </mapper>

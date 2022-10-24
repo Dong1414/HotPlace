@@ -1,6 +1,7 @@
 package com.dylim.hot.map.mapper;
 
 import java.util.List;
+import java.util.Map;
 
 import org.apache.ibatis.annotations.Mapper;
 
@@ -13,5 +14,7 @@ public interface ReviewMapper {
 
 	List<ReviewVO> getReviews() throws Exception;
 
-	List<ReviewVO> getReview(double lat, double lng) throws Exception;
+	ReviewVO getReview(double lat, double lng) throws Exception;
+
+	List<ReviewVO> getReviewCnt(double lat, double lng) throws Exception;
 }

@@ -1,44 +1,44 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
-	<div th:class="side-bar-wrapper" th:fragment="reviewInsert">
-		<div th:class="side-bar">
-			<div th:class="title-area">
-			  <input th:name="title" th:id="title" placeholder="제목을 입력해주세요."/>
-			</div>
-			<div th:class="image-area">
-			  <div th:class="iw-file-input">
-			  	<input th:class="file-input" type="file" th:id="attachFileIds" th:name="attachFileIds" multiple/>
-			  	<div class="fileList" id="fileList">
-					사진은 10개까지 등록 가능합니다.				  		
-			  	</div>
-			  </div>
-			</div>
-			
-			<div th:class="star-area">
-				<div class="star-rating space-x-4 mx-auto">
-					<input type="radio" id="5-stars" name="rating" value="5"/>
-					<label for="5-stars" class="star pr-4">★</label>
-					<input type="radio" id="4-stars" name="rating" value="4"/>
-					<label for="4-stars" class="star">★</label>
-					<input type="radio" id="3-stars" name="rating" value="3"/>
-					<label for="3-stars" class="star">★</label>
-					<input type="radio" id="2-stars" name="rating" value="2"/>
-					<label for="2-stars" class="star">★</label>
-					<input type="radio" id="1-star" name="rating" value="1"/>
-					<label for="1-star" class="star">★</label>
-				</div> 
-			</div>
-			<div th:class="location-info-area">
-			  <input th:name="address" th:id="addressInfo" placeholder="위치 정보가 표시됩니다." readonly/>
-			</div>
-			<div th:class="review-area">
-			  <textarea  th:name="review" th:id="review" placeholder="후기를 입력해주세요."></textarea>
-			</div>
-			<div th:class="bottom-btn-area">
-			  <button type= "button" th:class="save-btn" th:onclick="saveReview();">
-			      저장
-			  </button>
+	<div class="bottom-bar-wrapper bottom-bar" th:fragment="reviewInsert" >
+		<div class="insert-wrap" id="resizable">
+			<div class="bottom-bar" >
+				<div class="title-area">
+				  <input th:name="title" th:id="title" placeholder="제목을 입력해주세요."/>
+				</div>
+				<div class="insert-image-area">
+				  <div class="iw-file-input">
+				  	<div class="images-insert-area">
+			  			<input class="file-input" type="file" th:id="attachFileIds" th:name="attachFileIds" multiple/>
+					  	<div class="fileList" id="fileList">사진은 10개까지 등록 가능합니다.</div>
+				  	</div>
+				  </div>
+				</div>
+				<div class="star-area">
+					<div class="star-rating space-x-4 mx-auto">
+						<input type="radio" id="5-star" name="rating" value="5"/>
+						<label for="5-star" class="star pr-4">★</label>
+						<input type="radio" id="4-star" name="rating" value="4"/>
+						<label for="4-star" class="star">★</label>
+						<input type="radio" id="3-star" name="rating" value="3"/>
+						<label for="3-star" class="star">★</label>
+						<input type="radio" id="2-star" name="rating" value="2"/>
+						<label for="2-star" class="star">★</label>
+						<input type="radio" id="1-star" name="rating" value="1"/>
+						<label for="1-star" class="star">★</label>
+					</div> 
+				</div>
+				<div class="location-info-area">
+				  <input th:name="address" id="addressInfo" placeholder="위치 정보가 표시됩니다."/>
+				</div>
+				<div class="review-area">
+				  <textarea  th:name="review" th:id="review" placeholder="후기를 입력해주세요."></textarea>
+				</div>
+				<div class="bottom-btn-area">
+				  <button type= "button" class="save-btn" th:onclick="fnSaveReview();">저장</button>
+				  <button type= "button" class="close-btn" th:onclick="fnClose(2);">취소</button>
+				</div>
 			</div>
 		</div>
 	</div>

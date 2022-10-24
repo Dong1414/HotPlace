@@ -1,11 +1,13 @@
 package com.dylim.hot.map;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dylim.hot.file.FileVO;
 import com.dylim.hot.file.service.FileUtilService;
 import com.dylim.hot.map.service.ReviewService;
 
@@ -71,7 +74,25 @@ public class ReviewController {
     //좌표에 해당되는 리뷰 목록 불러오기
     @GetMapping("/map/getReview.do")
     @ResponseBody
-    public List<ReviewVO> getReview(HttpServletRequest request) throws Exception{
-    	return seviewService.getReview(Double.parseDouble(request.getParameter("lat")), Double.parseDouble(request.getParameter("lng")));
+    public Map<String, Object> getReview(HttpServletRequest request) throws Exception{
+    	
+    	ReviewVO result = seviewService.getReview(Double.parseDouble(request.getParameter("lat")), Double.parseDouble(request.getParameter("lng")));
+    	List<ReviewVO> resultCnt = seviewService.getReviewCnt(Double.parseDouble(request.getParameter("lat")), Double.parseDouble(request.getParameter("lng")));
+    	
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	if(Strings.isNotEmpty(result.getAttachFileMasterId())) {
+    		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
+    		
+    		for(FileVO file : files) {
+    			System.out.println(file.getAttachFileId());
+    		}
+    		resultMap.put("files", files);
+    	}
+    	
+		resultMap.put("result", result);
+		resultMap.put("resultCnt", resultCnt);
+		
+    	
+    	return resultMap;
     }  
 }

@@ -65,17 +65,27 @@ ul, ol, li {
     left: 0;
     top: 0;
     bottom: 0;
-    width:350px;
-    background-color: rgba(0, 0, 0, 0.5);
 }
+
 
 #map div img {
 	width:100%;
 	height: 100%;
 }
 
+.side-bar-wrapper .side-bar{
+	position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width:100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    resize: horizontal;
+}
+
 .side-bar-wrapper{
-	display: flex;
+	display:none;
+	/* display: flex; */
     color: #fff;
     height:100%;
 }
@@ -91,6 +101,7 @@ ul, ol, li {
     box-shadow: none;
     background: none;
     border: none;
+    width:100%;
 }
 
 
@@ -113,7 +124,7 @@ ul, ol, li {
     background-color: rgba(255, 255, 255, 0.5);
 }
 
-.side-bar-wrapper  .side-bar > .image-area  > .iw-file-input > .file-input{
+.side-bar-wrapper  .side-bar > .image-area  > .iw-file-input .file-input{
 	cursor: pointer;
     position: absolute;
     right: 0;
@@ -164,33 +175,9 @@ ul, ol, li {
 	color: #fff;
 }
 
- /* .star {
-    position: relative;
-    font-size: 3rem;
-    color: #ddd;
-    letter-spacing: 15px;
-  }
-  
-.star input {
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  left: 0;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.star span {
-  width: 0;
-  position: absolute; 
-  left: 0;
-  color: yellow;
-  overflow: hidden;
-  pointer-events: none;
-} */
  
  
-.star-rating {
+.star-rate {
   display: flex;
   flex-direction: row-reverse;
   font-size: 2.76rem;
@@ -201,11 +188,11 @@ ul, ol, li {
   /* width: 5em; */
 }
 
-.star-rating input {
+.star-rate input {
   display: none;
 }
 
-.star-rating label {
+.star-rate label {
   -webkit-text-fill-color: transparent; Will override color (regardless of order);
   -webkit-text-stroke-width: 2.3px;
   -webkit-text-stroke-color: gold;
@@ -213,17 +200,17 @@ ul, ol, li {
   cursor: pointer;
 }
 
-.star-rating :checked ~ label {
+.star-rate :checked ~ label {
   -webkit-text-fill-color: gold;
 }
 
-.star-rating label:hover,
-.star-rating label:hover ~ label {
+.star-rate label:hover,
+.star-rate label:hover ~ label {
   -webkit-text-fill-color: #fff58c;
 } 
 
 .fileList {
-	width: 95%;
+	width: 100%;
 }
 
 .fileLine li {
@@ -241,3 +228,46 @@ ul, ol, li {
 	left: 50%;
 	top: 5%;
 }
+
+.detail-wrap{
+	width: 350px;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    position: relative;
+}
+
+.side-bar-active-btn {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    padding: 0;
+    border: none;
+    border-radius: unset;
+    color: #fff;
+    opacity: 0.5;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.insert-wrap{
+	width: 100%;
+    left: 0px;
+    bottom: 0px;
+    height: 500px;
+    position: relative;
+}
+
+.inser-area-button{
+	display:none;
+    position: absolute;
+    top: 83%;
+    left: 50%;
+    width: 120px;
+    height: 30px;
+    align-items: center;
+}
+    

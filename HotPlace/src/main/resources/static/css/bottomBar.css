@@ -1,0 +1,186 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+  
+#app .bottom-bar {     
+    position: absolute;
+    left: 0;
+    bottom: 0;
+}
+
+.bottom-bar-wrapper .bottom-bar{
+	position: absolute;
+    left: 0;
+    bottom: 0;
+    width:100%;
+    height:100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.bottom-bar-wrapper{
+	display:none;
+    color: #fff;
+    width:100%;
+}
+
+.bottom-bar-wrapper  .bottom-bar > .title-area {
+	padding: 20px 10px;
+}
+
+.bottom-bar-wrapper  .bottom-bar > .title-area > #title {
+	font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: none;
+    background: none;
+    border: none;
+    width:100%;
+}
+
+
+
+
+.bottom-bar-wrapper  .bottom-bar > .insert-image-area {
+	padding: 0 10px;
+}
+
+
+.bottom-bar-wrapper  .bottom-bar > .insert-image-area  > .iw-file-input {
+	position: relative;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    border: 5px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    height: 100px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.bottom-bar-wrapper  .bottom-bar > .insert-image-area  > .iw-file-input .file-input{
+	cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+}
+.bottom-bar-wrapper  .bottom-bar > .location-info-area {
+	padding: 10px;
+}
+
+.bottom-bar-wrapper  .bottom-bar > .location-info-area > #addressInfo{
+	width:100%;
+	font-size: 1rem;
+    color: #fff;
+    box-shadow: none;
+    background: none;
+    border: none;
+}
+
+  
+
+.bottom-bar-wrapper  .bottom-bar > .review-area {
+	padding: 20px 10px;
+}
+    
+.bottom-bar-wrapper  .bottom-bar > .review-area {
+	padding: 20px 10px;
+}    
+
+.bottom-bar-wrapper .bottom-bar > .review-area > #review {
+	width:100%;
+	min-height: 97px;
+    resize: none;
+    color: #fff;
+    background: none;
+    border: none;
+    box-shadow: none;    
+}
+.bottom-bar-wrapper  .bottom-bar > .star-area {
+	padding: 20px 10px;
+}    
+
+.bottom-bar-wrapper  .bottom-bar > .title-area > #title::placeholder,
+.bottom-bar-wrapper  .bottom-bar > .location-info-area > #addressInfo::placeholder,
+.bottom-bar-wrapper  .bottom-bar > .review-area > #review::placeholder {
+	color: #fff;
+}
+
+ 
+ 
+.star-rating {
+  display: flex;
+  flex-direction: row-reverse;
+  font-size: 2.76rem;
+  line-height: 2.5rem;
+  justify-content: space-around;
+  padding: 0 0.2em;
+  text-align: center;
+}
+
+.star-rating input {
+  display: none;
+}
+
+.star-rating label {
+  -webkit-text-fill-color: transparent; Will override color (regardless of order);
+  -webkit-text-stroke-width: 2.3px;
+  -webkit-text-stroke-color: gold;
+  color: #ddd;
+  cursor: pointer;
+}
+
+.star-rating :checked ~ label {
+  -webkit-text-fill-color: gold;
+}
+
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+  -webkit-text-fill-color: #fff58c;
+} 
+
+.fileList {
+	width: 100%;
+}
+
+.fileLine li {
+    padding:0 5px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    color: floralwhite;
+    font-weight: 600;
+}
+
+.fileLine li > i {
+	cursor: pointer;
+	font-size: 18px;
+	left: 50%;
+	top: 5%;
+}
+
+.insert-wrap{
+	width: 100%;
+    left: 0px;
+    top: 0px !important;
+    bottom: 0px;
+    height:500px;
+    position: relative;
+}
+
+.bottom-bar-active-btn {
+    display: inline;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    padding: 0;
+    border: none;
+    border-radius: unset;
+    color: #fff;
+    opacity: 0.5;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+

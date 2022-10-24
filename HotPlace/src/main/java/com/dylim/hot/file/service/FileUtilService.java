@@ -17,5 +17,7 @@ public interface FileUtilService {
 	boolean writeFile(MultipartFile multipartFile, String saveFileName) throws Exception;
 
 	FileVO getImage(String attachFileId) throws Exception;
+
+	List<FileVO> getImages(String attachFileMasterId) throws Exception;
 	
 }

@@ -123,4 +123,8 @@ public class FileUtilServiceImpl implements FileUtilService {
     public FileVO getImage(String attachFileId) throws Exception{
     	return fileUtilMapper.getImage(attachFileId); 
     };
+    
+    public List<FileVO> getImages(String attachFileMasterId) throws Exception{
+    	return fileUtilMapper.getImages(attachFileMasterId);
+    };
 }

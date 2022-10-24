@@ -1,6 +1,7 @@
 package com.dylim.hot.map.service;
 
 import java.util.List;
+import java.util.Map;
 
 import com.dylim.hot.map.ReviewVO;
 
@@ -10,6 +11,8 @@ public interface ReviewService {
 
 	List<ReviewVO> getReviews() throws Exception;
 
-	List<ReviewVO> getReview(double lat, double lng) throws Exception;
+	ReviewVO getReview(double lat, double lng) throws Exception;
+
+	List<ReviewVO> getReviewCnt(double lat, double lng) throws Exception;
 	
 }

@@ -1,45 +1,53 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
-	<div th:class="side-bar-wrapper" th:fragment="reviewDetail">
-		<div th:class="side-bar">
-			<div th:class="title-area">
-			  <input th:name="title" th:id="title" placeholder="제목을 입력해주세요."/>
-			</div>
-			<div th:class="image-area">
-			  <div th:class="iw-file-input">
-			  	<input th:class="file-input" type="file" th:id="attachFileIds" th:name="attachFileIds" multiple/>
-			  	<div class="fileList" id="fileList">
-					사진은 10개까지 등록 가능합니다.				  		
-			  	</div>
-			  </div>
-			</div>
-			
-			<div th:class="star-area">
-				<div class="star-rating space-x-4 mx-auto">
-					<input type="radio" id="5-stars" name="rating" value="5"/>
-					<label for="5-stars" class="star pr-4">★</label>
-					<input type="radio" id="4-stars" name="rating" value="4"/>
-					<label for="4-stars" class="star">★</label>
-					<input type="radio" id="3-stars" name="rating" value="3"/>
-					<label for="3-stars" class="star">★</label>
-					<input type="radio" id="2-stars" name="rating" value="2"/>
-					<label for="2-stars" class="star">★</label>
-					<input type="radio" id="1-star" name="rating" value="1"/>
-					<label for="1-star" class="star">★</label>
-				</div> 
-			</div>
-			<div th:class="location-info-area">
-			  <input th:name="address" th:id="addressInfo" placeholder="위치 정보가 표시됩니다." readonly/>
-			</div>
-			<div th:class="review-area">
-			  <textarea  th:name="review" th:id="review" placeholder="후기를 입력해주세요."></textarea>
-			</div>
-			<div th:class="bottom-btn-area">
-			  <button type= "button" th:class="save-btn" th:onclick="saveReview();">
-			      저장
-			  </button>
+	<div class="side-bar-wrapper side-bar" th:fragment="reviewDetail" >
+		<div class="detail-wrap" id="resizable">
+			<div class="side-bar" >
+				<div class="title-area">
+				  <span th:name="title" th:id="title"></span>
+				</div>
+				<div class="image-area">
+				  <div class="iw-file-input">
+				  	<div class="swiper">
+					  	<div id="test-slide" class="swiper-container">
+						    <ul class="swiper-wrapper"></ul>
+						</div>
+						<div class="swiper-pagination"></div>
+						<div class="swiper-button-prev"></div>
+						<div class="swiper-button-next"></div>
+					</div>
+				  </div>
+				</div>
+				<div class="star-area">
+					<div class="star-rate space-x-4 mx-auto">
+						<input type="radio" id="5-stars" name="rate" value="5" disabled/>
+						<label for="5-stars" class="star pr-4">★</label>
+						<input type="radio" id="4-stars" name="rate" value="4" disabled/>
+						<label for="4-stars" class="star">★</label>
+						<input type="radio" id="3-stars" name="rate" value="3" disabled/>
+						<label for="3-stars" class="star">★</label>
+						<input type="radio" id="2-stars" name="rate" value="2" disabled/>
+						<label for="2-stars" class="star">★</label>
+						<input type="radio" id="1-stars" name="rate" value="1" disabled/>
+						<label for="1-stars" class="star">★</label>
+					</div> 
+				</div>
+				<div class="location-info-area">
+				  <span th:name="address" th:id="addressInfo"></span>
+				</div>
+				<div class="review-area">
+				  <span  th:name="review" th:id="review"></span>
+				</div>
+				<div class="bottom-btn-area">
+				  <button type= "button" class="save-btn" onclick="fnModifyReview();">
+				      수정
+				  </button>
+				</div>
 			</div>
 		</div>
+		<button type="button" class="side-bar-active-btn" onclick="fnClose(1);">
+				<i class='fa-solid fa-xmark' style="font-size:20px;"></i>
+		</button>
 	</div>
 </html>
