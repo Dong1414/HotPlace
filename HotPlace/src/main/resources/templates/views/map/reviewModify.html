@@ -1,45 +1,139 @@
 <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
 
-<html xmlns:th="http://www.thymeleaf.org">
-	<div th:class="side-bar-wrapper" th:fragment="reviewInsert">
-		<div th:class="side-bar">
-			<div th:class="title-area">
-			  <input th:name="title" th:id="title" placeholder="제목을 입력해주세요."/>
-			</div>
-			<div th:class="image-area">
-			  <div th:class="iw-file-input">
-			  	<input th:class="file-input" type="file" th:id="attachFileIds" th:name="attachFileIds" multiple/>
-			  	<div class="fileList" id="fileList">
-					사진은 10개까지 등록 가능합니다.				  		
-			  	</div>
-			  </div>
-			</div>
-			
-			<div th:class="star-area">
-				<div class="star-rating space-x-4 mx-auto">
-					<input type="radio" id="5-stars" name="rating" value="5"/>
-					<label for="5-stars" class="star pr-4">★</label>
-					<input type="radio" id="4-stars" name="rating" value="4"/>
-					<label for="4-stars" class="star">★</label>
-					<input type="radio" id="3-stars" name="rating" value="3"/>
-					<label for="3-stars" class="star">★</label>
-					<input type="radio" id="2-stars" name="rating" value="2"/>
-					<label for="2-stars" class="star">★</label>
-					<input type="radio" id="1-star" name="rating" value="1"/>
-					<label for="1-star" class="star">★</label>
-				</div> 
-			</div>
-			<div th:class="location-info-area">
-			  <input th:name="address" th:id="addressInfo" placeholder="위치 정보가 표시됩니다." readonly/>
-			</div>
-			<div th:class="review-area">
-			  <textarea  th:name="review" th:id="review" placeholder="후기를 입력해주세요."></textarea>
-			</div>
-			<div th:class="bottom-btn-area">
-			  <button type= "button" th:class="save-btn" th:onclick="saveReview();">
-			      저장
-			  </button>
+<th:block layout:fragment="content">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+<!-- swiper jQuery -->
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<!-- swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
+<link rel="stylesheet" th:href="@{/css/modifyView.css}" />
+
+	<form id="modifyForm" method="post" action="/map/updateReview/modifyReview.do" enctype="multipart/form-data">
+		<input type="hidden" name="id" th:value="${result.id}" />
+		<input type="hidden" name="lat" th:value="${result.lat}" />
+		<input type="hidden" name="lng" th:value="${result.lng}" />
+		<div class="container">
+			<table class="wrapper">
+				<tr class="title-area">
+					<th>제목</th>
+					<td><input type="text" th:name="title" th:id="title" placeholder="제목을 입력해주세요." th:value="${result.title}"/></td>
+				</tr>
+				<tr class="image-area">
+					<th>이미지</th>
+					<td>
+				  		<div class="file-list" id="fileList">
+					  		<div class="swiper mySwiper">
+						      <div class="swiper-wrapper">
+						      	<input class="file-input" type="file" th:id="attachFileIds" th:name="attachFileIds" multiple/>
+						      	<label class="file-input-form swiper-slide" for="attachFileIds">
+						      		<i class="fa-regular fa-square-plus" style="font-size: 5.5rem;"></i>
+						      	</label>
+						      	<th:block th:each="file : ${files}">
+						      		<div class="img-box swiper-slide">
+								        <img th:src="${file.url}" th:id="${file.attachFileId}" th:onclick="fnImgDel(this.getAttribute('id'));"/>
+								        <button type="button" class="img-del-btn"><i class="fa-regular fa-circle-xmark" style="font-size:5.5rem;"></i></button>
+								    </div>    
+						        </th:block>
+						      </div>
+							</div>
+			  			</div>
+					</td>
+				</tr>
+				<tr class="star-area">
+					<th>평점</th>
+					<td>
+						<div class="star-rating space-x-4 mx-auto">
+							<input type="radio" id="5-stars" name="rating" value="5" th:checked="${result.rating eq 5}"/>
+							<label for="5-stars" class="star pr-4">★</label>
+							<input type="radio" id="4-stars" name="rating" value="4" th:checked="${result.rating eq 4}"/>
+							<label for="4-stars" class="star">★</label>
+							<input type="radio" id="3-stars" name="rating" value="3" th:checked="${result.rating eq 3}"/>
+							<label for="3-stars" class="star">★</label>
+							<input type="radio" id="2-stars" name="rating" value="2" th:checked="${result.rating eq 2}"/>
+							<label for="2-stars" class="star">★</label>
+							<input type="radio" id="1-star" name="rating" value="1" th:checked="${result.rating eq 1}"/>
+							<label for="1-star" class="star">★</label>
+						</div> 
+					</td>
+				</tr>
+				<tr class="location-info-area">
+					<th>위치</th>
+					<td>
+						<input type="text" th:name="address" th:id="addressInfo" placeholder="위치 정보가 표시됩니다." th:value="${result.address}"/>
+					</td>
+				</tr>
+				<tr class="review-area">
+					<th>후기</th>
+					<td>
+						<textarea th:name="review" th:id="review" placeholder="후기를 입력해주세요." th:text="${result.review}"></textarea>
+					</td>
+				</tr>
+			</table>
+			<div class="bottom-btn-area">
+				<button type= "button" class="save-btn" th:onclick="fnMoidfyReview();">수정</button>
+				<button type= "button" class="close-btn" th:onclick="fnClose();">취소</button>
+				<button type= "button" class="delete-btn" th:onclick="fnDeleteReview();">삭제</button>
 			</div>
 		</div>
-	</div>
+	</form>
 </html>
+<script th:inline="javascript">
+function fnMoidfyReview(){
+	
+	if(!confirm('수정하시겠습니까?')){
+		return false;
+	}
+	if(!$('#title').val()){
+		alert('제목을 입력해주세요.');
+	}
+	if(!$('#addressInfo').val()){
+		alert('주소를 입력해주세요.');
+	}
+	if(!$('#review').text()){
+		alert('후기를 입력해주세요.');
+	}
+		
+	$('#modifyForm').submit();
+}
+function fnClose(){
+	
+}
+
+function fnDeleteReview(){
+	
+}
+
+function fnImgDel(attachFileId){
+	if(!confirm('해당 사진을 삭제하시겠습니까?')){
+		return false;
+	}
+	$.ajax({
+        type: "post",
+        url: '/file/deleteImage.do',
+        data: {
+        	attachFileId: attachFileId
+        },
+    }).done(function (resultMap) {
+    	alert('삭제되었습니다.');
+    	$('#'+attachFileId).remove();
+    })
+    .fail(function() {
+    	alert('삭제 실패 하였습니다.');
+    })
+    
+}
+
+var swiper = new Swiper(".mySwiper", {
+  slidesPerView: 5,
+  spaceBetween: 30,
+  freeMode: true,
+  pagination: {
+    clickable: true,
+  },
+});
+</script>

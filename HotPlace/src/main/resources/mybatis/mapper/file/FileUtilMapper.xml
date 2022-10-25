@@ -47,6 +47,7 @@
 				,prefix_path as prefixPath
 			FROM attach_file		
 			WHERE attach_file_id = #{attachFileId}	
+			AND del_yn = "N"
 		]]>
 	</select>
 	
@@ -58,7 +59,20 @@
 			    ,origin_file_name as originFileName
 				,prefix_path as prefixPath
 			FROM attach_file		
-			WHERE attach_file_master_id = #{attachFileMasterId}	
+			WHERE attach_file_master_id = #{attachFileMasterId}
+			AND del_yn = "N"
 		]]>
 	</select>	
+
+	<update id="deleteImage" parameterType="String">
+		<![CDATA[     	
+			update attach_file
+			SET
+				del_yn = "Y",
+				update_id = "수정자",    
+			    update_dt = now()
+			WHERE
+				attach_file_id = #{attachFileId}
+		]]>
+	</update>
 </mapper>

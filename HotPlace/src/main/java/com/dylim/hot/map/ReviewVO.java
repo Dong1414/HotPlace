@@ -6,8 +6,8 @@ public class ReviewVO {
     String address; //주소
     Integer rating; //별점
     String review; //후기내용
-    double lat; // 위도
-    double lng; // 경도
+    String lat; // 위도
+    String lng; // 경도
     String visitDt; //방문일자
     String registDt; //등록일자
     String updateDt; //수정일자
@@ -56,19 +56,19 @@ public class ReviewVO {
 		this.review = review;
 	}
 
-	public double getLat() {
+	public String getLat() {
 		return lat;
 	}
 
-	public void setLat(double lat) {
+	public void setLat(String lat) {
 		this.lat = lat;
 	}
 
-	public double getLng() {
+	public String getLng() {
 		return lng;
 	}
 
-	public void setLng(double lng) {
+	public void setLng(String lng) {
 		this.lng = lng;
 	}
 

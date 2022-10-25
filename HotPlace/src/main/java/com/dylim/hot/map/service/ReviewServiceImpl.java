@@ -32,4 +32,12 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewVO> getReviewCnt(double lat, double lng) throws Exception{
 		return reviewMapper.getReviewCnt(lat, lng);
 	};
+	
+	public ReviewVO getReview(String id) throws Exception{
+		return reviewMapper.getToIdReview(id);
+	};
+	
+	public void modifyReview(ReviewVO reviewVO) throws Exception{
+		reviewMapper.modifyReview(reviewVO);
+	};
 }

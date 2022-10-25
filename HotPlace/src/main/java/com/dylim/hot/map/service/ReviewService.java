@@ -14,5 +14,9 @@ public interface ReviewService {
 	ReviewVO getReview(double lat, double lng) throws Exception;
 
 	List<ReviewVO> getReviewCnt(double lat, double lng) throws Exception;
+
+	ReviewVO getReview(String id) throws Exception;
+
+	void modifyReview(ReviewVO reviewVO) throws Exception;
 	
 }

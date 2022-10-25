@@ -13,6 +13,7 @@ public class FileVO {
     String updateDt;
     String savePath;
     String prefixPath;
+    String url;
     
 	public String getAttachFileId() {
 		return attachFileId;
@@ -87,6 +88,13 @@ public class FileVO {
 	}
 	public void setPrefixPath(String prefixPath) {
 		this.prefixPath = prefixPath;
+	}
+	
+	public String getUrl() {
+		return url;
+	}
+	public void setUrl(String url) {
+		this.url = url;
 	}
 	@Override
 	public String toString() {

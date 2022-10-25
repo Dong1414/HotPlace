@@ -71,6 +71,35 @@ public class ReviewController {
     	return seviewService.getReviews();
     }    
     
+    //수정 페이지
+    @PostMapping("/map/updateReview.do")
+    public ModelAndView updateReview(ModelAndView mv, @ModelAttribute("searchVO")ReviewVO reviewVO ) throws Exception{        
+
+    	ReviewVO result = seviewService.getReview(reviewVO.getId());
+    	
+    	if(Strings.isNotEmpty(result.getAttachFileMasterId()) && result.getAttachFileMasterId() != null) {
+    		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
+    		for(FileVO file : files) {
+    			file.setUrl("/file/getImage.do?attachFileId=" + file.getAttachFileId());
+    		}
+    		mv.addObject("files", files);
+    		
+    	}
+    	
+    	mv.addObject("result", result);
+    	mv.setViewName("views/map/reviewModify");
+    	return mv;
+    }    
+    
+    //수정 
+    @PostMapping("/map/updateReview/modifyReview.do")    
+    public String modifyReview(ReviewVO reviewVO) throws Exception{
+    	
+    	seviewService.modifyReview(reviewVO);
+    	
+    	return "redirect:/map/getMyMapView.do";
+    }
+    
     //좌표에 해당되는 리뷰 목록 불러오기
     @GetMapping("/map/getReview.do")
     @ResponseBody
@@ -82,10 +111,6 @@ public class ReviewController {
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	if(Strings.isNotEmpty(result.getAttachFileMasterId())) {
     		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
-    		
-    		for(FileVO file : files) {
-    			System.out.println(file.getAttachFileId());
-    		}
     		resultMap.put("files", files);
     	}
     	

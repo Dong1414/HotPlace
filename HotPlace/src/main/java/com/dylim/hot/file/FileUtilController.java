@@ -4,11 +4,14 @@ import java.io.FileInputStream;
 import java.util.List;
 
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.dylim.hot.file.service.FileUtilService;
@@ -23,7 +26,7 @@ public class FileUtilController {
 		return fileUtilService.multiFileUpload(multipartFiles);
     }
 	
-	@GetMapping("/file/getImage")
+	@GetMapping("/file/getImage.do")
 	public String getImage(String attachFileId, HttpServletResponse response) throws Exception {
 		
 		if(attachFileId.isEmpty()) {
@@ -45,4 +48,12 @@ public class FileUtilController {
         }
         return null;
 	}
+	
+	@PostMapping("/file/deleteImage.do")
+	@ResponseBody
+	public String deleteImage(String attachFileId) throws Exception {
+		fileUtilService.deleteImage(attachFileId);
+        return null;
+	}
+	
 }

@@ -40,7 +40,7 @@
 			    ,regist_id as registId
 			    ,regist_dt as registDt
 				,attach_file_master_id as attachFileMasterId
-				,(select attach_file_id from attach_file where tb.attach_file_master_id = attach_file_master_id limit 1) as attachFileId
+				,(select attach_file_id from attach_file where tb.attach_file_master_id = attach_file_master_id and del_yn ='N' limit 1) as attachFileId
 			FROM map_review tb			
 		]]>
 	</select>
@@ -74,4 +74,41 @@
 			WHERE lat = #{lat} and lng = #{lng}
 		]]>
 	</select>
+	
+	<select id="getToIdReview" resultType="com.dylim.hot.map.ReviewVO">
+		<![CDATA[     	
+			SELECT 
+				id  
+			    ,title
+			    ,review
+			    ,address
+			    ,rating
+			    ,lat
+			    ,lng
+			    ,visit_dt as visitDt
+			    ,regist_id as registId
+			    ,regist_dt as registDt
+				,attach_file_master_id as attachFileMasterId
+			FROM map_review tb			
+			WHERE id = #{id}
+		]]>
+	</select>
+	
+	<update id="modifyReview" parameterType="com.dylim.hot.map.ReviewVO">
+		<![CDATA[     	
+			UPDATE map_review
+			SET
+				title = #{title},
+				review = #{review},
+				address = #{address},
+				rating = #{rating},
+				lat = #{lat},
+				lng = #{lng},
+				visit_dt = #{visitDt},
+				update_id = "수정자",
+				update_dt = now()
+			WHERE
+				id = #{id}
+		]]>
+	</update>
 </mapper>

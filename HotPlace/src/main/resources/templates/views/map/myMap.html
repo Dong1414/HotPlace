@@ -10,13 +10,18 @@
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=7u0vnvduxe&submodules=geocoder"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
-  
+<!-- swiper jQuery -->
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<!-- swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css" />
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+
 <div th:id="app">
 	<div id="map" style="width:100%;height:100%;"></div>
 
-	<form id="detailForm" th:object="${reviewVO}" method="post" enctype="multipart/form-data" >
-		<input type="hidden" th:name="lat" th:id="lat" />
-		<input type="hidden" th:name="lng" th:id="lng" />
+	<form id="detailForm" method="post" action="/map/updateReview.do">
+		<input type="hidden" th:name="id" th:id="id" />
 		<div th:replace="views/map/reviewDetail :: reviewDetail"></div>
 	</form>
 	
@@ -31,7 +36,6 @@
 </div>
 <style>
 
-
 #app{
 	position: absolute;
     left: 0;
@@ -39,42 +43,42 @@
     bottom: 0;
     right: 0;
 }
-      .swiper, .swiper-container{
-        width: 100%;
-        height: 100%;
-      }
+.swiper, .swiper-container{
+  width: 100%;
+  height: 100%;
+}
 
-      .swiper-slide {
-        text-align: center;
-        font-size: 18px;
-        background: #fff;
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
 
-        /* Center slide text vertically */
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: -webkit-flex;
-        display: flex;
-        -webkit-box-pack: center;
-        -ms-flex-pack: center;
-        -webkit-justify-content: center;
-        justify-content: center;
-        -webkit-box-align: center;
-        -ms-flex-align: center;
-        -webkit-align-items: center;
-        align-items: center;
-      }
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
 
-      .swiper-slide img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-      }
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 </style>
 
 <script th:inline="javascript">
-//1 등록모드, 2 읽기/수정모드
-var mode = 1
+//1 등록모드, 2 읽기/수정모드, 3 기본
+var mode = 3;
 var fileCnt = 10;
 
 var mapOptions = {
@@ -101,7 +105,7 @@ if(areaArr.length > 0){
 			draggable: false,
 	        position: new naver.maps.LatLng(areaArr[i].lat , areaArr[i].lng), // 지역구의 위도 경도 넣기
 	        icon: {
-	        	content: '<img src="/file/getImage?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
+	        	content: '<img src="/file/getImage.do?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
 	            size: new naver.maps.Size(50, 52),
 	        },
 	        seq: areaArr[i].id
@@ -126,9 +130,12 @@ function getClickHandler(lat, lng) {
             dataType: "json"
         }).done(function (resultMap) {
         	mode = 2;
-        	fnViewClear(2);
+        	fnViewClear(mode);
         	$('.inser-area-button').css('display', 'none');
+        	$('.bottom-bar-wrapper').css('display', 'none');
         	$('.side-bar-wrapper').css('display', 'flex');
+        	
+        	$("#id").val(resultMap.result.id);
     		$("#title").text(resultMap.result.title);
     		$("#review").text(resultMap.result.review);
     		$("#addressInfo").text(resultMap.result.address);
@@ -139,7 +146,7 @@ function getClickHandler(lat, lng) {
     		}else{
     			$('.image-area').css('display', 'block');
     			for(var i = 0; i < resultMap.files.length; i++){
-    				$('.swiper-wrapper').append('<li class="swiper-slide"><img src="/file/getImage?attachFileId=' + resultMap.files[i].attachFileId + '"/></li>');	
+    				$('.swiper-wrapper').append('<li class="swiper-slide"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li>');	
     			}
     		}
     		
@@ -158,15 +165,32 @@ function getClickHandler(lat, lng) {
 const drawStar = (target) => {
     document.querySelector(`.star span`).style.width = `${target.value * 20}%`;
 }
-function fnViewClear(id){
+
+function fnClose(mode){
+	if(mode == 1){
+		$('.side-bar-wrapper').css('display', 'none');	
+	}else{
+		$('.bottom-bar-wrapper').css('display', 'none');
+	}
+	this.mode = 3;	
+}
+
+function fnInsertView(){
+	$('.bottom-bar-wrapper').css('display', 'flex');	
+	$('.side-bar-wrapper').css('display', 'none');
+	$('.inser-area-button').css('display', 'none');	
 	
-	if(id == 1){
+}
+
+function fnViewClear(mode){
+	//1등록 2읽기
+	if(mode == 1){
 		$('#insertForm')[0].reset();
 		$('.fileList').text('사진은 10개까지 등록 가능합니다.');
+		
 	}else{
 		$('#detailForm')[0].reset();
 	}
-	
 }
 
 //마커,데이터 세팅
@@ -187,7 +211,7 @@ function fnInitialization(data){
 				draggable: false,
 		        position: new naver.maps.LatLng(areaArr[i].lat , areaArr[i].lng), // 지역구의 위도 경도 넣기
 		        icon: {
-		        	content: '<img src="/file/getImage?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
+		        	content: '<img src="/file/getImage.do?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
 		            size: new naver.maps.Size(50, 52),
 		        },
 		        seq: areaArr[i].id
@@ -203,9 +227,12 @@ function fnInitialization(data){
 
 //위도 경도 (lat, lng)
 naver.maps.Event.addListener(map, 'click', function(e) {
-	fnViewClear(1);
-
-	$('.inser-area-button').css('display', 'block');
+	if(mode != 1){
+		mode = 1;
+		$('.inser-area-button').css('display', 'block');	
+	}
+	fnViewClear(mode);
+	
 	cuserMarker.setPosition(e.latlng);
     naver.maps.Service.reverseGeocode({
         location: new naver.maps.LatLng(e.coord._lat, e.coord._lng),
@@ -231,7 +258,8 @@ naver.maps.Event.addListener(map, 'click', function(e) {
 });
 
 function fnModifyReview(){
-	console.log(1);
+	$('#detailForm').attr("action", '/map/updateReview.do');
+	$('#detailForm').submit();
 }
 
 //등록
@@ -239,8 +267,6 @@ function fnSaveReview(){
 	if(!confirm('등록하시겠습니까?')){
 		return false;
 	}
-	// console.log($('input[name=rating]:checked').val()); 
-	// $("#resultDiv").replaceWith(result); 
     var formData = new FormData($('#insertForm')[0]);
 	$.ajax({
         type: "post",
@@ -252,7 +278,8 @@ function fnSaveReview(){
     }).done(function (data) {
     	alert("등록되었습니다.");
     	//등록 후 조회데이터로 오버레이 초기화
-        fnInitialization(data);
+//        fnInitialization(data);
+    	window.location.reload()
     })
     .fail(function() {
     	alert('등록 실패 하였습니다.');
@@ -318,20 +345,7 @@ var swiper = new Swiper("#test-slide", {
     observeParents: true,
 });
 
-function fnClose(id){
-	if(id == 1){
-		$('.side-bar-wrapper').css('display', 'none');	
-	}else{
-		$('.bottom-bar-wrapper').css('display', 'none');	
-	}
-	
-}
 
-function fnInsertView(){
-	$('.bottom-bar-wrapper').css('display', 'flex');	
-	$('.inser-area-button').css('display', 'none');	
-	
-}
 
 $(document).ready(function(){
 	$( ".detail-wrap" ).resizable({

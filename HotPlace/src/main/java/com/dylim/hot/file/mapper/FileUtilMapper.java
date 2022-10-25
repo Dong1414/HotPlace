@@ -16,5 +16,7 @@ public interface FileUtilMapper {
 	FileVO getImage(String attachFileId) throws Exception;
 
 	List<FileVO> getImages(String attachFileMasterId) throws Exception;
+
+	void deleteImage(String attachFileId) throws Exception;
 	
 }

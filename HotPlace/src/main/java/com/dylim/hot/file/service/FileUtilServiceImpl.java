@@ -1,21 +1,10 @@
 package com.dylim.hot.file.service;
 
-import java.awt.BorderLayout;
-import java.awt.Image;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.List;
 import java.util.UUID;
-
-import javax.imageio.ImageIO;
-import javax.servlet.ServletOutputStream;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +36,6 @@ public class FileUtilServiceImpl implements FileUtilService {
 	};
 	
 	public String multiFileUpload(List<MultipartFile> multipartFiles) throws Exception {
-		System.out.println("bbbb");
 		// upload
         String fileMsterId = UUID.randomUUID().toString();
         try {
@@ -126,5 +114,9 @@ public class FileUtilServiceImpl implements FileUtilService {
     
     public List<FileVO> getImages(String attachFileMasterId) throws Exception{
     	return fileUtilMapper.getImages(attachFileMasterId);
+    };
+    
+    public void deleteImage(String attachFileId) throws Exception{
+    	fileUtilMapper.deleteImage(attachFileId);
     };
 }
