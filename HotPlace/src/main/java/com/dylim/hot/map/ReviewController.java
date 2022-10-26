@@ -85,7 +85,7 @@ public class ReviewController {
     		mv.addObject("files", files);
     		
     	}
-    	
+    	System.out.println(result.toString());
     	mv.addObject("result", result);
     	mv.setViewName("views/map/reviewModify");
     	return mv;
@@ -94,9 +94,14 @@ public class ReviewController {
     //수정 
     @PostMapping("/map/updateReview/modifyReview.do")    
     public String modifyReview(ReviewVO reviewVO) throws Exception{
-    	
     	seviewService.modifyReview(reviewVO);
-    	
+    	return "redirect:/map/getMyMapView.do";
+    }
+    
+    //삭제 
+    @PostMapping("/map/updateReview/deleteReview.do")    
+    public String deleteReview(ReviewVO reviewVO) throws Exception{
+    	seviewService.deleteReview(reviewVO);
     	return "redirect:/map/getMyMapView.do";
     }
     

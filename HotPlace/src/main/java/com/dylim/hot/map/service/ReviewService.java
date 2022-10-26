@@ -18,5 +18,7 @@ public interface ReviewService {
 	ReviewVO getReview(String id) throws Exception;
 
 	void modifyReview(ReviewVO reviewVO) throws Exception;
+
+	void deleteReview(ReviewVO reviewVO) throws Exception;
 	
 }

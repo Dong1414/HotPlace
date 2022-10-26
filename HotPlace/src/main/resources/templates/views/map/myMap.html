@@ -290,7 +290,6 @@ function fnSaveReview(){
 //파일 유효검증
 $("#attachFileIds").change(function (e) {
 	var fileInfo = this.files;
-	var maxCnt = 6;
 	
 	if (fileInfo.length > 10) {
 		alert('최대 10개까지 업로드 할 수 있습니다.');
@@ -300,7 +299,7 @@ $("#attachFileIds").change(function (e) {
 	$('.fileList').text('');
 	var fileListHt = "<ul class='fileLine'>";
 	for(var i = 0; i < fileInfo.length; i++){
-		fileListHt += "<li id='file"+i+"'>" + fileInfo[i].name + "  <i class='fa-solid fa-xmark' onclick='fnFileSelDel(" + i + ");'></i></li>";
+		fileListHt += "<li id='file"+fileInfo[i].lastModified+"'>" + fileInfo[i].name + "  <i class='fa-solid fa-xmark' onclick='fnFileSelDel(" + fileInfo[i].lastModified + ");'></i></li>";
 	}
 	fileListHt += "</ul>";
 	$("#fileList").append(fileListHt);
@@ -314,8 +313,15 @@ $("#attachFileIds").change(function (e) {
 
 // 파일 업로드 개별취소
 function fnFileSelDel(fileNum){
-	//선택된 파일 삭제
-	delete $('#attachFileIds')[0].files[fileNum];
+	const dataTransfer = new DataTransfer();
+	var fileInfo = $('#attachFileIds')[0].files;
+	var fileArray = Array.from(fileInfo);
+	
+	Array.from(fileArray).filter(file => file.lastModified != fileNum).forEach(file => {
+		dataTransfer.items.add(file);
+	});	
+
+	$('#attachFileIds')[0].files = dataTransfer.files;	//제거 처리된 FileList를 돌려줌
 	
 	//리스트 삭제
     $('#file'+fileNum).remove();

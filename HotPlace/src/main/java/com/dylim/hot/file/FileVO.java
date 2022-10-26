@@ -2,7 +2,7 @@ package com.dylim.hot.file;
 
 public class FileVO {
     String attachFileId;     
-    String attachFileMaster;     
+    String attachFileMasterId;     
     String saveFileName;
     String originFileName;
     String fileExt;
@@ -21,11 +21,11 @@ public class FileVO {
 	public void setAttachFileId(String attachFileId) {
 		this.attachFileId = attachFileId;
 	}
-	public String getAttachFileMaster() {
-		return attachFileMaster;
+	public String getAttachFileMasterId() {
+		return attachFileMasterId;
 	}
-	public void setAttachFileMaster(String attachFileMaster) {
-		this.attachFileMaster = attachFileMaster;
+	public void setAttachFileMasterId(String attachFileMasterId) {
+		this.attachFileMasterId = attachFileMasterId;
 	}
 	public String getSaveFileName() {
 		return saveFileName;
@@ -98,10 +98,11 @@ public class FileVO {
 	}
 	@Override
 	public String toString() {
-		return "FileVO [attachFileId=" + attachFileId + ", attachFileMaster=" + attachFileMaster + ", saveFileName="
+		return "FileVO [attachFileId=" + attachFileId + ", attachFileMasterId=" + attachFileMasterId + ", saveFileName="
 				+ saveFileName + ", originFileName=" + originFileName + ", fileExt=" + fileExt + ", fileSize="
 				+ fileSize + ", registId=" + registId + ", registDt=" + registDt + ", updateId=" + updateId
-				+ ", updateDt=" + updateDt + "]";
+				+ ", updateDt=" + updateDt + ", savePath=" + savePath + ", prefixPath=" + prefixPath + ", url=" + url
+				+ "]";
 	}
     
 }

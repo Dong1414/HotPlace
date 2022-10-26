@@ -3,6 +3,7 @@ package com.dylim.hot.file.service;
 import java.util.List;
 
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.dylim.hot.file.FileVO;
 
@@ -21,5 +22,7 @@ public interface FileUtilService {
 	List<FileVO> getImages(String attachFileMasterId) throws Exception;
 
 	void deleteImage(String attachFileId) throws Exception;
+
+	String dropZoneUpload(MultipartHttpServletRequest request, String attchFileMasterId) throws Exception;
 	
 }

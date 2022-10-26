@@ -40,4 +40,8 @@ public class ReviewServiceImpl implements ReviewService {
 	public void modifyReview(ReviewVO reviewVO) throws Exception{
 		reviewMapper.modifyReview(reviewVO);
 	};
+	
+	public void deleteReview(ReviewVO reviewVO) throws Exception{
+		reviewMapper.deleteReview(reviewVO);
+	};	
 }

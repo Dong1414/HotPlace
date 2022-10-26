@@ -20,4 +20,6 @@ public interface ReviewMapper {
 	ReviewVO getToIdReview(String id) throws Exception;
 
 	void modifyReview(ReviewVO reviewVO) throws Exception;
+
+	void deleteReview(ReviewVO reviewVO) throws Exception;
 }

@@ -11,6 +11,9 @@
 <!-- swiper CSS -->
 <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
 
+<link rel="stylesheet" href="https://rawgit.com/enyo/dropzone/master/dist/dropzone.css" />
+<script src="https://rawgit.com/enyo/dropzone/master/dist/dropzone.js"></script>
+
 <link rel="stylesheet" th:href="@{/css/modifyView.css}" />
 
 	<form id="modifyForm" method="post" action="/map/updateReview/modifyReview.do" enctype="multipart/form-data">
@@ -19,20 +22,17 @@
 		<input type="hidden" name="lng" th:value="${result.lng}" />
 		<div class="container">
 			<table class="wrapper">
+				<tbody>
 				<tr class="title-area">
 					<th>제목</th>
 					<td><input type="text" th:name="title" th:id="title" placeholder="제목을 입력해주세요." th:value="${result.title}"/></td>
 				</tr>
 				<tr class="image-area">
-					<th>이미지</th>
+					<th>등록된 사진</th>
 					<td>
-				  		<div class="file-list" id="fileList">
+				  		<div class="file-list" id="fileList" style="display: grid;">
 					  		<div class="swiper mySwiper">
 						      <div class="swiper-wrapper">
-						      	<input class="file-input" type="file" th:id="attachFileIds" th:name="attachFileIds" multiple/>
-						      	<label class="file-input-form swiper-slide" for="attachFileIds">
-						      		<i class="fa-regular fa-square-plus" style="font-size: 5.5rem;"></i>
-						      	</label>
 						      	<th:block th:each="file : ${files}">
 						      		<div class="img-box swiper-slide">
 								        <img th:src="${file.url}" th:id="${file.attachFileId}" th:onclick="fnImgDel(this.getAttribute('id'));"/>
@@ -42,6 +42,14 @@
 						      </div>
 							</div>
 			  			</div>
+					</td>
+				</tr>
+				<tr class="insert-image-area">
+					<th>추가할 사진</th>
+					<td>
+						<div class="dropzone">
+						</div>
+						<p class="caution">※ 사진은 추가 시 바로 적용됩니다.</p>
 					</td>
 				</tr>
 				<tr class="star-area">
@@ -73,6 +81,7 @@
 						<textarea th:name="review" th:id="review" placeholder="후기를 입력해주세요." th:text="${result.review}"></textarea>
 					</td>
 				</tr>
+				</tbody>
 			</table>
 			<div class="bottom-btn-area">
 				<button type= "button" class="save-btn" th:onclick="fnMoidfyReview();">수정</button>
@@ -83,6 +92,10 @@
 	</form>
 </html>
 <script th:inline="javascript">
+//4eed686c-e876-4ad3-b9d4-9537b419ddc2
+var fileCnt = [[${files.size()}]] > 0 ? 10 - [[${files.size()}]] : 10;
+var fileContents = [];
+
 function fnMoidfyReview(){
 	
 	if(!confirm('수정하시겠습니까?')){
@@ -101,11 +114,15 @@ function fnMoidfyReview(){
 	$('#modifyForm').submit();
 }
 function fnClose(){
-	
+	location.href = "/map/getMyMapView.do";
 }
 
 function fnDeleteReview(){
-	
+	if(!confirm('리뷰를 삭제하시겠습니까?')){
+		return false;
+	}
+	$('#modifyForm').attr('action', '/map/updateReview/deleteReview.do');
+	$('#modifyForm').submit();
 }
 
 function fnImgDel(attachFileId){
@@ -120,7 +137,8 @@ function fnImgDel(attachFileId){
         },
     }).done(function (resultMap) {
     	alert('삭제되었습니다.');
-    	$('#'+attachFileId).remove();
+    	$('#'+attachFileId).closest('div').remove();
+    	dropzone.options.maxFiles = ++fileCnt;
     })
     .fail(function() {
     	alert('삭제 실패 하였습니다.');
@@ -129,11 +147,37 @@ function fnImgDel(attachFileId){
 }
 
 var swiper = new Swiper(".mySwiper", {
-  slidesPerView: 5,
-  spaceBetween: 30,
-  freeMode: true,
-  pagination: {
-    clickable: true,
+	slidesPerView: 5,
+	spaceBetween: 20,
+	freeMode: true,
+	pagination: {
+	  clickable: true,
+	},
+	variableWidth: true
+})
+
+Dropzone.autoDiscover = false; // deprecated 된 옵션. false로 해놓는걸 공식문서에서 명시
+var attchFileMasterId = [[${result.attachFileMasterId}]];
+var dropzone = new Dropzone("div.dropzone", {
+  url: "/file/saveImages.do",
+  params: {
+      "attchFileMasterId" : attchFileMasterId,
   },
+  maxFiles: fileCnt, // 업로드 파일수
+  uploadMultiple: true, // 다중업로드 기능
+  parallelUploads: 10, // 동시파일업로드 수(이걸 지정한 수 만큼 여러파일을 한번에 넘긴다.)
+  acceptedFiles: '.jpeg,.jpg,.png,.gif,.JPEG,.JPG,.PNG,.GIF', // 이미지 파일 포맷만 허용
+  dictDefaultMessage: '클릭 또는 사진을 드래그 해주세요',
+  dictMaxFilesExceeded: '업로드 가능한 사진 갯수를 초과하였습니다.\n사진은 최대 10개까지 등록 가능합니다.',
+  thumbnailWidth: 162.4, // Upload icon size
+  thumbnailHeight: 140, // Upload icon size
+  init: function () {
+		this.on('success', function (file, responseText) {
+			console.log('성공');
+		});
+		this.on('error', function (file, errorMessage) {
+			alert(errorMessage);
+		});
+  }
 });
 </script>
