@@ -15,6 +15,7 @@
 
 html{
 	font-size:62.5%;
+	height:100%
 }
 * {
     margin: 0;
@@ -28,11 +29,9 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
+	min-height: 100%;  
+	height:100%;
+	position: relative;
 }
 
 ul, ol, li {
@@ -46,8 +45,22 @@ a {
 	color: black;
 }
 
-inpiut{
-	-webkit-appearance: none;
+.none{
+	display:none;
+}
+
+
+input{
+	display: block;
+    width: 100%;
+    line-height: 1.36;
+    font-size: 1.6rem;
+    box-sizing: border-box;
+    height: 5.5rem;
+    padding: 0.9rem 1.2rem;
+    border: none;
+    color: black;
+    -webkit-appearance: none;
 }
 input, textarea, select, button, table{
 	font-family: 'Noto Sans Kr', sans-serif;
@@ -92,10 +105,31 @@ input, textarea, select, button, table{
 .main {
     background-image: url('/images/mainView.png');
     width:100%;
-    height: 100vh;
+    height: 100%;
     background-size: cover;
  }
- 
- 
 
+.form-wrap{
+	width:100%;
+	height:100%;
     
+}
+.form-view-area{
+	max-width: 120rem;
+    padding: 1.2rem 1.6rem;
+    box-sizing: border-box;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+}		
+
+.form-area{
+	display: flex;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+}

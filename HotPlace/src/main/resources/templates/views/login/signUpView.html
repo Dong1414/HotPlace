@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<section class="form-wrap">
+		<div class="form-view-area plus-padding">
+			<div class="form-area">
+				<div class="sign-up-area">
+					<div class="sign-up-title"><h1>회원가입</h1></div>
+					<h3>기본정보입력</h3>
+					<div class="sign-up-input">	
+						<div class="input-form">
+							<label for="mberId">아이디</label>
+							<input type="text" id="mberId" name="mberId" placeholder="아이디를 입력해주세요."/>
+						</div>
+					</div>
+					<div class="sign-up-input">	
+						<div class="input-form">
+							<label for="password">비밀번호</label>
+							<input type="text" id="password" name="password" placeholder="비밀번호를 입력해주세요."/>
+						</div>
+					</div>
+					<div class="sign-up-input">	
+						<div class="input-form">
+							<label for="passwordChk">비밀번호확인</label>
+							<input type="text" id="passwordChk" name="passwordChk" placeholder="비밀번호확인을 입력해주세요."/>
+						</div>
+					</div>
+					<div class="sign-up-input">	
+						<div class="input-form">
+							<label for="mberName">이름</label>
+							<input type="text" id="mberName" name="mberName" placeholder="이름을 입력해주세요."/>
+						</div>
+					</div>
+					<div class="sign-up-input">	
+						<div class="input-form">
+							<label for="mberBrthd">생년월일</label>
+							<input type="text" id="mberBrthd" name="mmberBrthd" placeholder="생년월일을 입력해주세요."/>
+						</div>
+					</div>
+					<div class="sign-up-input">	
+						<div class="input-form">
+							<label for="telNm">전화번호</label>
+							<input type="text" id="telNm1" name="telNm"/> - 
+							<input type="text" id="telNm2" name="telNm"/> -
+							<input type="text" id="telNm3" name="telNm"/>
+						</div>
+					</div>
+					<div class="sign-up-input">	
+						<div class="input-form">
+							<label for=""eamil"">이메일</label>
+							<input type="text" id="email" name="email" placeholder="이메일을 입력해주세요."/>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+</th:block>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<section class="form-wrap">
+		<div class="form-view-area">
+			<div class="form-area">
+				<div class="login-form">
+					<h1>LOGIN</h1>
+					<div class="login-info">
+						<form>
+							<label class="none" for="id">아이디</label>
+							<input type="text" id="id" name="id" placeholder="아이디를 입력해주세요."/>
+							<label class="none" for="password">비밀번호</label>
+							<input type="text" id="password" name="password" placeholder="비밀번호를 입력해주세요."/>
+							<button class="login-action-btn" type="button">로그인</button>
+							<button class="naver-login-btn" type="button">네이버로그인</button>
+							<button class="kakao-login-btn" type="button">카카오로그인</button>
+						</form>
+					</div>
+					<nav class="member-area">
+						<a href="/login/signUpView.do">회원가입</a>
+						<nav class="member-find">
+							<ul>
+								<li><a href="#">아이디찾기</a></li>
+								<li><a href="#">비밀번호찾기</a></li>
+							</ul>
+						</nav>
+					</nav>
+				</div>
+			</div>
+		</div>
+	</section>
+</th:block>
+</html>

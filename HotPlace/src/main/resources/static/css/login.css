@@ -1,0 +1,152 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+.title-area p{
+	font-size: 3rem;
+	margin-bottom: 3rem;
+}
+
+.title-area p i{
+	font-size: 2.5rem;
+    margin-right: 1.3rem;
+}	
+
+.login-form{
+	display: inline-block;
+    vertical-align: top;
+    text-align: left;
+    width: 100%;
+    max-width: 68.3rem;
+    padding: 3rem 6rem;
+    font-size: 1.6rem;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    margin: 0 auto;
+}
+
+.login-form > h1{
+	font-size: 4rem;
+    padding-top: 2rem;
+    font-weight: 600;
+    width: 100%;
+    text-align: center;
+}
+
+.login-form input{
+	display: block;
+    margin: 3rem 0;
+    border-bottom-style: solid;
+}	
+
+.login-info{
+	width:100%;
+}
+
+.login-action-btn{
+    width: 100%;
+    height: 4rem;
+    margin-bottom: 1.5rem;	
+}
+
+.naver-login-btn{
+    width: 100%;
+    height: 4rem;
+    margin-bottom: 1.5rem;	
+}
+
+.kakao-login-btn{
+    width: 100%;
+    height: 4rem;
+    margin-bottom: 1.5rem;
+}
+.member-area{
+    width: 100%;
+    text-align: center;
+    display: flex;
+}
+.member-area > a{
+	display: inline-flex;
+    width: 7rem;
+   	font-size: 1.5rem;
+    line-height: 1.32;
+    font-weight: 600;
+}
+
+.member-find{
+	text-align: right;
+    width: 100%;
+}
+.member-area ul{
+	display: inline-block;    
+}
+
+.member-area ul li{
+	display: inline-block;
+    margin: 0;
+}
+
+.member-area ul li a{
+	font-size: 1.5rem;
+    line-height: 1.32;
+    margin-right: 3rem;
+    font-weight: 600;
+}
+.member-area ul li:nth-last-child(1) a{
+    margin-right: 0;
+}
+
+
+/* 회원가입 페이지 */
+.sign-up-area{
+    text-align: left;
+    width: 100%;
+    height: 100%;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    padding:1.3rem;
+}
+
+.sign-up-title{
+	width:100%;
+	text-align:center;
+	font-size:2.5rem;
+}
+
+.form-area h3{
+	width:100%;
+	font-size:2.5rem;
+	margin-top:5rem;
+	margin-bottom:2rem;
+}
+
+.sign-up-input{
+	width:100%;
+	margin-bottom: 2rem;
+}
+
+.sign-up-input .input-form{
+	width:100%;
+	height:100%;	
+	display:flex;
+    align-items: center;
+}
+
+.sign-up-input div label{
+    min-width: 17rem;
+    line-height: 1.36;
+    font-size: 1.8rem;
+    height: 5.5rem;
+    padding: 0.9rem 1.2rem;
+    color: black;
+    align-items: center;
+    display: flex;
+}
+
+.sign-up-input .input-form input{
+	height: 4rem;
+	border: 1px solid #e5e5e5;
+}	
+
+.plus-padding{
+	padding: 3rem 1.6rem
+}
