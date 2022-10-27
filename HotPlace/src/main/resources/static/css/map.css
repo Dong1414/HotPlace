@@ -1,0 +1,238 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+ 
+#app{
+	position: absolute;
+    left: 0;
+    top: 7rem;
+    bottom: 0;
+    right: 0;
+}
+.swiper, .swiper-container{
+  width: 100%;
+  height: 100%;
+}
+
+.swiper-slide {
+  text-align: center;
+  font-size: 18px;
+  background: #fff;
+
+  /* Center slide text vertically */
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  -webkit-align-items: center;
+  align-items: center;
+}
+
+.swiper-slide img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+input[type="text"]{
+	border: 1px solid #d2d2d2;
+    background: #fff;
+    color: #323232;	
+}
+.container{
+	padding: 25px 30px 30px;	
+}
+
+<!-- 사이드바 -->
+#app{
+	position: absolute;
+    left: 0;
+    top: 50px;
+    bottom: 0;
+    right: 0;
+}
+#app .side-bar {     
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+}
+
+
+#map div img {
+	width:100%;
+	height: 100%;
+}
+
+.side-bar-wrapper .side-bar{
+	position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width:100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    resize: horizontal;
+}
+
+.side-bar-wrapper{
+	display:none;
+	/* display: flex; */
+    color: #fff;
+    height:100%;
+}
+
+.side-bar-wrapper  .side-bar > .title-area {
+	padding: 20px 10px;
+}
+
+.side-bar-wrapper  .side-bar > .title-area > #title {
+	font-size: 1.8rem;
+    font-weight: bold;
+    color: #fff;
+    box-shadow: none;
+    background: none;
+    border: none;
+    width:100%;
+}
+
+
+
+
+.side-bar-wrapper  .side-bar > .image-area {
+	padding: 0 10px;
+}
+
+
+.side-bar-wrapper  .side-bar > .image-area  > .iw-file-input {
+	position: relative;
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.3rem;
+    border: 5px dashed rgba(255, 255, 255, 0.5);
+    border-radius: 10px;
+    height: 250px;
+    background-color: rgba(255, 255, 255, 0.5);
+}
+
+.side-bar-wrapper  .side-bar > .image-area  > .iw-file-input .file-input{
+	cursor: pointer;
+    position: absolute;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    opacity: 0;
+}
+.side-bar-wrapper  .side-bar > .location-info-area {
+	padding: 10px;
+}
+
+.side-bar-wrapper  .side-bar > .location-info-area > #addressInfo{
+	width:100%;
+	font-size: 1rem;
+    color: #fff;
+    box-shadow: none;
+    background: none;
+    border: none;
+}
+
+  
+
+.side-bar-wrapper  .side-bar > .review-area {
+	padding: 20px 10px;
+}
+    
+.side-bar-wrapper  .side-bar > .review-area {
+	padding: 20px 10px;
+}    
+
+.side-bar-wrapper .side-bar > .review-area > #review {
+	width:100%;
+	min-height: 97px;
+    resize: none;
+    color: #fff;
+    background: none;
+    border: none;
+    box-shadow: none;    
+}
+.side-bar-wrapper  .side-bar > .star-area {
+	padding: 20px 10px;
+}    
+
+.side-bar-wrapper  .side-bar > .title-area > #title::placeholder,
+.side-bar-wrapper  .side-bar > .location-info-area > #addressInfo::placeholder,
+.side-bar-wrapper  .side-bar > .review-area > #review::placeholder {
+	color: #fff;
+}
+
+ 
+ 
+
+.fileList {
+	width: 100%;
+}
+
+.fileLine li {
+    padding:0 5px;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+    color: floralwhite;
+    font-weight: 600;
+}
+
+.fileLine li > i {
+	cursor: pointer;
+	font-size: 18px;
+	left: 50%;
+	top: 5%;
+}
+
+.detail-wrap{
+	width: 350px;
+    left: 0px;
+    top: 0px;
+    height: 100%;
+    position: relative;
+}
+
+.side-bar-active-btn {
+    flex-shrink: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #000000;
+    padding: 0;
+    border: none;
+    border-radius: unset;
+    color: #fff;
+    opacity: 0.5;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+}
+
+.insert-wrap{
+	width: 100%;
+    left: 0px;
+    bottom: 0px;
+    height: 500px;
+    position: relative;
+}
+
+.inser-area-button{
+	display:none;
+    position: absolute;
+    top: 83%;
+    left: 50%;
+    width: 120px;
+    height: 30px;
+    align-items: center;
+}

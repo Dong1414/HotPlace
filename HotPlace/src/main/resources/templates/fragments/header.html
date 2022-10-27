@@ -2,8 +2,24 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
   <header th:fragment="headerFragment">
-	  <div class="header">
-	    <a class="loginBtn" href="#" >LOGIN</a>
-	  </div>
+  	<div class="menu-area">
+ 		<a class="logo" href="#">사관</a>
+  		<nav class="menu">
+	  		<ul class="menu-items">
+	  			<li class="menu-item"><a href="/map/getMyMapView.do">지도보기</a></li>
+	  			<li class="menu-item"><a href="#">타임라인</a></li>
+	  		</ul>
+  		</nav>
+  		<div class="menu-right-area">
+  			<span>
+  				<span class="search-input-box">
+  					<input class="search-keyword" type="text" id="searchKwd" placeholder="주소를 검색해주세요."/>
+  				</span>
+  			</span>
+  			<span>
+  				<button class="login-btn" onclick="on();">로그인</button>
+  			</span>
+  		</div>
+  	</div>
   </header>
 </html>

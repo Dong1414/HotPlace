@@ -1,0 +1,103 @@
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Anton&display=swap');
+
+header{
+  color: var(--seed-scale-color-gray-900);
+  top: 0;
+  left: 0;
+  width: 100%;
+  max-width: 100vw;
+  height: 7rem;
+  z-index: 999;
+  background-color:white;	
+}
+.menu-area{
+	max-width: 120rem;
+	padding: 1.2rem 1.6rem;
+    box-sizing: border-box;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    margin: 0 auto;
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.logo{
+	display: inline-flex;
+    align-items: center;
+    font-size: 2.5rem;
+    font-weight: 600;
+    width:10rem;
+    margin-right: 3rem;
+}
+.menu{
+	display: flex;
+    align-items: center;
+    width: 100%;
+    padding-top: 0;
+    padding-right: 4rem;
+    padding-bottom: 0;
+    padding-left: 0;
+}
+
+.menu > .menu-items{
+    display: inline-block
+}
+
+.menu > .menu-items .menu-item{
+	display: inline-block;
+    margin: 0;
+}
+
+.menu > .menu-items .menu-item > a{
+	font-size: 1.8rem;
+	line-height: 1.32;
+	margin-right: 3rem;
+    font-weight: 600;
+}
+
+.menu-right-area{
+	display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-btn{
+  line-height: 1.3;
+  font-size: 1.6rem;
+  display: block;
+  white-space: nowrap;
+  background-color: var(--seed-scale-color-gray-00);
+  color: var(--seed-scale-color-gray-900);
+  height: 4rem;
+  width: fit-content;
+  min-height: 2.8rem;
+  padding: 0.5rem 1rem;
+  border-radius: 0.3rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.menu-right-area .search-input-box{
+	display: block;
+    position: relative;
+    margin-right: 1.2rem;
+    background-color: var(--seed-scale-color-gray-00);
+    color: var(--seed-scale-color-gray-900);
+}
+
+.menu-right-area .search-input-box > .search-keyword{
+	width: 28.8rem;
+    line-height: 1.36;
+    font-size: 1.6rem;
+    background-color: rgb(233 233 233);
+    box-sizing: border-box;
+    height: 4rem;
+    padding: 0.9rem 1.2rem;
+    border: none;
+    border-radius: 0.6rem;
+    color: black;
+    -webkit-appearance: none;
+}
