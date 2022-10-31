@@ -365,7 +365,9 @@
 				return false;
 			}
 			
-			fnEmailCheck($('#mberEmail').val());
+			if(!fnEmailCheck($('#mberEmail').val())){
+				return false;
+			};
 			
 			$('#signUpForm').attr('action', '/member/signUpInsert.do');
 			$('#signUpForm').submit();
