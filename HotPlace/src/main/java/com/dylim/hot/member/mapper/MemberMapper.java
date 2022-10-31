@@ -11,4 +11,5 @@ public interface MemberMapper {
 
 	int idCheck(String id) throws Exception;
 	
+	MemberVO loadUserByUserId(String mberId);
 }

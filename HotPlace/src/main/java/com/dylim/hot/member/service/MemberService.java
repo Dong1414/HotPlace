@@ -11,5 +11,7 @@ public interface MemberService {
 	void signUpInsert(MemberVO memberVO) throws Exception;
 
 	boolean idCheck(String id) throws Exception;
+
+	MemberVO loadUserByUserId(MemberVO memberVO) throws Exception;
 	
 }

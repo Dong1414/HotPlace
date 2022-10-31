@@ -28,4 +28,17 @@
 				)
 		]]>
 	</insert>
+	<select id="loadUserByUserId" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
+		<![CDATA[
+			SELECT 
+				mber_id as mberId,
+				mber_password as mberPassword,
+				mber_name as mberName,
+				mber_brthd as mberBrthd,
+				mber_tel_no as mberTelNo,
+				mber_email as mberEmail
+			FROM member WHERE mber_id = #{mberId} and del_yn = "N"			
+		]]>
+	</select>
+	
 </mapper>

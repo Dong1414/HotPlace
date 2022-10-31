@@ -1,18 +1,40 @@
 package com.dylim.hot.member;
 
-public class MemberVO {
-	String id;
-	String mberId;
-	String mberPassword;
-	String mberName;
-	String mberBrthd;
-	String mberTelNo;
-	String mberEmail;
-	String registId;
-	String registDt;
-	String updateId;
-	String updateDt;
-	String delYn;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import lombok.Data;
+
+@Data
+public class MemberVO{
+
+
+	String id ="";
+	String mberId ="";
+	String mberPassword ="";
+	String mberName ="";
+	String mberBrthd="";
+	String mberTelNo="";
+	String mberEmail="";
+	String registId="";
+	String registDt="";
+	String updateId="";
+	String updateDt="";
+	String delYn="";
+	String mberAuth="";
+	
+	public String getMberAuth() {
+		return mberAuth;
+	}
+	public void setMberAuth(String mberAuth) {
+		this.mberAuth = mberAuth;
+	}
 	public String getId() {
 		return id;
 	}
@@ -92,6 +114,4 @@ public class MemberVO {
 				+ registId + ", registDt=" + registDt + ", updateId=" + updateId + ", updateDt=" + updateDt + ", delYn="
 				+ delYn + "]";
 	}
-	
-	
 }

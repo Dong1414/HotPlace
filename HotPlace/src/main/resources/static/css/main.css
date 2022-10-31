@@ -157,3 +157,7 @@ input, textarea, select, button, table, select{
 .side-margin-01{
 	margin: 0 1rem;	
 }
+
+.mb1{
+	margin: 1rem;
+}

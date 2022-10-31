@@ -17,7 +17,8 @@
   				</span>
   			</span>
   			<span>
-  				<button class="login-btn" onclick="location.href='/login/loginView.do'">로그인</button>
+  				<button th:if="${session.loginMember == null}" class="login-btn" onclick="location.href='/login/loginView.do'">로그인</button>
+  				<button th:if="${session.loginMember != null}" th:text="${session.loginMember.mberName}"class="login-btn" onclick=""></button>
   			</span>
   		</div>
   	</div>

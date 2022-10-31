@@ -11,12 +11,13 @@
 				<div class="login-form">
 					<h1>LOGIN</h1>
 					<div class="login-info">
-						<form>
+						<form id="loginForm" method="post">
 							<label class="none" for="id">아이디</label>
-							<input type="text" id="id" name="id" placeholder="아이디를 입력해주세요."/>
+							<input type="text" id="mberId" name="mberId" th:value="${mberId}" placeholder="아이디를 입력해주세요."/>
 							<label class="none" for="password">비밀번호</label>
-							<input type="text" id="password" name="password" placeholder="비밀번호를 입력해주세요."/>
-							<button class="login-action-btn" type="button">로그인</button>
+							<input type="password" id="mberPassword" name="mberPassword" placeholder="비밀번호를 입력해주세요."/>
+							<div th:if="${loginMsg != null}" th:text="${loginMsg}" class="mb1 red"></div>
+							<button class="login-action-btn" onclick="fnLoginAction();" type="submit">로그인</button>
 							<button class="naver-login-btn" type="button">네이버로그인</button>
 							<button class="kakao-login-btn" type="button">카카오로그인</button>
 						</form>
@@ -34,5 +35,21 @@
 			</div>
 		</div>
 	</section>
+<script th:inline="javascript">
+function fnLoginAction(){
+	if($('#mberId').val() == '' || !$('#mberId').val()){
+		alert('아이디를 입력해주세요.');
+		return false;
+	}
+	
+	if($('#mberPassword').val() == '' || !$('#mberPassword').val()){
+		alert('비밀번호를 입력해주세요.');
+		return false;
+	}
+	
+	$('#loginForm').attr('action', '/login/loginView/loginAction.do');
+	$('#loginForm').submit();
+}
+</script>
 </th:block>
 </html>
