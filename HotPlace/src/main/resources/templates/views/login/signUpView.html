@@ -1,63 +1,375 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-      layout:decorate="/layouts/layout">
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/layouts/layout">
 
 <th:block layout:fragment="content">
 	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<form id="signUpForm" method="post">
+	<input type="hidden" id="mberIdCheck"/>
+	<input type="hidden" id="telNoCheck"/>
 	<section class="form-wrap">
 		<div class="form-view-area plus-padding">
 			<div class="form-area">
 				<div class="sign-up-area">
-					<div class="sign-up-title"><h1>회원가입</h1></div>
+					<div class="sign-up-title">
+						<h1>회원가입</h1>
+					</div>
 					<h3>기본정보입력</h3>
-					<div class="sign-up-input">	
+					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="mberId">아이디</label>
-							<input type="text" id="mberId" name="mberId" placeholder="아이디를 입력해주세요."/>
+							<label for="mberId">아이디<span class="red">*</span></label>
+							<div style="display: flex;">
+								<input style="width:35rem;" type="text" id="mberId" name="mberId" placeholder="아이디를 입력해주세요." /> 
+								<button type="button" class="id-chk-btn" onclick="fnIdChk()">중복확인</button>
+								<div class="id-chk-result-msg">
+									<ul>
+										<li><p class="red">※ 6 ~ 12자의 영문 소문자, 숫자만 사용가능</p></li>
+										<li><p id="falseMsg" class="red none">입력하신 아이디는 사용이 불가합니다.</p></li>
+										<li><p id="seccessMsg" class="blue none">입력하신 아이디는 사용이 가능합니다.</p></li>
+									</ul>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="sign-up-input">	
+					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="password">비밀번호</label>
-							<input type="text" id="password" name="password" placeholder="비밀번호를 입력해주세요."/>
+							<label for="password">비밀번호<span class="red">*</span></label>
+							<div class="w100">
+								<input type="password" id="mberPassword" onchange="fnPasswordChk(); return false;" name="mberPassword" placeholder="비밀번호를 입력해주세요." /><br>
+								<span class="red">※ 영문(대소문자구분), 숫자, 특수문자(!@#$^&*만 허용)를 혼용하여 9~16자를 입력하여 주십시오.</span>
+							</div>
 						</div>
 					</div>
-					<div class="sign-up-input">	
+					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="passwordChk">비밀번호확인</label>
-							<input type="text" id="passwordChk" name="passwordChk" placeholder="비밀번호확인을 입력해주세요."/>
+							<label for="passwordChk">비밀번호확인<span class="red">*</span></label>
+							<div class="w100">
+								<input type="password" id="passwordChk" onchange="fnValidPssrdCheck(); return false;" name="passwordChk" placeholder="비밀번호확인을 입력해주세요." /><br>
+								<span class="red">※ 입력 오류 방지를 위하여 한번 더 입력해 주세요.</span>
+								<div id="password_msg">
+									<p class="red">비밀번호가 일치하지 않습니다.</p>
+								</div>
+							</div>
 						</div>
 					</div>
-					<div class="sign-up-input">	
+					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="mberName">이름</label>
-							<input type="text" id="mberName" name="mberName" placeholder="이름을 입력해주세요."/>
+							<label for="mberName">이름<span class="red">*</span></label>
+							<input type="text" id="mberName" name="mberName" placeholder="이름을 입력해주세요." />
 						</div>
 					</div>
-					<div class="sign-up-input">	
+					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="mberBrthd">생년월일</label>
-							<input type="text" id="mberBrthd" name="mmberBrthd" placeholder="생년월일을 입력해주세요."/>
+							<label for="mberBrthd">생년월일<span class="red">*</span></label>
+							
+							<select class="w15" id="selYear">
+								<option value='' selected>-- 선택 --</option>
+	 							<option th:each="num : ${#numbers.sequence(year,year+100)}" th:value="${num}" th:text="${num}"></option>
+							</select><p class="side-margin-01">년</p>
+							<select class="w15" id="selMon">
+								<option value='' selected>-- 선택 --</option>
+								<option th:each="num : ${#numbers.sequence(1,12)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}"></option>
+							</select><p class="side-margin-01">월</p>
+							<select class="w15" id="selDay">
+								<option value='' selected>-- 선택 --</option>
+								<option th:each="num : ${#numbers.sequence(1,31)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}"></option>
+							</select><p class="side-margin-01">일</p>
+							<input type="hidden" id="mberBrthd" name="mberBrthd"/>
 						</div>
 					</div>
-					<div class="sign-up-input">	
+					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="telNm">전화번호</label>
-							<input type="text" id="telNm1" name="telNm"/> - 
-							<input type="text" id="telNm2" name="telNm"/> -
-							<input type="text" id="telNm3" name="telNm"/>
+							<label for="telNm">전화번호<span class="red">*</span></label> 
+							<input class="w15" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1" />
+							<p class="side-margin-01">-</p>
+							<input class="w15" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" />
+							<p class="side-margin-01">-</p>
+							<input class="w15" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" />
+							<button type="button" class="cancel-btn" id="phonChkRequest" style="margin-left:2rem; width:10rem;" onclick="fnChkPhone()">인증번호요청</button>
+							<input type="hidden" id="mberTelNo" name="mberTelNo" />
 						</div>
 					</div>
-					<div class="sign-up-input">	
+					<div class="sign-up-input">
 						<div class="input-form">
-							<label for=""eamil"">이메일</label>
-							<input type="text" id="email" name="email" placeholder="이메일을 입력해주세요."/>
+							<label for="phonChk">인증번호<span class="red">*</span></label> 
+							<input style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="phonChk" name="phonChk" placeholder="인증번호를 입력하세요." />
+							<button type="button" id="phonChkBtn" class="cancel-btn" style="margin-left:2rem;" onclick="fnValPhonChek">인증</button>
+						</div>
+					</div>					
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label for="email">이메일<span class="red">*</span></label>
+							<input type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." />
+						</div>
+					</div>
+					<div class="sign-up-input">
+						<div style="text-align: center;">
+							<button type="button" class="sign-up-btn" onclick="fnSingUp();">회원가입</button>
+							<button type="button" class="cancel-btn " onclick="">취소</button>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
+	</form>
+	<script th:inline="javascript">
+		$(document).ready(function(){
+	        //비밀번호 label 숨기기
+	        $("#password_msg").prop("hidden", true);
+	    });
+		
+		function fnIdChk(){
+			var id = $('#mberId').val();
+			if(!id || id==''){
+				alert("아이디를 입력해주세요.");
+				return false;
+			}
+			
+			if(id.length < 6){
+	            alert("아이디는 6 ~ 12자로 입력하여 주십시오.");
+	            $("#mberId").focus();
+	            return false;
+	        }
+	        
+	        var blank_pattern = /[\s]/g; // 공백패턴 
+			
+	        if(blank_pattern.test(id) == true){
+	            alert("공백문자가 존재합니다.\r\n확인하고 다시입력하여주십시오.");
+	            $("#mberId").focus();
+	            return false;
+	        }
+	      //아이디 only number인지 체크
+	        var onlynum_pattern = /^[0-9]*$/;
+	        if (onlynum_pattern.test(id)) {
+	            alert("숫자로만 이루어진 아이디는 사용할 수 없습니다.");
+	            return false;
+	        }
+	        
+	        // 아이디 문자 유효성 검사
+	        var pattern_engnum = /^[a-z0-9]*$/;
+	        
+	        if((pattern_engnum.test(id)) ){ // 아이디가 적합하면 중복검사 시작
+	        	$.ajax({
+					type : "get",
+					url : '/member/idCheck.do?id=' + id,
+				}).done(function(result) {
+					if(result){
+						$('#mberIdCheck').val(id);
+						alert('입력하신 아이디 '+id+"는 사용이 가능합니다.")
+						$('#seccessMsg').show();
+						$('#falseMsg').hide();
+						$('#mberId').css('border', '1px solid blue');
+					}else{
+						$('#mberIdCheck').val('');
+						alert('입력하신 아이디 '+id+"는 사용이 불가합니다.")
+						$('#falseMsg').show();
+						$('#seccessMsg').hide();
+						$('#mberId').css('border', '1px solid red')
+					}				
+				}).fail(function() {
+					alert('실패 하였습니다.');
+				})
+	        }else{
+	            alert("아이디는 영문 소문자, 숫자만 입력하여 주십시오.");
+	            $("#mberId").focus();
+	            return false;
+	        }
+		}
+		
+		function fnPasswordChk(){
+			var id = $("#mberId").val();
+	        var pw = $("#mberPassword").val();
+	        var num = pw.search(/[0-9]/g);
+	        var eng = pw.search(/[a-z]/ig);
+	        var spe = /([a-zA-Z0-9].*[!,@,#,$,^,&,*])|([!,@,#,$,^,&,*].*[a-zA-Z0-9])/;
+	        
+	        if(pw != ""){
+	            if(pw.length < 9 || pw.length > 16){
+	                alert("비밀번호는 9자리 ~ 16자리 이내로 입력하여 주십시오.");
+	                $("#mberPassword").val("");
+	                $("#mberPassword").focus();
+	                return false;
+	            }
+	            
+	            if(pw.search(/₩s/) != -1){
+	                alert("비밀번호는 공백없이 입력하여 주십시요.");
+	                $("#mberPassword").val("");
+	                $("#mberPassword").focus();
+	                return false;
+	            }
+	            
+	            // 비밀번호의 특수문자만 남겨 해당특수문자를 비교한다.
+	            var tmp = pw.replace(/[A-za-z]/g,"");
+	            tmp = tmp.replace(/[0-9]/g,"");
+	            
+	            if(tmp != ""){
+	                for (var i = 0; i < tmp.length; i++) {
+	                    if(tmp.charAt(i) == "!"){
+	                    }else if(tmp.charAt(i) == "@"){
+	                    }else if(tmp.charAt(i) == "#"){
+	                    }else if(tmp.charAt(i) == "$"){
+	                    }else if(tmp.charAt(i) == "^"){
+	                    }else if(tmp.charAt(i) == "&"){
+	                    }else if(tmp.charAt(i) == "*"){
+	                    }else{
+	                        alert("비밀번호는 특수문자는 !@#$^&*만 입력하여 주십시오.");
+	                        $("#mberPassword").val("");
+	                        $("#mberPassword").focus();
+	                        return false;
+	                    }
+	                } 
+	            }
+	            if(!spe.test(pw)){
+	                alert("비밀번호는 영문(대소문자구분), 숫자, 특수문자(!@#$^&*만 허용)를 혼용하여 9~16자를 입력하여 주십시오.");
+	                $("#mberPassword").val("");
+	                $("#mberPassword").focus();
+	                return false;
+	            }
+	        }
+	     }
+		
+		function fnValidPssrdCheck(){
+	         if($("#mberPassword").val() != "" && $("#passwordChk").val() != ""){
+	             if($("#mberPassword").val() != $("#passwordChk").val()) {
+	                 alert("비밀번호와 비밀번호 확인에 입력한 비밀번호가 일치하지 않습니다.");
+	                 $("#password_msg").prop("hidden", false);
+	                 $("#passwordChk").val("");
+	                 $("#passwordChk").focus();
+	                 return false;            
+	             }
+	             $("#password_msg").prop("hidden", true);    
+	         }
+	     }
+
+		function fnChkPhone() {
+			if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
+				alert('전화번호를 입력해주세요.');
+				return false;
+			}
+			var phonNum = $('#telNm1').val() + $('#telNm2').val()+ $('#telNm3').val();
+			console.log(phonNum);
+		    
+			$.ajax({
+				type : "post",
+				url : '/sms/sendSms.do',
+				data : {
+					phonNum: phonNum
+				}
+			}).done(function(res) {
+				alert("인증번호가 전송되었습니다.");
+				$('#phonChkRequest').text('완료');
+				$('#phonChkRequest').attr('disabled', true);
+				
+				$('#phonChkBtn').click(function(){
+                    if($.trim(res) == $('#phonChk').val()){
+                        alert('휴대폰 인증이 정상적으로 완료되었습니다.');
+                        $('#phonChk').text('완료');
+        				$('#phonChk').attr('disabled', true);
+        				$('#telNoCheck').val(phonNum);
+                    }else{
+                    	alert('인증번호가 올바르지 않습니다!');
+                    }
+                })
+			}).fail(function() {
+				alert('실패 하였습니다.');
+			})
+
+		}
+		
+		function fnValIdCheck(){
+			if($("#mberId").val() != $("#mberIdCheck").val()) {
+	            return false;            
+	        }
+	        return true;
+		}
+		function fnValTelNoCheck(no){
+			if(no != $("#telNoCheck").val()) {
+	            return false;            
+	        }
+	        return true;
+		}
+		
+		function fnEmailCheck(email) {
+
+			var reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+			
+			if(!reg.test(email)){
+				alert("이메일 형식이 올바르지 않습니다.")
+			}
+			
+			return 
+
+		}
+		
+		function fnSingUp(){
+			
+			if(!confirm('입력하신 정보로 회원가입 하시겠습니까?')){
+				return false;
+			}
+			
+				
+			if(!$('#mberId').val() || $('#mberbId').val()==''){
+				alert('아이디를 입력해주세요.');
+				$('#mberbId').focus();
+				return false;
+			}
+			if(!fnValIdCheck()){
+				alert("아이디 중복확인을 진행하시기 바랍니다.");
+		        $("#mberId").focus();
+		        return false;
+			};
+			
+			if(!$('#mberPassword').val() || $('#mberPassword').val()==''){
+				alert('비밀번호를 입력해주세요.');
+				$('#mberPassword').focus();
+				return false;
+			}else{
+				if($('#mberPassword').val() != $('#passwordChk').val() ){
+					alert('비밀번호가 일치하지 않습니다.')
+					$('#passwordChk').focus();
+					return false;
+				}
+			}
+			
+			if(!$('#mberName').val() || $('#mberName').val()==''){
+				alert('이름을 입력해주세요.');
+				$('#mberName').focus();
+				return false;
+			}
+			
+			if($("#selYear option:selected").val() == '' || $("#selMon option:selected").val() == '' || $("#selDay option:selected").val() == ''){
+				alert('생년월일을 입력해주세요.');
+				$('#selYear').focus();
+				return false;
+			}
+			$('#mberBrthd').val($("#selYear option:selected").val()+$("#selMon option:selected").val()+$("#selDay option:selected").val())
+			
+			if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
+				alert('전화번호를 입력해주세요.');
+				$('#telNm1').focus();
+				return false;
+			}
+			$('#mberTelNo').val($('#telNm1').val() + $('#telNm2').val()+ $('#telNm3').val());
+			
+			if(!fnValTelNoCheck($('#mberTelNo').val())){
+				alert('휴대폰 인증을 진행해주세요.');
+				$('#telNm1').focus();
+				return false;
+			}
+			
+			if(!$('#mberEmail').val() || $('#mberEmail').val()==''){
+				alert('이메일을 입력해주세요.');
+				$('#mberEmail').focus();
+				return false;
+			}
+			
+			fnEmailCheck($('#mberEmail').val());
+			
+			$('#signUpForm').attr('action', '/member/signUpInsert.do');
+			$('#signUpForm').submit();
+		}
+	</script>
 </th:block>
 </html>

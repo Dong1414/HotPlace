@@ -3,5 +3,29 @@
    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
    
 <mapper namespace="com.dylim.hot.member.mapper.MemberMapper">
-<!-- <select id="getImage" parameterType="String" resultType="com.dylim.hot.member.MemberVO"> -->
+	<select id="idCheck" parameterType="String" resultType="int">
+		<![CDATA[
+			SELECT COUNT(id) FROM member WHERE mber_id = #{id}			
+		]]>
+	</select>
+	<insert id="signUpInsert" parameterType="com.dylim.hot.member.MemberVO">
+		<![CDATA[  
+			INSERT INTO member
+			VALUES
+				(
+					null
+					,#{mberId}
+					,#{mberPassword}
+					,#{mberName}
+					,#{mberBrthd}
+					,#{mberTelNo}
+					,#{mberEmail}
+					,"등록자"
+					,now()
+					,"수정자"
+					,now()
+					,"N"
+				)
+		]]>
+	</insert>
 </mapper>

@@ -104,6 +104,7 @@
     box-sizing: border-box;
     border: 1px solid #e5e5e5;
     padding:1.3rem;
+    display: block;
 }
 
 .sign-up-title{
@@ -149,4 +150,30 @@
 
 .plus-padding{
 	padding: 3rem 1.6rem
+}
+
+.sign-up-btn{
+    width: 13rem;
+    height: 4rem;
+    margin-right: 1rem;
+}
+
+.cancel-btn {
+    width: 7rem;
+    height: 4rem;
+}
+
+.id-chk-btn{
+    height: 4rem;
+    width: 15rem;
+    border: 1px solid skyblue;
+    background-color: rgba(0,0,0,0);
+    cursor: pointer;
+}
+.id-chk-result-msg{
+	display:flex;
+	align-items:center;
+}
+.id-chk-result-msg > ul{
+	margin-left:2rem;
 }

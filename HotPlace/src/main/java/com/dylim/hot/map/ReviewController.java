@@ -27,7 +27,7 @@ public class ReviewController {
 	@Autowired
 	private ReviewService seviewService;
 	@Autowired
-	private FileUtilService fileUtilService;
+	private FileUtilService fileUtilService;	
 
 	@GetMapping("/")
 	public String main2() throws Exception{        
