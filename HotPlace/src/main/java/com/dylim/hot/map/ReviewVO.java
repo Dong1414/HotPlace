@@ -16,6 +16,10 @@ public class ReviewVO {
     String attachFileMasterId = ""; //파일 마스터 아이디
     String attachFileId = ""; //파일 마스터 아이디
     
+    int pageNo = 1;
+    int startPage = 0;
+    int endPage = 0;
+    
 	public String getId() {
 		return id;
 	}
@@ -127,13 +131,38 @@ public class ReviewVO {
 	public void setAttachFileId(String attachFileId) {
 		this.attachFileId = attachFileId;
 	}
+	
+	public int getPageNo() {
+		return pageNo;
+	}
+
+	public void setPageNo(int pageNo) {
+		this.pageNo = pageNo;
+	}
+	
+
+	public int getStartPage() {
+		return startPage;
+	}
+
+	public void setStartPage(int startPage) {
+		this.startPage = startPage;
+	}
+
+	public int getEndPage() {
+		return endPage;
+	}
+
+	public void setEndPage(int endPage) {
+		this.endPage = endPage;
+	}
 
 	@Override
 	public String toString() {
 		return "ReviewVO [id=" + id + ", title=" + title + ", address=" + address + ", rating=" + rating + ", review="
 				+ review + ", lat=" + lat + ", lng=" + lng + ", visitDt=" + visitDt + ", registDt=" + registDt
 				+ ", updateDt=" + updateDt + ", registId=" + registId + ", updatId=" + updatId + ", attachFileMasterId="
-				+ attachFileMasterId + "]";
+				+ attachFileMasterId + ", attachFileId=" + attachFileId + ", pageNo=" + pageNo + "]";
 	}
 	
 	

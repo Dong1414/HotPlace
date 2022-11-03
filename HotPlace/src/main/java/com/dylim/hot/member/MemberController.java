@@ -82,14 +82,12 @@ public class MemberController {
       	return mv; 
       }
   	
-  	@PostMapping("/logout")
+  	@PostMapping("/logout.do")
   	public String logout(HttpServletRequest request) {
-
   	    HttpSession session = request.getSession(false);
   	    if (session != null) {
   	        session.invalidate();   // 세션 날림
   	    }
-
   	    return "redirect:/";
   	}
 }

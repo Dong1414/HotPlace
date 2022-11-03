@@ -101,3 +101,55 @@ header{
     color: black;
     -webkit-appearance: none;
 }
+
+.my-menu-on-btn{
+	display: inline-block;
+    vertical-align: top;
+}
+
+.my-menu{
+	z-index: 20;
+    left: auto;
+    right: 50px;
+    display: none;
+    position: absolute;
+    top: 66px;
+    /* left: -110px; */
+    width: 280px;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #4e4e4e;
+}
+
+.my-menu-area{
+	margin: 0 auto;
+}
+
+.my-menu-area li a{
+    position: relative;
+    display: block;
+    font-weight: 400;
+    font-size: 15px;
+    padding: 15px;
+    line-height: 100%;
+    background-color: #f2f5f8;
+    margin:0.5rem;
+}
+
+.my-menu-area .close-btn {
+	position: absolute;
+    top: 1.6rem;
+    right: 2.5rem;
+    width: 3rem;
+    height: 3rem;
+    background: url(/images/myMenuClose.png);
+    border: none;
+}
+
+.menu-title{
+	display: block;
+    margin-bottom: 0.7rem;
+    margin-left: 0.5rem;
+    font-size: 2rem;
+    text-align: left;
+}

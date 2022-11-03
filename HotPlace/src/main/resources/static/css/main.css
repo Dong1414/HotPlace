@@ -161,3 +161,7 @@ input, textarea, select, button, table, select{
 .mb1{
 	margin: 1rem;
 }
+
+button{
+	cursor: pointer;
+}

@@ -55,6 +55,7 @@ var map = new naver.maps.Map('map', mapOptions);
 //커서용 마커
 var cuserMarker = new naver.maps.Marker({	    	
     map: map,
+    position: new naver.maps.LatLng(36.2290986, 128.0612096), 
 });	
 
 var markers = new Array(); // 마커 정보를 담는 배열
@@ -72,7 +73,8 @@ if(areaArr.length > 0){
 	        	content: '<img src="/file/getImage.do?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
 	            size: new naver.maps.Size(50, 52),
 	        },
-	        seq: areaArr[i].id
+	        seq: areaArr[i].id,
+	        animation: naver.maps.Animation.DROP
 	    });
 	    markers.push(marker); // 생성한 마커를 배열에 담는다.
 	}
@@ -80,48 +82,6 @@ if(areaArr.length > 0){
 for (var i=0, ii=markers.length; i<ii; i++) {
 	naver.maps.Event.addListener(markers[i], 'click', getClickHandler(markers[i].position._lat, markers[i].position._lng));// 클릭한 마커 핸들러 
 	
-}
-
-function getClickHandler(lat, lng) {
-	
-    return function(e) {  // 마커를 클릭하는 부분
-    	$.ajax({
-            type: "get",
-            url: '/map/getReview.do?lat=' + encodeURI(lat) + "&lng=" + encodeURI(lng),
-            cache: false,
-            contentType: false,
-            processData: false,        
-            dataType: "json"
-        }).done(function (resultMap) {
-        	mode = 2;
-        	fnViewClear(mode);
-        	$('.inser-area-button').css('display', 'none');
-        	$('.bottom-bar-wrapper').css('display', 'none');
-        	$('.side-bar-wrapper').css('display', 'flex');
-        	
-        	$("#id").val(resultMap.result.id);
-    		$("#title").text(resultMap.result.title);
-    		$("#review").text(resultMap.result.review);
-    		$("#addressInfo").text(resultMap.result.address);
-    		$('input:radio[name="rate"][value="'+resultMap.result.rating+'"]').prop('checked', true);
-    		$('.swiper-wrapper').children().remove();
-    		if(resultMap.result.attachFileMasterId == '' || resultMap.result.attachFileMasterId == null){
-    			$('.image-area').css('display', 'none');
-    		}else{
-    			$('.image-area').css('display', 'block');
-    			for(var i = 0; i < resultMap.files.length; i++){
-    				$('.swiper-wrapper').append('<li class="swiper-slide"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li>');	
-    			}
-    		}
-    		
-        	for(var i = 0; i < resultMap.resultCnt.length; i++){
-        		//resultMap.resultCnt[i].id
-        	}
-        })
-        .fail(function() {
-        	alert('등록 실패 하였습니다.');
-        })
-	}
 }
 
 
@@ -178,7 +138,8 @@ function fnInitialization(data){
 		        	content: '<img src="/file/getImage.do?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
 		            size: new naver.maps.Size(50, 52),
 		        },
-		        seq: areaArr[i].id
+		        seq: areaArr[i].id,
+		        animation: naver.maps.Animation.DROP
 		    });
 			 markers.push(marker); // 생성한 마커를 배열에 담는다.
 		}
@@ -198,6 +159,8 @@ naver.maps.Event.addListener(map, 'click', function(e) {
 	fnViewClear(mode);
 	
 	cuserMarker.setPosition(e.latlng);
+	console.log(e.coord._lat);
+	console.log(e.coord._lng);
     naver.maps.Service.reverseGeocode({
         location: new naver.maps.LatLng(e.coord._lat, e.coord._lng),
     }, function(status, response) {
@@ -207,19 +170,57 @@ naver.maps.Event.addListener(map, 'click', function(e) {
 
         var result = response.result, // 검색 결과의 컨테이너
          	items = result.items; // 검색 결과의 배열
-         	
-        if(items.length < 1){
-        	$('#insertForm #addressInfo').val(items[1].address); //도로명주
-        }else if(items.length == 1){
-        	$('#insertForm #addressInfo').val(items[0].address); //지번주소
-        }else{
-        	
+        console.log(items);
+        if(items.length > 0){
+        	if(items.length > 1){
+            	if(items)
+            	$('#insertForm #addressInfo').val(items[1].address); //도로명주
+            }else{
+            	$('#insertForm #addressInfo').val(items[0].address); //지번주소
+            }
+        }
+        else{
+        	alert('해당 위치는 위치정보가 제공되지 않습니다.\n위치정보를 직접 입력해주세요.')
         }
         
     });
     $('#insertForm #lat').val(e.coord._lat);
     $('#insertForm #lng').val(e.coord._lng);
 });
+
+naver.maps.Event.addListener(map, 'idle', function() {
+    updateMarkers(map, markers);
+});
+
+function updateMarkers(map, markers) {
+
+    var mapBounds = map.getBounds();
+    var marker, position;
+
+    for (var i = 0; i < markers.length; i++) {
+
+        marker = markers[i]
+        position = marker.getPosition();
+
+        if (mapBounds.hasLatLng(position)) {        	
+            showMarker(map, marker);
+        } else {
+            hideMarker(map, marker);
+        }
+    }
+}
+
+function showMarker(map, marker) {
+
+    if (marker.getMap()) return;
+    marker.setMap(map);
+}
+
+function hideMarker(map, marker) {
+
+    if (!marker.getMap()) return;
+    marker.setMap(null);
+}
 
 function fnModifyReview(){
 	$('#detailForm').attr("action", '/map/updateReview.do');
@@ -333,6 +334,116 @@ $(document).ready(function(){
     });
 });
 
+function getClickHandler(lat, lng) {
+	
+    return function(e) {  // 마커를 클릭하는 부분
+    	$.ajax({
+            type: "get",
+            url: '/map/getReview.do?lat=' + encodeURI(lat) + "&lng=" + encodeURI(lng),
+            cache: false,
+            contentType: false,
+            processData: false,        
+            dataType: "json"
+        }).done(function (resultMap) {
+        	mode = 2;
+        	fnViewClear(mode);
+        	$('.inser-area-button').css('display', 'none');
+        	$('.bottom-bar-wrapper').css('display', 'none');
+        	$('.side-bar-wrapper').css('display', 'flex');
+        	
+        	$("#id").val(resultMap.result.id);
+    		$("#title").text(resultMap.result.title);
+    		$("#review").text(resultMap.result.review);
+    		$("#addressInfo").text(resultMap.result.address);
+    		$('input:radio[name="rate"][value="'+resultMap.result.rating+'"]').prop('checked', true);
+    		$('.swiper-wrapper').children().remove();
+    		if(resultMap.result.attachFileMasterId == '' || resultMap.result.attachFileMasterId == null){
+    			$('.image-area').css('display', 'none');
+    		}else{
+    			$('.image-area').css('display', 'block');
+    			for(var i = 0; i < resultMap.files.length; i++){
+    				$('.swiper-wrapper').append('<li class="swiper-slide"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li>');	
+    			}
+    		}
+    		if(resultMap.resultCnt > 1){
+    			var page = resultMap.result.pageNo;
+                var startpage = resultMap.startpage;
+                var endpage = resultMap.endpage;
+                var htmlStr = ""
+    			for (var num=startpage; num<=endpage; num++) {
+                    if (num == page) {
+                    	htmlStr += '<a href="#" style="font-weight:bold;" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                    } else {
+                    	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                    }
+                 }
+                if(resultMap.resultCnt > endpage){
+                	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;" class="page-btn"><i class="fas fa-angle-right"></a>';
+                }
+                $("#paginate").html(htmlStr);
+    		}else{
+    			$("#paginate").html('');
+    		}
+        })
+        .fail(function() {
+        	alert('조회 실패 하였습니다.');
+        })
+	}
+}
+
+function getReviewByPageNo(lat, lng, pageNo){
+	$.ajax({
+        type: "get",
+        url: '/map/getReview.do?pageNo=' + pageNo + '&lat=' + encodeURI(lat) + '&lng=' + encodeURI(lng),
+        cache: false,
+        contentType: false,
+        processData: false,        
+        dataType: "json"
+    }).done(function (resultMap) {
+    	mode = 2;
+    	fnViewClear(mode);
+    	$('.inser-area-button').css('display', 'none');
+    	$('.bottom-bar-wrapper').css('display', 'none');
+    	$('.side-bar-wrapper').css('display', 'flex');
+    	
+    	$("#id").val(resultMap.result.id);
+		$("#title").text(resultMap.result.title);
+		$("#review").text(resultMap.result.review);
+		$("#addressInfo").text(resultMap.result.address);
+		$('input:radio[name="rate"][value="'+resultMap.result.rating+'"]').prop('checked', true);
+		$('.swiper-wrapper').children().remove();
+		if(resultMap.result.attachFileMasterId == '' || resultMap.result.attachFileMasterId == null){
+			$('.image-area').css('display', 'none');
+		}else{
+			$('.image-area').css('display', 'block');
+			for(var i = 0; i < resultMap.files.length; i++){
+				$('.swiper-wrapper').append('<li class="swiper-slide"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li>');	
+			}
+		}
+		if(resultMap.resultCnt > 1){
+			var page = resultMap.result.pageNo;
+            var startpage = resultMap.startpage;
+            var endpage = resultMap.endpage;
+            var htmlStr = ""
+			for (var num=startpage; num<=endpage; num++) {
+                if (num == page) {
+                	htmlStr += '<a href="#" style="font-weight:bold;" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                } else {
+                	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                }
+             }
+            if(resultMap.resultCnt > endpage){
+            	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;" class="page-btn"><i class="fas fa-angle-right"></a>';
+            }
+            $("#paginate").html(htmlStr);
+		}else{
+			$("#paginate").html('');
+		}
+    })
+    .fail(function() {
+    	alert('조 실패 하였습니다.');
+    })
+}
 </script>
 </th:block>
 </html>

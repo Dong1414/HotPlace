@@ -13,13 +13,15 @@ public interface ReviewMapper {
 
 	List<ReviewVO> getReviews() throws Exception;
 
-	ReviewVO getReview(double lat, double lng) throws Exception;
+	ReviewVO getReview(ReviewVO reviewVO) throws Exception;
 
-	List<ReviewVO> getReviewCnt(double lat, double lng) throws Exception;
+	int getReviewCnt(ReviewVO reviewVO) throws Exception;
 
 	ReviewVO getToIdReview(String id) throws Exception;
 
 	void modifyReview(ReviewVO reviewVO) throws Exception;
 
 	void deleteReview(ReviewVO reviewVO) throws Exception;
+
+	List<ReviewVO> getReviewPaging(ReviewVO reviewVO) throws Exception;
 }

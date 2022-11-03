@@ -18,7 +18,24 @@
   			</span>
   			<span>
   				<button th:if="${session.loginMember == null}" class="login-btn" onclick="location.href='/login/loginView.do'">로그인</button>
-  				<button th:if="${session.loginMember != null}" th:text="${session.loginMember.mberName}"class="login-btn" onclick=""></button>
+  				<th:block th:if="${session.loginMember != null}">
+  					<button th:text="${session.loginMember.mberName}+님" class="login-btn my-menu-on-btn" onclick="fnOnMyMenu();"></button>
+  					<div class="my-menu">
+  						<div class="my-menu-area">
+  							<strong class="menu-title">Menu</strong>
+  							<ul>
+  								<li>
+  									<form id="logoutForm" action="/logout.do" method="post">
+  										<a href="#" onclick="$('#logoutForm').submit();">로그아웃</a>
+  									</form>
+  								</li>
+  								<li><a href="/">마이페이지</a></li>  								
+  								<li><a href="/">회원탈퇴</a></li>
+  							</ul>
+  							<button class="close-btn" onclick="fnOffMyMenu();"></button>
+  						</div>
+  					</div>
+  				</th:block>
   			</span>
   		</div>
   	</div>

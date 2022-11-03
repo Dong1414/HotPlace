@@ -30,72 +30,72 @@
 	<select id="getReviews" resultType="com.dylim.hot.map.ReviewVO">
 		<![CDATA[     	
 			SELECT 
-				id  
-			    ,title
-			    ,review
-			    ,address
-			    ,rating
-			    ,lat
-			    ,lng
-			    ,visit_dt as visitDt
-			    ,regist_id as registId
-			    ,regist_dt as registDt
-				,attach_file_master_id as attachFileMasterId
-				,(select attach_file_id from attach_file where tb.attach_file_master_id = attach_file_master_id and del_yn ='N' limit 1) as attachFileId
+				ANY_VALUE(id) as id  
+			    ,ANY_VALUE(title) as title
+			    ,ANY_VALUE(review) as review
+			    ,ANY_VALUE(address) as address
+			    ,ANY_VALUE(rating) as rating
+			    ,ANY_VALUE(lat) as lat
+			    ,ANY_VALUE(lng) as lng
+			    ,ANY_VALUE(visit_dt) as visitDt
+			    ,ANY_VALUE(regist_id) as registId
+			    ,ANY_VALUE(regist_dt) as registDt
+				,ANY_VALUE(attach_file_master_id) as attachFileMasterId
+				,ANY_VALUE((select attach_file_id from attach_file where tb.attach_file_master_id = attach_file_master_id and del_yn ='N' limit 1)) as attachFileId
 			FROM map_review tb			
-			WHERE del_yn = "N";
+			WHERE del_yn = "N"
+			group by lat,lng
+			;
 		]]>
 	</select>
 	
-	<select id="getReview" resultType="com.dylim.hot.map.ReviewVO">
+	<select id="getReview" resultType="com.dylim.hot.map.ReviewVO" parameterType="com.dylim.hot.map.ReviewVO">
 		<![CDATA[     	
 			SELECT 
-				id  
-			    ,title
-			    ,review
-			    ,address
-			    ,rating
-			    ,lat
-			    ,lng
-			    ,visit_dt as visitDt
-			    ,regist_id as registId
-			    ,regist_dt as registDt
-				,attach_file_master_id as attachFileMasterId
+				tb2.*
+			FROM
+				(
+					SELECT
+						@ROWNUM := @ROWNUM + 1 as pageNo
+						,id  
+					    ,title
+					    ,review
+					    ,address
+					    ,rating
+					    ,lat
+					    ,lng
+					    ,visit_dt as visitDt
+					    ,regist_id as registId
+					    ,regist_dt as registDt
+						,attach_file_master_id as attachFileMasterId
+					FROM map_review tb,(SELECT @ROWNUM:= 0) RN_TB				
+					WHERE lat = #{lat} and lng = #{lng}
+					AND del_yn = "N"					
+					ORDER BY registDt asc
+				)tb2
+			WHERE pageNo = #{pageNo}
+		]]>
+	</select>
+	
+	<select id="getReviewCnt" resultType="int" parameterType="com.dylim.hot.map.ReviewVO">
+		<![CDATA[     	
+			SELECT 
+				COUNT(id)  
 			FROM map_review tb			
 			WHERE lat = #{lat} and lng = #{lng}
 			AND del_yn = "N"
-			ORDER BY registDt asc
-			limit 1
 		]]>
 	</select>
 	
-	<select id="getReviewCnt" resultType="com.dylim.hot.map.ReviewVO">
+	<select id="getReviewPaging" resultType="com.dylim.hot.map.ReviewVO" parameterType="com.dylim.hot.map.ReviewVO">
 		<![CDATA[     	
 			SELECT 
-				id  
-			FROM map_review tb			
+				id
+			FROM map_review tb				
 			WHERE lat = #{lat} and lng = #{lng}
 			AND del_yn = "N"
-		]]>
-	</select>
-	
-	<select id="getToIdReview" resultType="com.dylim.hot.map.ReviewVO">
-		<![CDATA[     	
-			SELECT 
-				id  
-			    ,title
-			    ,review
-			    ,address
-			    ,rating
-			    ,lat
-			    ,lng
-			    ,visit_dt as visitDt
-			    ,regist_id as registId
-			    ,regist_dt as registDt
-				,attach_file_master_id as attachFileMasterId
-			FROM map_review tb			
-			WHERE id = #{id} 
-			AND del_yn = "N"
+			ORDER BY regist_dt asc
+			limit #{startPage},#{endPage}
 		]]>
 	</select>
 	

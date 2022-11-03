@@ -25,12 +25,12 @@ public class ReviewServiceImpl implements ReviewService {
 		return reviewMapper.getReviews();
 	}
 	
-	public ReviewVO getReview(double lat, double lng) throws Exception {
-		return reviewMapper.getReview(lat, lng);
+	public ReviewVO getReview(ReviewVO reviewVO) throws Exception {
+		return reviewMapper.getReview(reviewVO);
 	}
 	
-	public List<ReviewVO> getReviewCnt(double lat, double lng) throws Exception{
-		return reviewMapper.getReviewCnt(lat, lng);
+	public int getReviewCnt(ReviewVO reviewVO) throws Exception{
+		return reviewMapper.getReviewCnt(reviewVO);
 	};
 	
 	public ReviewVO getReview(String id) throws Exception{
@@ -43,5 +43,9 @@ public class ReviewServiceImpl implements ReviewService {
 	
 	public void deleteReview(ReviewVO reviewVO) throws Exception{
 		reviewMapper.deleteReview(reviewVO);
-	};	
+	};
+	
+	public List<ReviewVO> getReviewPaging(ReviewVO reviewVO) throws Exception{
+		return reviewMapper.getReviewPaging(reviewVO);
+	};
 }

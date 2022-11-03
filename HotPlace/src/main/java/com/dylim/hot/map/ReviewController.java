@@ -110,19 +110,54 @@ public class ReviewController {
     @ResponseBody
     public Map<String, Object> getReview(HttpServletRequest request) throws Exception{
     	
-    	ReviewVO result = seviewService.getReview(Double.parseDouble(request.getParameter("lat")), Double.parseDouble(request.getParameter("lng")));
-    	List<ReviewVO> resultCnt = seviewService.getReviewCnt(Double.parseDouble(request.getParameter("lat")), Double.parseDouble(request.getParameter("lng")));
+    	ReviewVO reviewVO = new ReviewVO();
+    	reviewVO.setLat(request.getParameter("lat"));
+    	reviewVO.setLng(request.getParameter("lng"));
+    	if(request.getParameter("pageNo") != null && request.getParameter("pageNo") != "") {
+    		reviewVO.setPageNo(Integer.parseInt(request.getParameter("pageNo")));
+    	}
+    	reviewVO.setPageNo(reviewVO.getPageNo());
+    	
+    	ReviewVO result = seviewService.getReview(reviewVO); //리뷰 상세 데이터
+    	int resultCnt = seviewService.getReviewCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
+    	
+    	int limit = 5;
+    	
+    	// 총 페이지수
+        int maxpage = resultCnt; 
+
+        // 시작 페이지수
+        int startpage = ((reviewVO.getPageNo() - 1) / 5) * 5 + 1;
+
+        // 마지막 페이지수
+        int endpage = startpage + 5 - 1;
+
+        if (endpage > maxpage) endpage = maxpage;
+            
+        reviewVO.setStartPage(startpage);
+        reviewVO.setEndPage(endpage);
+        System.out.println(reviewVO.getPageNo());
+        System.out.println(startpage);
+        System.out.println(endpage);
+
+    	List<ReviewVO> resultPaging = seviewService.getReviewPaging(reviewVO); //리뷰 데이터 페이징 넘버
+    	
+    	System.out.println(result.toString());
+    	System.out.println(resultPaging.toString());
     	
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	if(Strings.isNotEmpty(result.getAttachFileMasterId())) {
     		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
     		resultMap.put("files", files);
     	}
-    	
+    	resultMap.put("resultPaging", resultPaging);
+    	resultMap.put("resultCnt", resultCnt);
 		resultMap.put("result", result);
-		resultMap.put("resultCnt", resultCnt);
+		resultMap.put("startpage", startpage);
+		resultMap.put("endpage", endpage);
 		
     	
     	return resultMap;
     }  
+    
 }
