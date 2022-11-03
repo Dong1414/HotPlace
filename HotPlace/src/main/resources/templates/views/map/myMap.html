@@ -8,6 +8,7 @@
 <script src="https://openapi.map.naver.com/openapi/v3/maps.js?ncpClientId=7u0vnvduxe"></script>
 
 <script type="text/javascript" src="https://openapi.map.naver.com/openapi/v3/maps.js?clientId=7u0vnvduxe&submodules=geocoder"></script>
+<script th:src="@{/js/markerClustering.js}"></script>
 <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
 <link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
 <!-- swiper jQuery -->
@@ -334,6 +335,7 @@ $(document).ready(function(){
     });
 });
 
+
 function getClickHandler(lat, lng) {
 	
     return function(e) {  // 마커를 클릭하는 부분
@@ -444,6 +446,46 @@ function getReviewByPageNo(lat, lng, pageNo){
     	alert('조 실패 하였습니다.');
     })
 }
+
+var htmlMarker1 = {
+        content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-1.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20)
+    },
+    htmlMarker2 = {
+        content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-2.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20)
+    },
+    htmlMarker3 = {
+        content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-3.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20)
+    },
+    htmlMarker4 = {
+        content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-4.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20)
+    },
+    htmlMarker5 = {
+        content: '<div style="cursor:pointer;width:40px;height:40px;line-height:42px;font-size:10px;color:white;text-align:center;font-weight:bold;background:url(/images/cluster-marker-5.png);background-size:contain;"></div>',
+        size: N.Size(40, 40),
+        anchor: N.Point(20, 20)
+    };
+
+var markerClustering = new MarkerClustering({
+    minClusterSize: 2,
+    maxZoom: 13,
+    map: map,
+    markers: markers,
+    disableClickZoom: false,
+    gridSize: 120,
+    icons: [htmlMarker1, htmlMarker2, htmlMarker3, htmlMarker4, htmlMarker5],
+    indexGenerator: [10, 100, 200, 500, 1000],
+    stylingFunction: function(clusterMarker, count) {
+        $(clusterMarker.getElement()).find('div:first-child').text(count);
+    }
+});
 </script>
 </th:block>
 </html>
