@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +15,16 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dylim.hot.file.FileVO;
 import com.dylim.hot.file.service.FileUtilService;
 import com.dylim.hot.map.service.ReviewService;
+import com.dylim.hot.member.MemberVO;
 
 @Controller
 public class ReviewController {
@@ -67,8 +72,13 @@ public class ReviewController {
     
     //등록된 리뷰 불러오기
     @GetMapping("/map/getReviews.do")
-    public List<ReviewVO> getReviews() throws Exception{        
-    	return seviewService.getReviews();
+    public List<ReviewVO> getReviews() throws Exception{
+    	HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
+    	//HttpServletRequest request = servletContainer.getRequest();
+    	HttpSession session = request.getSession();
+    	MemberVO loginVO = (MemberVO) session.getAttribute("loginMember");
+    	
+    	return seviewService.getReviews(loginVO.getMberId());
     }    
     
     //수정 페이지

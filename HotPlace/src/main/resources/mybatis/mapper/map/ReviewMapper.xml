@@ -27,7 +27,7 @@
 		]]>
 	</insert>
 	
-	<select id="getReviews" resultType="com.dylim.hot.map.ReviewVO">
+	<select id="getReviews" parameterType="string" resultType="com.dylim.hot.map.ReviewVO">
 		<![CDATA[     	
 			SELECT 
 				ANY_VALUE(id) as id  
@@ -44,6 +44,7 @@
 				,ANY_VALUE((select attach_file_id from attach_file where tb.attach_file_master_id = attach_file_master_id and del_yn ='N' limit 1)) as attachFileId
 			FROM map_review tb			
 			WHERE del_yn = "N"
+			AND regist_id = #{mberId}
 			group by lat,lng
 			;
 		]]>
@@ -128,5 +129,25 @@
 				id = #{id}
 		]]>
 	</update>	
+	
+	<select id="getToIdReview" resultType="com.dylim.hot.map.ReviewVO">
+		<![CDATA[     	
+			SELECT 
+				id  
+			    ,title
+			    ,review
+			    ,address
+			    ,rating
+			    ,lat
+			    ,lng
+			    ,visit_dt as visitDt
+			    ,regist_id as registId
+			    ,regist_dt as registDt
+				,attach_file_master_id as attachFileMasterId
+			FROM map_review tb			
+			WHERE id = #{id} 
+			AND del_yn = "N"
+		]]>
+	</select>
 	
 </mapper>

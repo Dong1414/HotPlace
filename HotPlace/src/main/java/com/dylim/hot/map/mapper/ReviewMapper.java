@@ -11,7 +11,7 @@ public interface ReviewMapper {
 	
 	void saveReview(ReviewVO reviewVO) throws Exception;
 
-	List<ReviewVO> getReviews() throws Exception;
+	List<ReviewVO> getReviews(String mberId) throws Exception;
 
 	ReviewVO getReview(ReviewVO reviewVO) throws Exception;
 

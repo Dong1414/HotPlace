@@ -45,6 +45,10 @@ a {
 	color: black;
 }
 
+button{
+	cursor: pointer;
+}
+
 .none{
 	display:none;
 }
@@ -162,6 +166,19 @@ input, textarea, select, button, table, select{
 	margin: 1rem;
 }
 
-button{
-	cursor: pointer;
+.d-flex{
+	display:flex;
+}
+
+.p-relative{
+	position:relative;
+}
+.p12{
+	padding: 12px;
+}
+.justify-con-end{
+	justify-content: end;
+}
+.mr1{
+	margin-right:1rem;
 }

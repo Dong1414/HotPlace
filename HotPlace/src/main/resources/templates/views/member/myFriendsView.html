@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<form id="signUpForm" method="post">
+	<input type="hidden" id="mberIdCheck"/>
+	<input type="hidden" id="telNoCheck"/>
+	<section class="form-wrap">
+		<div class="form-view-area plus-padding">
+			<div class="form-area">
+				<div class="sign-up-area">
+					<div class="sign-up-title">
+						<h1>내 친구</h1>
+					</div>
+					<div class="w100 d-flex justify-con-end">
+						<div class="mr1">
+							<input class="search-box" type="text" id="searchId" name="searchId" placeholder="아이디를 검색해주세요."/>
+						</div>
+						<div>
+							<button class="search-btn"type="submit">검색</button>
+						</div>
+					</div>
+					<h3>요청목록</h3>
+					<div class="request-area">
+						<div>	
+							<div class="request-box-size" >
+								<div class="w100">
+									<div class="d-flex p-relative">
+										<div class="request-profile-box">
+											<div class="w100 p-relative">
+												<img class="request-profile-img" src="/images/noImage.png"/>
+											</div>
+											<div class="p12">
+												<div class="friend-add-box">
+													<div class="friend-add-btn">
+														<p>수락</p>
+													</div>
+												</div>
+												<div class="friend-no-box">
+													<div class="friend-no-btn">
+														<p>거절</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<h3>내 친구</h3>
+					<div class="request-area">
+						<div>	
+							<div class="request-box-size" >
+								<div class="w100">
+									<div class="d-flex p-relative">
+										<div class="request-profile-box">
+											<div class="w100 p-relative">
+												<img class="request-profile-img" src="/images/noImage.png"/>
+											</div>
+											<div class="p12">
+												<div class="friend-add-box">
+													<div class="friend-add-btn">
+														<p>지도보기</p>
+													</div>
+												</div>
+												<div class="friend-no-box">
+													<div class="friend-no-btn">
+														<p>끊기</p>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	</form>
+	<script th:inline="javascript">
+	</script>
+</th:block>
+</html>

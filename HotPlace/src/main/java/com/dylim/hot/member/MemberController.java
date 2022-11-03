@@ -90,4 +90,18 @@ public class MemberController {
   	    }
   	    return "redirect:/";
   	}
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+  	@GetMapping("/member/myFriends.do")
+  	public ModelAndView myFriends(ModelAndView mv, HttpServletRequest request) {
+  	    HttpSession session = request.getSession(false);
+  	    if (session == null) {
+  	    	mv.setViewName("redirect:/");
+  	        return mv;
+  	    }
+  	  String stg = passwordEncoder.encode("1");
+  	  System.out.println(stg);
+  	    mv.setViewName("views/member/myFriendsView");
+  	    return mv;
+  	}
 }
