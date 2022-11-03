@@ -13,7 +13,7 @@
   		<div class="menu-right-area">
   			<span>
   				<span class="search-input-box">
-  					<input class="search-keyword" type="text" id="searchKwd" placeholder="주소를 검색해주세요."/>
+  					<input class="search-keyword" type="text" id="searchKwd" placeholder="주소를 검색해주세요." onKeypress="javascript:if(event.keyCode==13) {searchAddressToCoordinate()}" />
   				</span>
   			</span>
   			<span>
