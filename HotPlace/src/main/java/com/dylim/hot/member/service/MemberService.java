@@ -13,5 +13,13 @@ public interface MemberService {
 	boolean idCheck(String id) throws Exception;
 
 	MemberVO loadUserByUserId(MemberVO memberVO) throws Exception;
-	
+
+	MemberVO searchById(MemberVO memberVO) throws Exception;
+
+	String friendRequest(String mberFirstId, String mberSecondId) throws Exception;
+
+	List<MemberVO> friendRequestList(String loginId) throws Exception;
+
+	String friendAccept(String loginId, String mberId) throws Exception;
+
 }

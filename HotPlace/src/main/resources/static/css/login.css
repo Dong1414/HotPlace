@@ -198,6 +198,7 @@
 	z-index: 0; 
 	overflow-y: hidden;
 	border: solid 1px;
+	background-color:white;
 }
 
 .request-profile-img{
@@ -271,4 +272,18 @@
     font-weight: 700;
     cursor: pointer;
     
+}
+
+.user-name-box{
+	font-size: 2rem;
+    text-align: center;
+    padding-left: 1.2rem;
+    padding-right: 1.2rem;
+}
+
+.no-search{
+	font-size: 2rem;
+    text-align: center;
+    background-color: antiquewhite;
+    padding: 2rem 0;
 }

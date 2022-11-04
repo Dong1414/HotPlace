@@ -1,5 +1,7 @@
 package com.dylim.hot.member.service;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -41,5 +43,39 @@ public class MemberServiceImpl implements MemberService {
 		}
 		
 		return result;
+	};
+	
+	public MemberVO searchById(MemberVO memberVO) throws Exception{
+		return memberMapper.searchById(memberVO);
+	};
+	
+	public String friendRequest(String mberFirstId, String mberSecondId) throws Exception{
+		//이미 친구사이인지 확인
+		int fChack = memberMapper.friendCheck(mberFirstId,mberSecondId); 
+		if(fChack > 0){
+			return "이미 친구관계인 사용자 입니다.";
+		}
+		
+		//이미 보낸 신청이 있는지 확인
+		int rChack = memberMapper.requestCheck(mberFirstId,mberSecondId);
+		if(rChack > 0) {
+			return "이미 요청으르 보냈거나 상대가 보낸 요청이 있습니다.";
+		}
+		//신청 보내기
+		memberMapper.friendRequest(mberFirstId,mberSecondId);
+		return "요청 보냈습니다.";
+	};
+	
+	public List<MemberVO> friendRequestList(String loginId) throws Exception{
+		return memberMapper.friendRequestList(loginId);
+	};
+	
+	public String friendAccept(String loginId, String mberId) throws Exception{
+		//수락 히스토리 기록
+		memberMapper.friendAcceptHistory(loginId,mberId);
+		//수락 친구 추가
+		memberMapper.friendAccept(loginId,mberId);
+		
+		return "수락되었습니다.";
 	};
 }

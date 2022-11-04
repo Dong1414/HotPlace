@@ -41,4 +41,106 @@
 		]]>
 	</select>
 	
+	<insert id="friendRequest" parameterType="String">
+		<![CDATA[  
+			INSERT INTO member_relationship_history
+			VALUES
+				(
+					null
+					,#{mberFirstId}
+				    ,#{mberSecondId}
+				    ,"1"
+				    ,now()	
+				    ,now()
+				)
+		]]>
+	</insert>
+	
+	<select id="friendCheck" parameterType="String" resultType="int">
+		<![CDATA[  
+			SELECT
+				COUNT(id)
+			FROM
+				 member_relationship
+			WHERE
+				mber_first_id IN(#{mberFirstId}, #{mberSecondId})
+				AND mber_second_id IN(#{mberFirstId}, #{mberSecondId})	 
+		]]>		
+	</select>
+	<select id="requestCheck" parameterType="String" resultType="int">
+		<![CDATA[  
+			SELECT
+				COUNT(id)
+			FROM
+				 member_relationship_history
+			WHERE
+				mber_first_id IN(#{mberFirstId}, #{mberSecondId})
+				AND mber_second_id IN(#{mberFirstId}, #{mberSecondId})	
+				AND relation_type = "1"
+		]]>		
+	</select>
+	
+	<select id="searchById" parameterType="com.dylim.hot.member.MemberVO" resultType="com.dylim.hot.member.MemberVO">
+		<![CDATA[
+			SELECT 
+				t1.mber_id as mberId,
+				t1.mber_name as mberName,
+				t2.relation_type as relationType
+			FROM 
+				member t1
+				LEFT OUTER JOIN member_relationship_history t2
+				ON t2.mber_first_id IN ( #{mberId}, #{loginId} )
+				AND t2.mber_second_id IN ( #{mberId}, #{loginId} ) 
+			WHERE 
+				mber_id = #{mberId} and del_yn = "N";
+		]]>
+	</select>
+	
+	<select id="friendRequestList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
+		<![CDATA[
+			SELECT
+				mber_id as mberId
+			FROM
+				member,
+				(
+					SELECT
+						mber_first_id,
+						mber_second_id		
+					FROM
+						member_relationship_history
+					WHERE
+						mber_second_id = #{loginId}		
+						and relation_type = '1'
+				)tb
+			WHERE 
+				mber_id = tb.mber_first_id
+				AND del_yn = "N"
+		]]>
+	</select>	
+	
+	<update id="friendAcceptHistory" parameterType="String">
+		<![CDATA[
+			update 
+				member_relationship_history
+			set
+				relation_type = '3'
+			where
+				mber_first_id in(#{loginId}, #{mberId})
+				and mber_second_id	in(#{loginId}, #{mberId})
+		]]>
+	</update>
+
+	<insert id="friendAccept" parameterType="String">
+		<![CDATA[
+			insert into 
+				member_relationship
+			value(
+				null,
+				#{mberId},
+				#{loginId},
+				now(),
+				now()
+			)
+		]]>
+	</insert>	
 </mapper>

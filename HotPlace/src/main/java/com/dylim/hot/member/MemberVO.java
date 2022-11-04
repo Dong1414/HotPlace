@@ -29,6 +29,9 @@ public class MemberVO{
 	String delYn="";
 	String mberAuth="";
 	
+	String loginId = "";
+	String relationType = "";
+	
 	public String getMberAuth() {
 		return mberAuth;
 	}
@@ -106,6 +109,20 @@ public class MemberVO{
 	}
 	public void setDelYn(String delYn) {
 		this.delYn = delYn;
+	}
+	
+	public String getLoginId() {
+		return loginId;
+	}
+	public void setLoginId(String loginId) {
+		this.loginId = loginId;
+	}
+	
+	public String getRelationType() {
+		return relationType;
+	}
+	public void setRelationType(String relationType) {
+		this.relationType = relationType;
 	}
 	@Override
 	public String toString() {
