@@ -112,7 +112,7 @@ public class ReviewController {
     	mv.addObject("result", result);
     	mv.setViewName("views/map/reviewModify");
     	return mv;
-    }    
+    }
      
     //수정 
     @PostMapping("/map/updateReview/modifyReview.do")    
