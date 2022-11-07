@@ -1,12 +1,15 @@
 package com.dylim.hot.map;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.groovy.parser.antlr4.util.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -15,16 +18,19 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.context.request.ServletWebRequest;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.dylim.hot.SessionConstants;
 import com.dylim.hot.file.FileVO;
 import com.dylim.hot.file.service.FileUtilService;
 import com.dylim.hot.map.service.ReviewService;
 import com.dylim.hot.member.MemberVO;
+import com.dylim.hot.member.service.MemberService;
 
 @Controller
 public class ReviewController {
@@ -32,7 +38,7 @@ public class ReviewController {
 	@Autowired
 	private ReviewService seviewService;
 	@Autowired
-	private FileUtilService fileUtilService;	
+	private FileUtilService fileUtilService;
 
 	@GetMapping("/")
 	public String main2() throws Exception{        
@@ -46,19 +52,28 @@ public class ReviewController {
 	
 	//지도 보기
 	@GetMapping("/map/getMyMapView.do")
-	public ModelAndView getMyMapView(ModelAndView mv) throws Exception{        
-		List<ReviewVO> resultList = getReviews();
-		mv.addObject("resultList", resultList);
+	public ModelAndView getMyMapView(ModelAndView mv, HttpServletRequest request,
+			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
 		
+		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
+		
+		if(loginMember != null){
+			resultList = getReviews();
+			mv.addObject("loginId", loginMember.getMberId());
+		}
+		
+		mv.addObject("resultList", resultList);
 		mv.setViewName("views/map/myMap");
     	return mv;
     }
 	
 	//저장
-    @PostMapping("/map/saveReview.do")
+    @PostMapping("/map/getMyMapView/saveReview.do")
 	@ResponseBody
-    public List<ReviewVO> saveReview(@ModelAttribute("searchVO")ReviewVO reviewVO, @RequestParam("attachFileIds") List<MultipartFile> multipartFiles) throws Exception{        
-    	System.out.println("reviewVO: " + reviewVO.toString());
+    public List<ReviewVO> saveReview(@ModelAttribute("searchVO")ReviewVO reviewVO, @RequestParam("attachFileIds") List<MultipartFile> multipartFiles,
+    		@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false)MemberVO loginMember) throws Exception{
+    	
+    	reviewVO.setRegistId(loginMember.getMberId());
     	
     	if(!multipartFiles.get(0).isEmpty()) {
     		reviewVO.setAttachFileMasterId(fileUtilService.multiFileUpload(multipartFiles));
@@ -71,14 +86,13 @@ public class ReviewController {
     }
     
     //등록된 리뷰 불러오기
-    @GetMapping("/map/getReviews.do")
+    @GetMapping("/map/getMyMapView/getReviews.do")
     public List<ReviewVO> getReviews() throws Exception{
     	HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    	//HttpServletRequest request = servletContainer.getRequest();
-    	HttpSession session = request.getSession();
-    	MemberVO loginVO = (MemberVO) session.getAttribute("loginMember");
-    	
-    	return seviewService.getReviews(loginVO.getMberId());
+    	HttpSession session = request.getSession(false);
+    	String loginId = (String) session.getAttribute("loginMemberId");
+    	System.out.println(loginId);
+    	return seviewService.getReviews(loginId);
     }    
     
     //수정 페이지
@@ -95,28 +109,41 @@ public class ReviewController {
     		mv.addObject("files", files);
     		
     	}
-    	System.out.println(result.toString());
     	mv.addObject("result", result);
     	mv.setViewName("views/map/reviewModify");
     	return mv;
     }    
-    
+     
     //수정 
     @PostMapping("/map/updateReview/modifyReview.do")    
-    public String modifyReview(ReviewVO reviewVO) throws Exception{
+    public String modifyReview(ReviewVO reviewVO, HttpServletRequest request) throws Exception{
+    	
+    	HttpSession session = request.getSession(false);
+
+    	if(!reviewVO.getRegistId().equals((String) session.getAttribute("loginMemberId"))){
+    		return "redirect:" + request.getHeader("Referer");
+    	};
+    	
     	seviewService.modifyReview(reviewVO);
     	return "redirect:/map/getMyMapView.do";
     }
     
     //삭제 
     @PostMapping("/map/updateReview/deleteReview.do")    
-    public String deleteReview(ReviewVO reviewVO) throws Exception{
+    public String deleteReview(ReviewVO reviewVO, HttpServletRequest request) throws Exception{
+    	
+    	HttpSession session = request.getSession(false);
+
+    	if(!reviewVO.getRegistId().equals((String) session.getAttribute("loginMemberId"))){
+    		return "redirect:" + request.getHeader("Referer");
+    	};
+    	
     	seviewService.deleteReview(reviewVO);
     	return "redirect:/map/getMyMapView.do";
     }
     
     //좌표에 해당되는 리뷰 목록 불러오기
-    @GetMapping("/map/getReview.do")
+    @GetMapping("/map/getMyMapView/getReview.do")
     @ResponseBody
     public Map<String, Object> getReview(HttpServletRequest request) throws Exception{
     	
@@ -146,14 +173,8 @@ public class ReviewController {
             
         reviewVO.setStartPage(startpage);
         reviewVO.setEndPage(endpage);
-        System.out.println(reviewVO.getPageNo());
-        System.out.println(startpage);
-        System.out.println(endpage);
 
     	List<ReviewVO> resultPaging = seviewService.getReviewPaging(reviewVO); //리뷰 데이터 페이징 넘버
-    	
-    	System.out.println(result.toString());
-    	System.out.println(resultPaging.toString());
     	
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	if(Strings.isNotEmpty(result.getAttachFileMasterId())) {

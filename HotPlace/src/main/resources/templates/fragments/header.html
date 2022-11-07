@@ -17,7 +17,7 @@
   				</span>
   			</span>
   			<span>
-  				<button th:if="${session.loginMember == null}" class="login-btn" onclick="location.href='/login/loginView.do'">로그인</button>
+   				<button th:if="${session.loginMember == null}" class="login-btn" onclick="location.href='/login/loginView.do'">로그인</button>
   				<th:block th:if="${session.loginMember != null}">
   					<button th:text="${session.loginMember.mberName}+님" class="login-btn my-menu-on-btn" onclick="fnOnMyMenu();"></button>
   					<div class="my-menu">
@@ -40,5 +40,22 @@
   			</span>
   		</div>
   	</div>
+  	<script th:inline="javascript">
+  	
+		$(document).ajaxSend(function(event, request, settings) {
+			request.setRequestHeader('AJAX', 'true');
+		});
+		
+		//ajax 에러처리
+		$(document).ajaxError(function(event, request, settings, thrownError) {
+			console.log(request.responseJSON.status);
+			if (request.responseJSON.status == -1 || request.responseJSON.status == 0) {
+				alert('로그인 후 이용 가능합니다.');
+			} else {
+				alert('다음 위치에서 에러가 발생하였습니다. 관리자에게 문의해주세요.\n' + settings.url);
+			};
+		});	
+		
+  </script>
   </header>
 </html>

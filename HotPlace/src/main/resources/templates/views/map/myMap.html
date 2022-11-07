@@ -237,7 +237,7 @@ function fnSaveReview(){
     var formData = new FormData($('#insertForm')[0]);
 	$.ajax({
         type: "post",
-        url: '/map/saveReview.do',
+        url: '/map/getMyMapView/saveReview.do',
         cache: false,
         contentType: false,
         processData: false,        
@@ -249,7 +249,6 @@ function fnSaveReview(){
     	window.location.reload()
     })
     .fail(function() {
-    	alert('등록 실패 하였습니다.');
     })
     
 }
@@ -342,7 +341,7 @@ function getClickHandler(lat, lng) {
     return function(e) {  // 마커를 클릭하는 부분
     	$.ajax({
             type: "get",
-            url: '/map/getReview.do?lat=' + encodeURI(lat) + "&lng=" + encodeURI(lng),
+            url: '/map/getMyMapView/getReview.do?lat=' + encodeURI(lat) + "&lng=" + encodeURI(lng),
             cache: false,
             contentType: false,
             processData: false,        
@@ -397,7 +396,7 @@ function getClickHandler(lat, lng) {
 function getReviewByPageNo(lat, lng, pageNo){
 	$.ajax({
         type: "get",
-        url: '/map/getReview.do?pageNo=' + pageNo + '&lat=' + encodeURI(lat) + '&lng=' + encodeURI(lng),
+        url: '/map/getMyMapView/getReview.do?pageNo=' + pageNo + '&lat=' + encodeURI(lat) + '&lng=' + encodeURI(lng),
         cache: false,
         contentType: false,
         processData: false,        
@@ -522,6 +521,7 @@ function insertAddress(address, latitude, longitude) {
 	map.setOptions("zoom", 14);
 	cuserMarker.setPosition(naver.maps.LatLng(longitude, latitude));
 }
+
 </script>
 </th:block>
 </html>

@@ -140,7 +140,25 @@
 				#{loginId},
 				now(),
 				now()
+			),
+			(
+				null,
+				#{loginId},
+				#{mberId},
+				now(),
+				now()
 			)
 		]]>
 	</insert>	
+	<select id="friendtList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
+		<![CDATA[
+			SELECT
+				mber_second_id as mberSecondId
+			FROM
+				member_relationship
+			WHERE 
+				mber_first_id = #{loginId}
+		]]>
+	</select>	
+	
 </mapper>

@@ -22,4 +22,6 @@ public interface MemberService {
 
 	String friendAccept(String loginId, String mberId) throws Exception;
 
+	List<MemberVO> friendtList(String loginId) throws Exception;
+
 }

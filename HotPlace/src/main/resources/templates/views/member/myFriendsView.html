@@ -38,7 +38,7 @@
 														<span th:text="${result.mberId}"></span>
 													</div>
 													<div class="p12">
-														<div th:if="${result.relationType == null || result.relationType == '0'}" class="friend-add-box">
+														<div th:if="${result.relationType == null || result.relationType == '0' || result.relationType == ''}" class="friend-add-box">
 															<div class="friend-add-btn" th:id="${result.mberId}+'Btn'" th:onclick="|fnFriendReq('@{${result.mberId}}');|">
 																<p>요청</p>
 															</div>
@@ -106,18 +106,21 @@
 							</div>
 						</div>
 					</div>
-					<div th:unless="${results == null}" class="no-search">
+					<div th:unless="${results != null}" class="no-search">
 						<p>요청목록이 없습니다.</p>	
 					</div>
 					<h3>내 친구</h3>
-					<div class="request-area">
+					<div th:if="${friendResults != null}"class="request-area">
 						<div>	
-							<div class="request-box-size" >
+							<div th:each="myFriend : ${friendResults}" class="request-box-size" >
 								<div class="w100">
 									<div class="d-flex p-relative">
 										<div class="request-profile-box">
 											<div class="w100 p-relative">
 												<img class="request-profile-img" src="/images/noImage.png"/>
+											</div>
+											<div class="user-name-box">
+												<span th:text="${myFriend.mberId}"></span>
 											</div>
 											<div class="p12">
 												<div class="friend-add-box">
@@ -137,17 +140,28 @@
 							</div>
 						</div>
 					</div>
+					<div th:unless="${friendResults != null}" class="no-search">
+						<p>친구를 추가해보세요!</p>	
+					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 <script th:inline="javascript">
+	$(function(){
+		 
+		if([[${searchNoMsg}]]){
+			alert([[${searchNoMsg}]]);
+		}
+			
+	})
 	function fnSearchFriend(){
 		if($('#searchId').val() == null || $('#searchId').val() == ''){
 			alert('검색할 친구의 아이디를 입력해주세요.');
 			return false;
 		}
-		$('#searchFriend').attr('action', '/member/myFriendsView/searchFriends.do');
+		
+		$('#searchFriend').attr('action', '/member/myFriendsView.do');
 		$('#searchFriend').submit();
 	}
 	

@@ -32,6 +32,9 @@ public class MemberVO{
 	String loginId = "";
 	String relationType = "";
 	
+	String mberFirstId = "";
+	String mberSecondId = "";
+	
 	public String getMberAuth() {
 		return mberAuth;
 	}
@@ -123,6 +126,19 @@ public class MemberVO{
 	}
 	public void setRelationType(String relationType) {
 		this.relationType = relationType;
+	}
+	
+	public String getMberFirstId() {
+		return mberFirstId;
+	}
+	public void setMberFirstId(String mberFirstId) {
+		this.mberFirstId = mberFirstId;
+	}
+	public String getMberSecondId() {
+		return mberSecondId;
+	}
+	public void setMberSecondId(String mberSecondId) {
+		this.mberSecondId = mberSecondId;
 	}
 	@Override
 	public String toString() {

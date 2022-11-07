@@ -17,9 +17,9 @@
 				,#{lat}
 				,#{lng}
 				,#{visitDt}
-				,"등록자"
+				,#{registId}
 				,now()
-				,"수정자"
+				,#{registId}
 				,now()
 				,#{attachFileMasterId}
 				,"N"

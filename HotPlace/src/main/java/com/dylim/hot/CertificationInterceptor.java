@@ -1,5 +1,7 @@
 package com.dylim.hot;
 
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -18,18 +20,34 @@ public class CertificationInterceptor implements HandlerInterceptor{
 	@Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         
-		System.out.println("aaaaaaaaaaaaaaaaa");
-		
-        HttpSession session = request.getSession();
-        MemberVO loginVO = (MemberVO) session.getAttribute("loginMember");
+        HttpSession session = request.getSession(false);
+        MemberVO loginVO = new MemberVO();
         
-        if(ObjectUtils.isEmpty(loginVO)){
-//            response.sendRedirect("/login/loginView.do");
-            return true;
-        }else{ 
-            session.setMaxInactiveInterval(30*60);
-            return false;
+        if(session!=null) {
+        	loginVO = (MemberVO) session.getAttribute("loginMember");
+        	//System.out.println("현재 로그인 ID : " + loginVO.toString());
+            if(Objects.isNull(loginVO)){
+            	if (isAjaxRequest(request)){
+                    response.sendError(-1);
+                    return false;
+                } else {
+                	response.sendRedirect("/login/loginView.do");
+                    return false;
+                }
+            }else{ 
+                session.setMaxInactiveInterval(1800);
+                return true;
+            }
+        }else {
+        	if (isAjaxRequest(request)){
+                response.sendError(-1);
+                return false;
+            } else {
+            	response.sendRedirect("/login/loginView.do");
+                return false;
+            }
         }
+        
         
     }
  
@@ -47,5 +65,14 @@ public class CertificationInterceptor implements HandlerInterceptor{
             throws Exception {
         // TODO Auto-generated method stub
         
+    }
+    
+	private boolean isAjaxRequest(HttpServletRequest req) {
+        String header = req.getHeader("AJAX");
+        if ("true".equals(header)) {
+        	 return true;
+         } else {
+        	 return false;
+        }
     }
 }

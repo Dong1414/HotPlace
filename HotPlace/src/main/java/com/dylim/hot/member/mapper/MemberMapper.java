@@ -28,4 +28,6 @@ public interface MemberMapper {
 	void friendAccept(String loginId, String mberId) throws Exception;
 	
 	void friendAcceptHistory(String loginId, String mberId) throws Exception;
+
+	List<MemberVO> friendtList(String loginId) throws Exception;
 }

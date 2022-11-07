@@ -10,7 +10,10 @@ public class WebConfig implements WebMvcConfigurer{
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(new CertificationInterceptor())
-                .addPathPatterns("/login/loginView.do") // 해당 경로에 접근하기 전에 인터셉터가 가로챈다.
-                .excludePathPatterns("/*"); // 해당 경로는 인터셉터가 가로채지 않는다.
+                //.addPathPatterns("/login/*")  
+                .addPathPatterns("/map/getMyMapView/*")// 해당 경로에 접근하기 전에 인터셉터가 가로챈다.
+                .addPathPatterns("/map/updateReview/*")
+                .addPathPatterns("/member/myFriendsView*")
+        		.excludePathPatterns("/*");// 해당 경로는 인터셉터가 가로채지 않는다.
     }
 }

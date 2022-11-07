@@ -18,6 +18,7 @@
 
 	<form id="modifyForm" method="post" action="/map/updateReview/modifyReview.do" enctype="multipart/form-data">
 		<input type="hidden" name="id" th:value="${result.id}" />
+		<input type="hidden" name="registId" th:value="${result.registId}" />
 		<input type="hidden" name="lat" th:value="${result.lat}" />
 		<input type="hidden" name="lng" th:value="${result.lng}" />
 		<div class="container">
@@ -90,8 +91,7 @@
 			</div>
 		</div>
 	</form>
-</html>
-<script th:inline="javascript">
+	<script th:inline="javascript">
 //4eed686c-e876-4ad3-b9d4-9537b419ddc2
 var fileCnt = [[${files.size()}]] > 0 ? 10 - [[${files.size()}]] : 10;
 var fileContents = [];
@@ -101,6 +101,11 @@ function fnMoidfyReview(){
 	if(!confirm('수정하시겠습니까?')){
 		return false;
 	}
+	
+	var areaArr = [[${session.loginMemberId}]];
+	alert(areaArr);
+	
+	
 	if(!$('#title').val()){
 		alert('제목을 입력해주세요.');
 	}
@@ -181,3 +186,4 @@ var dropzone = new Dropzone("div.dropzone", {
   }
 });
 </script>
+</html>

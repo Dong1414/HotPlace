@@ -71,11 +71,17 @@ public class MemberServiceImpl implements MemberService {
 	};
 	
 	public String friendAccept(String loginId, String mberId) throws Exception{
+		
+		System.out.println(loginId + " , " + mberId);
 		//수락 히스토리 기록
 		memberMapper.friendAcceptHistory(loginId,mberId);
 		//수락 친구 추가
 		memberMapper.friendAccept(loginId,mberId);
 		
 		return "수락되었습니다.";
+	};
+	
+	public List<MemberVO> friendtList(String loginId) throws Exception{
+		return memberMapper.friendtList(loginId);
 	};
 }
