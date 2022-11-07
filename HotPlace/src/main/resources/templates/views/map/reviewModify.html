@@ -17,10 +17,11 @@
 <link rel="stylesheet" th:href="@{/css/modifyView.css}" />
 
 	<form id="modifyForm" method="post" action="/map/updateReview/modifyReview.do" enctype="multipart/form-data">
-		<input type="hidden" name="id" th:value="${result.id}" />
-		<input type="hidden" name="registId" th:value="${result.registId}" />
+		<input type="hidden" name="id" id="id" th:value="${result.id}" />
 		<input type="hidden" name="lat" th:value="${result.lat}" />
 		<input type="hidden" name="lng" th:value="${result.lng}" />
+		<input type="hidden" name="registId" id="registId" th:value="${result.registId}" />
+		<input type="hidden" name="attachFileMasterId" id="attachFileMasterId" th:value="${result.attachFileMasterId}" />
 		<div class="container">
 			<table class="wrapper">
 				<tbody>
@@ -34,7 +35,7 @@
 				  		<div class="file-list" id="fileList" style="display: grid;">
 					  		<div class="swiper mySwiper">
 						      <div class="swiper-wrapper">
-						      	<th:block th:each="file : ${files}">
+						      	<th:block th:if="${files != null}" th:each="file : ${files}">
 						      		<div class="img-box swiper-slide">
 								        <img th:src="${file.url}" th:id="${file.attachFileId}" th:onclick="fnImgDel(this.getAttribute('id'));"/>
 								        <button type="button" class="img-del-btn"><i class="fa-regular fa-circle-xmark" style="font-size:5.5rem;"></i></button>
@@ -93,7 +94,7 @@
 	</form>
 	<script th:inline="javascript">
 //4eed686c-e876-4ad3-b9d4-9537b419ddc2
-var fileCnt = [[${files.size()}]] > 0 ? 10 - [[${files.size()}]] : 10;
+var fileCnt = [[${fileCnt}]];
 var fileContents = [];
 
 function fnMoidfyReview(){
@@ -101,11 +102,13 @@ function fnMoidfyReview(){
 	if(!confirm('수정하시겠습니까?')){
 		return false;
 	}
+	var loginId = [[${session.loginMemberId}]];
 	
-	var areaArr = [[${session.loginMemberId}]];
-	alert(areaArr);
-	
-	
+	if(loginId != $('#registId').val()){
+		alert('등록자만 수정 할 수 있습니다.');
+		return false;
+	}
+
 	if(!$('#title').val()){
 		alert('제목을 입력해주세요.');
 	}
@@ -124,6 +127,11 @@ function fnClose(){
 
 function fnDeleteReview(){
 	if(!confirm('리뷰를 삭제하시겠습니까?')){
+		return false;
+	}
+	var loginId = [[${session.loginMemberId}]];
+	if(loginId != $('#registId').val()){
+		alert('등록자만 삭제 할 수 있습니다.');
 		return false;
 	}
 	$('#modifyForm').attr('action', '/map/updateReview/deleteReview.do');
@@ -178,7 +186,23 @@ var dropzone = new Dropzone("div.dropzone", {
   thumbnailHeight: 140, // Upload icon size
   init: function () {
 		this.on('success', function (file, responseText) {
-			console.log('성공');
+			if(!$('#attachFileMasterId').val()){
+				var attachFileMasterId = responseText.attachFileMasterId;
+				var id = $('#id').val();
+				$.ajax({
+			        type: "post",
+			        url: '/map/updateReview/firstFile.do',
+			        data: {
+			        	attachFileMasterId: attachFileMasterId,
+			        	id: id
+			        },
+			    }).done(function (resultMap) {
+			    	$('#attachFileMasterId').val(responseText.attachFileMasterId);
+			    })
+			    .fail(function() {
+			    	alert('삭제 실패 하였습니다.');
+			    })
+			}
 		});
 		this.on('error', function (file, errorMessage) {
 			alert(errorMessage);

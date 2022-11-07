@@ -45,4 +45,7 @@ public class ReviewServiceImpl implements ReviewService {
 	public List<ReviewVO> getReviewPaging(ReviewVO reviewVO) throws Exception{
 		return reviewMapper.getReviewPaging(reviewVO);
 	};
+	public void firstFile(ReviewVO reviewVO) throws Exception{
+		reviewMapper.firstFile(reviewVO);
+	};
 }

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dylim.hot.file.service.FileUtilService;
 
@@ -27,10 +28,12 @@ public class FileUtilController {
 	private FileUtilService fileUtilService;
 	
 	@PostMapping("/file/saveImages.do")
-	public String dropZoneUpload(MultipartHttpServletRequest request, String attchFileMasterId) throws Exception {
-		
-		 fileUtilService.dropZoneUpload(request, attchFileMasterId);
-		 return "redirect:/";
+	@ResponseBody
+	public FileVO dropZoneUpload(MultipartHttpServletRequest request, String attchFileMasterId) throws Exception {
+		FileVO result = new FileVO();
+		String fileMasterId = fileUtilService.dropZoneUpload(request, attchFileMasterId);
+		result.setAttachFileMasterId(fileMasterId);
+		return result;
     }
 	
 	public String multiFileUpload(List<MultipartFile> multipartFiles) throws Exception {

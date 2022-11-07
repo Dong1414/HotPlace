@@ -112,7 +112,8 @@
 				lng = #{lng},
 				visit_dt = #{visitDt},
 				update_id = "수정자",
-				update_dt = now()
+				update_dt = now(),
+				attach_file_master_id = #{attachFileMasterId}
 			WHERE
 				id = #{id}
 		]]>
@@ -149,5 +150,16 @@
 			AND del_yn = "N"
 		]]>
 	</select>
+	
+	<update id="firstFile" parameterType="com.dylim.hot.map.ReviewVO">
+		<![CDATA[     	
+			UPDATE map_review
+			SET
+				attach_file_master_id = #{attachFileMasterId}
+			WHERE
+				id = #{id}
+		]]>
+	</update>
+	
 	
 </mapper>

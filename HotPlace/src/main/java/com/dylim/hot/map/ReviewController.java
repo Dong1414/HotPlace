@@ -107,8 +107,11 @@ public class ReviewController {
     			file.setUrl("/file/getImage.do?attachFileId=" + file.getAttachFileId());
     		}
     		mv.addObject("files", files);
-    		
+    		mv.addObject("fileCnt", 10 - files.size());
+    	}else {
+    		mv.addObject("fileCnt", 10);
     	}
+    	
     	mv.addObject("result", result);
     	mv.setViewName("views/map/reviewModify");
     	return mv;
@@ -138,8 +141,18 @@ public class ReviewController {
     		return "redirect:" + request.getHeader("Referer");
     	};
     	
+    	
+    	
     	seviewService.deleteReview(reviewVO);
     	return "redirect:/map/getMyMapView.do";
+    }
+    
+    //첫 파일 등록( 수정 시 )
+    @PostMapping("/map/updateReview/firstFile.do")    
+    @ResponseBody
+    public String firstFile(ReviewVO reviewVO) throws Exception{
+    	seviewService.firstFile(reviewVO);
+    	return null;
     }
     
     //좌표에 해당되는 리뷰 목록 불러오기

@@ -24,4 +24,6 @@ public interface ReviewMapper {
 	void deleteReview(ReviewVO reviewVO) throws Exception;
 
 	List<ReviewVO> getReviewPaging(ReviewVO reviewVO) throws Exception;
+
+	void firstFile(ReviewVO reviewVO) throws Exception;
 }

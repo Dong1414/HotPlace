@@ -86,7 +86,6 @@ public class FileUtilServiceImpl implements FileUtilService {
 	}
 	
 	public void saveFile(FileVO file) throws Exception {
-		System.out.println(" aaaaaaaaaaaaaa" + file.toString());
 		fileUtilMapper.saveFile(file);
 	};
 	

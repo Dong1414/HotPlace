@@ -371,7 +371,8 @@ function getClickHandler(lat, lng) {
     			var page = resultMap.result.pageNo;
                 var startpage = resultMap.startpage;
                 var endpage = resultMap.endpage;
-                var htmlStr = ""
+                var htmlStr = "";
+               	
     			for (var num=startpage; num<=endpage; num++) {
                     if (num == page) {
                     	htmlStr += '<a href="#" style="font-weight:bold;" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
@@ -426,7 +427,13 @@ function getReviewByPageNo(lat, lng, pageNo){
 			var page = resultMap.result.pageNo;
             var startpage = resultMap.startpage;
             var endpage = resultMap.endpage;
-            var htmlStr = ""
+            var htmlStr = "";
+            
+            if(startpage > 5){
+            	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (startpage-1) + '); return false;" class="page-btn"><i class="fas fa-angle-left"/></a>';
+            	console.log(htmlStr);
+            }
+            
 			for (var num=startpage; num<=endpage; num++) {
                 if (num == page) {
                 	htmlStr += '<a href="#" style="font-weight:bold;" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
@@ -435,7 +442,7 @@ function getReviewByPageNo(lat, lng, pageNo){
                 }
              }
             if(resultMap.resultCnt > endpage){
-            	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;" class="page-btn"><i class="fas fa-angle-right"></a>';
+            	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;" class="page-btn"><i class="fas fa-angle-right"/></a>';
             }
             $("#paginate").html(htmlStr);
 		}else{
