@@ -114,7 +114,19 @@ public class ReviewController {
     	return mv;
     }
      
+    //수정 
+    @PostMapping("/map/updateReview/modifyReview.do")    
+    public String modifyReview(ReviewVO reviewVO, HttpServletRequest request) throws Exception{
+    	
+    	HttpSession session = request.getSession(false);
 
+    	if(!reviewVO.getRegistId().equals((String) session.getAttribute("loginMemberId"))){
+    		return "redirect:" + request.getHeader("Referer");
+    	};
+    	
+    	seviewService.modifyReview(reviewVO);
+    	return "redirect:/map/getMyMapView.do";
+    }
     
     //삭제 
     @PostMapping("/map/updateReview/deleteReview.do")    
