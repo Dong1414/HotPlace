@@ -70,7 +70,7 @@ public class ReviewController {
     }
 	
 	//친구 지도 보기
-	@PostMapping("/map/FriendMapView.do")
+	@GetMapping("/map/FriendMapView.do")
 	public ModelAndView FriendMapView(ModelAndView mv, MemberVO memberVO,
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
 		

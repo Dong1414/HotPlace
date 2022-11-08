@@ -159,6 +159,9 @@ input, textarea, select, button, table, select{
 .w100{
 	width:100%;
 }
+.h100{
+	height:100%;
+}
 .w15{
 	width:15rem;
 }

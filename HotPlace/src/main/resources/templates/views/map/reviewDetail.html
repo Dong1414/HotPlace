@@ -2,22 +2,22 @@
 
 <html xmlns:th="http://www.thymeleaf.org">
 	<div class="side-bar-wrapper side-bar" th:fragment="reviewDetail" >
-		<div class="detail-wrap" id="resizable">
-			<div class="side-bar" >
+		<div class="detail-wrap">
+			<div class="side-bar" id="resizable" style="overflow:auto; overflow-x: hidden; background-color: rgba(0, 0, 0, 0.5); height:100%">
 				<div class="title-area">
 				  <span class="fs-2 fw-bold" th:name="title" id="titleInfo"></span>
 				</div>
-				<div class="image-area">
-				  <div class="iw-file-input">
-				  	<div class="swiper">
-					  	<div id="test-slide" class="swiper-container">
-						    <ul class="swiper-wrapper"></ul>
+					<div class="image-area">
+					  <div class="iw-file-input">
+					  	<div class="swiper">	
+						  	<div id="test-slide" class="swiper-container">
+							    <ul class="swiper-wrapper"></ul>
+							</div>
+							<div class="swiper-pagination"></div>
+							<div class="swiper-button-prev"></div>
+							<div class="swiper-button-next"></div>
 						</div>
-						<div class="swiper-pagination"></div>
-						<div class="swiper-button-prev"></div>
-						<div class="swiper-button-next"></div>
-					</div>
-				  </div>
+					  </div>
 				</div>
 				<div class="star-area">
 					<div class="star-rate space-x-4 mx-auto">
@@ -51,8 +51,8 @@
 				</nav>
 			</div>
 		</div>
-		<button type="button" class="side-bar-active-btn" onclick="fnClose(1);">
+		<!-- <button type="button" class="side-bar-active-btn" onclick="fnClose(1);">
 				<i class='fa-solid fa-xmark' style="font-size:20px;"></i>
-		</button>
+		</button> -->
 	</div>
 </html>

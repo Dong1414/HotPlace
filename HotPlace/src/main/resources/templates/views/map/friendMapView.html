@@ -187,7 +187,7 @@ function getClickHandler(lat, lng) {
     		}else{
     			$('.image-area').css('display', 'block');
     			for(var i = 0; i < resultMap.files.length; i++){
-    				$('.swiper-wrapper').append('<li class="swiper-slide"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li>');	
+    				$('.swiper-wrapper').append('<li class="swiper-slide"><a class="w-100 h-100" target="blank" href="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li></a>');	
     			}
     		}
     		if(resultMap.resultCnt > 1){
@@ -243,7 +243,7 @@ function getReviewByPageNo(lat, lng, pageNo){
 		}else{
 			$('.image-area').css('display', 'block');
 			for(var i = 0; i < resultMap.files.length; i++){
-				$('.swiper-wrapper').append('<li class="swiper-slide"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li>');	
+				$('.swiper-wrapper').append('<li class="swiper-slide"><a class="w-100 h-100" target="blank" href="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"><img src="/file/getImage.do?attachFileId=' + resultMap.files[i].attachFileId + '"/></li></a>');	
 			}
 		}
 		if(resultMap.resultCnt > 1){
