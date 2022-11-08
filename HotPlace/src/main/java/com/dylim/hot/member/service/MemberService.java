@@ -17,7 +17,7 @@ public interface MemberService {
 	MemberVO searchById(MemberVO memberVO) throws Exception;
 
 	String friendRequest(String loginId, String mberId) throws Exception;
-
+	
 	List<MemberVO> friendRequestList(String loginId) throws Exception;
 
 	String friendAccept(String loginId, String mberId) throws Exception;
@@ -27,5 +27,7 @@ public interface MemberService {
 	String friendNo(String loginId, String mberId) throws Exception;
 
 	String friendDel(String loginId, String mberId) throws Exception;
+	
+	boolean friendCheck(String loginId, String mberId) throws Exception;
 
 }

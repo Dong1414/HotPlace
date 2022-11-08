@@ -39,7 +39,9 @@ public class ReviewController {
 	private ReviewService seviewService;
 	@Autowired
 	private FileUtilService fileUtilService;
-
+	@Autowired
+	private MemberService memberservice;
+	
 	@GetMapping("/")
 	public String main2() throws Exception{        
     	return "views/main";
@@ -58,7 +60,7 @@ public class ReviewController {
 		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
 		
 		if(loginMember != null){
-			resultList = getReviews();
+			resultList = getReviews(loginMember.getMberId());
 			mv.addObject("loginId", loginMember.getMberId());
 		}
 		
@@ -67,6 +69,33 @@ public class ReviewController {
     	return mv;
     }
 	
+	//친구 지도 보기
+	@PostMapping("/map/FriendMapView.do")
+	public ModelAndView FriendMapView(ModelAndView mv, MemberVO memberVO,
+			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
+		
+		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
+		
+		if(loginMember!=null) {
+			
+			boolean tn = memberservice.friendCheck(loginMember.getMberId(), memberVO.getMberId());
+			if(tn) {
+				resultList = getReviews(memberVO.getMberId());
+			}else {
+				mv.addObject("msg", "친구관계만 볼 수 있습니다.");
+			}
+		}
+		
+		mv.addObject("resultList", resultList);
+		mv.setViewName("views/map/FriendMapView");
+    	return mv;
+    }
+	
+	//등록된 리뷰 불러오기
+    public List<ReviewVO> getReviews(String loginId) throws Exception{
+    	return seviewService.getReviews(loginId);
+    }   
+    
 	//저장
     @PostMapping("/map/getMyMapView/saveReview.do")
 	@ResponseBody
@@ -80,20 +109,10 @@ public class ReviewController {
     	}
     	seviewService.saveReview(reviewVO);
     	
-    	List<ReviewVO> result = getReviews();
+    	List<ReviewVO> result = getReviews(reviewVO.getRegistId());
     	
     	return result;
     }
-    
-    //등록된 리뷰 불러오기
-    @GetMapping("/map/getMyMapView/getReviews.do")
-    public List<ReviewVO> getReviews() throws Exception{
-    	HttpServletRequest request = ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    	HttpSession session = request.getSession(false);
-    	String loginId = (String) session.getAttribute("loginMemberId");
-    	System.out.println(loginId);
-    	return seviewService.getReviews(loginId);
-    }    
     
     //수정 페이지
     @PostMapping("/map/updateReview.do")
@@ -211,7 +230,7 @@ public class ReviewController {
     	List<ReviewVO> resultList = new ArrayList<ReviewVO>();
 		
 		if(loginMember != null){
-			resultList = getReviews();
+			resultList = getReviews(loginMember.getMberId());
 			mv.addObject("loginId", loginMember.getMberId());
 		}
 		

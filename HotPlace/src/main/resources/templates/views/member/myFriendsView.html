@@ -22,6 +22,9 @@
 							</div>
 						</div>
 					</form>
+					<form method="post" id="friendMapForm" action="/map/FriendMapView.do">
+						<input type="hidden" id="mberId" name="mberId" />
+					</form>
 					<th:block th:if="${searchMod != null}">
 						<th:block th:if="${result != null}">
 							<h3>검색결과</h3>
@@ -40,7 +43,7 @@
 													<div class="p12">
 														<th:block th:if="${result.relation == 'Y'}">
 															<div class="friend-add-box">
-																<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${result.mberId}+'MapBtn'" th:onclick="|fnFriendReq('@{${result.mberId}}');|">지도보기</button>
+																<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${result.mberId}+'MapBtn'" th:onclick="|fnFriendMap('@{${result.mberId}}');|">지도보기</button>
 															</div>
 															<div class="friend-no-box">
 																<button type="button" class="btn btn-secondary w-100 fs-3" th:id="${result.mberId}+'DelBtn'" th:onclick="|fnFriendDel('@{${result.mberId}}');|">끊기</button>
@@ -114,7 +117,7 @@
 											</div>
 											<div class="p12">
 												<div class="friend-add-box">
-													<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${myFriend.mberId}+'MapBtn'" th:onclick="|fnFriendAccept('@{${myFriend.mberId}}');|">지도보기</button>
+													<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${myFriend.mberId}+'MapBtn'" th:onclick="|fnFriendMap('@{${myFriend.mberId}}');|">지도보기</button>
 												</div>
 												<div class="friend-no-box">
 													<button type="button" class="btn btn-secondary w-100 fs-3" th:id="${myFriend.mberId}+'DelBtn'" th:onclick="|fnFriendDel('@{${myFriend.mberId}}');|">끊기</button>
@@ -249,6 +252,11 @@
 	    })
 	    .fail(function() {
 	    })
+	}
+	
+	function fnFriendMap(mberId){
+		$('#friendMapForm #mberId').val(mberId);
+		$('#friendMapForm').submit();
 	}
 </script>
 </th:block>

@@ -100,4 +100,9 @@ public class MemberServiceImpl implements MemberService {
 		
 		return mberId + "님과 친구관계를 끊었습니다.";
 	};
+	
+	public boolean friendCheck(String loginId, String mberId) throws Exception{
+		int fChack = memberMapper.friendCheck(loginId,mberId); 
+		return fChack > 0 ? true : false;
+	};
 }
