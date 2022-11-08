@@ -157,10 +157,10 @@ public class MemberController {
   		HttpSession session = request.getSession(false);
   	    //MemberVO loginVO = (MemberVO) session.getAttribute("loginMemberId");
   	    
-  	    String mberFirstId = (String) session.getAttribute("loginMemberId"); //내 아이디
-  	    String mberSecondId = request.getParameter("mberId"); //요청 보낼 아이디
+  	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
+  	    String mberId = request.getParameter("mberId"); //요청 보낼 아이디
   	    
-  	    String resultMsg = memberService.friendRequest(mberFirstId, mberSecondId);
+  	    String resultMsg = memberService.friendRequest(loginId, mberId);
   	    
   	    return resultMsg;
   	}
@@ -178,4 +178,33 @@ public class MemberController {
   	    
   	    return resultMsg;
   	}
+
+  	@PostMapping("/member/myFriendsView/friendNo.do")
+  	@ResponseBody
+  	public String friendNo(HttpServletRequest request) throws Exception {
+  		
+  	    HttpSession session = request.getSession(false);
+  	    
+  	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
+  	    String mberId = request.getParameter("mberId"); //수락할 아이디
+  	    
+  	    String resultMsg = memberService.friendNo(loginId, mberId);
+  	    
+  	    return resultMsg;
+  	}
+
+  	@PostMapping("/member/myFriendsView/friendDel.do")
+  	@ResponseBody
+  	public String friendDel(HttpServletRequest request) throws Exception {
+  		
+  	    HttpSession session = request.getSession(false);
+  	    
+  	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
+  	    String mberId = request.getParameter("mberId"); //수락할 아이디
+  	    
+  	    String resultMsg = memberService.friendDel(loginId, mberId);
+  	    
+  	    return resultMsg;
+  	}  	
+  	
 }

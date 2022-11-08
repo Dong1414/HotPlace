@@ -38,28 +38,22 @@
 														<span th:text="${result.mberId}"></span>
 													</div>
 													<div class="p12">
-														<div th:if="${result.relationType == null || result.relationType == '0' || result.relationType == ''}" class="friend-add-box">
-															<div class="friend-add-btn" th:id="${result.mberId}+'Btn'" th:onclick="|fnFriendReq('@{${result.mberId}}');|">
-																<p>요청</p>
-															</div>
-														</div>
-														<div th:if="${result.relationType == '1'}" class="friend-add-box">
-															<div class="friend-add-btn" th:id="${result.mberId}+'Btn'" th:onclick="|fnFriendReq('@{${result.mberId}}');|">
-																<p>요청완료</p>
-															</div>
-														</div>
-														<th:block th:if="${result.relationType == '3'}">
+														<th:block th:if="${result.relation == 'Y'}">
 															<div class="friend-add-box">
-																<div class="friend-add-btn">
-																	<p>지도보기</p>
-																</div>
+																<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${result.mberId}+'MapBtn'" th:onclick="|fnFriendReq('@{${result.mberId}}');|">지도보기</button>
 															</div>
 															<div class="friend-no-box">
-																<div class="friend-no-btn">
-																	<p>끊기</p>
-																</div>
+																<button type="button" class="btn btn-secondary w-100 fs-3" th:id="${result.mberId}+'DelBtn'" th:onclick="|fnFriendDel('@{${result.mberId}}');|">끊기</button>
 															</div>
 														</th:block>
+														<th:block th:unless="${result.relation == 'Y'}">	
+															<div th:if="${result.relationType == null || result.relationType == ''}" class="friend-add-box">
+																<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${result.mberId}+'Btn'" th:onclick="|fnFriendReq('@{${result.mberId}}');|">친구신청</button>
+															</div>
+															<div th:if="${result.relationType == '1'}" class="friend-add-box">
+																<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3">신청완료</button>
+															</div>
+														</th:block>	
 													</div>
 												</div>
 											</div>
@@ -71,13 +65,13 @@
 						<th:block th:unless="${result != null}">
 							<h3>검색결과</h3>
 							<div class="no-search">
-								<p>검색결과가 존재하지 않습니다.</p>	
+								<span>검색결과가 존재하지 않습니다.</span>	
 							</div>
 						</th:block>
 					</th:block>
-					<h3>요청목록</h3>
+					<h3>신청목록</h3>
 					<div th:if="${results != null}" class="request-area">
-						<div>	
+						<div style="background-color: antiquewhite;">	
 							<div th:each="member : ${results}" class="request-box-size" >
 								<div class="w100">
 									<div class="d-flex p-relative">
@@ -90,14 +84,10 @@
 											</div>
 											<div class="p12">
 												<div class="friend-add-box">
-													<div class="friend-add-btn" th:id="${member.mberId}+'AcceptBtn'" th:onclick="|fnFriendAccept('@{${member.mberId}}');|">
-														<p>수락</p>
-													</div>
+													<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${member.mberId}+'AcceptBtn'" th:onclick="|fnFriendAccept('@{${member.mberId}}');|">수락</button>
 												</div>
 												<div class="friend-no-box">
-													<div class="friend-no-btn">
-														<p>거절</p>
-													</div>
+													<button type="button" class="btn btn-secondary w-100 fs-3" th:id="${member.mberId}+'NoBtn'" th:onclick="|fnFriendNo('@{${member.mberId}}');|">거절</button>
 												</div>
 											</div>
 										</div>
@@ -107,11 +97,11 @@
 						</div>
 					</div>
 					<div th:unless="${results != null}" class="no-search">
-						<p>요청목록이 없습니다.</p>	
+						<span>신청목록이 없습니다.</span>	
 					</div>
 					<h3>내 친구</h3>
 					<div th:if="${friendResults != null}"class="request-area">
-						<div>	
+						<div style="background-color: antiquewhite;">	
 							<div th:each="myFriend : ${friendResults}" class="request-box-size" >
 								<div class="w100">
 									<div class="d-flex p-relative">
@@ -124,14 +114,10 @@
 											</div>
 											<div class="p12">
 												<div class="friend-add-box">
-													<div class="friend-add-btn">
-														<p>지도보기</p>
-													</div>
+													<button type="button" style="background-color:#FF6F0F;" class="btn text-white w-100 fs-3" th:id="${myFriend.mberId}+'MapBtn'" th:onclick="|fnFriendAccept('@{${myFriend.mberId}}');|">지도보기</button>
 												</div>
 												<div class="friend-no-box">
-													<div class="friend-no-btn">
-														<p>끊기</p>
-													</div>
+													<button type="button" class="btn btn-secondary w-100 fs-3" th:id="${myFriend.mberId}+'DelBtn'" th:onclick="|fnFriendDel('@{${myFriend.mberId}}');|">끊기</button>
 												</div>
 											</div>
 										</div>
@@ -141,7 +127,7 @@
 						</div>
 					</div>
 					<div th:unless="${friendResults != null}" class="no-search">
-						<p>친구를 추가해보세요!</p>	
+						<span>친구를 추가해보세요!</span>	
 					</div>
 				</div>
 			</div>
@@ -166,7 +152,7 @@
 	}
 	
 	function fnFriendReq(mberId){
-		if(!confirm("요청을 보내시겠습니까?")){
+		if(!confirm("신청을 보내시겠습니까?")){
 			return false;
 		}
 		
@@ -178,15 +164,20 @@
 	        }
 	    }).done(function (data) {
 	    	alert(data);
-	    	$("#"+mberId+"Btn").css("pointer-events", "none");
-	    	$("#"+mberId+"Btn").children().text("요청완료");
+	    	
+	    	if(data == '친구신청을 보냈습니다.'){
+	    		$("#"+mberId+"Btn").css("pointer-events", "none");
+		    	$("#"+mberId+"Btn").attr('disabled', true);
+		    	$("#"+mberId+"Btn").attr('onclick', '');
+		    	$("#"+mberId+"Btn").text("요청완료");
+	    	}
 	    })
 	    .fail(function() {
 	    })
 	}
 	
 	function fnFriendAccept(mberId){
-		if(!confirm("요청을 수락하시겠습니까?")){
+		if(!confirm("친구신청을 수락하시겠습니까?")){
 			return false;
 		}
 		
@@ -198,8 +189,63 @@
 	        }
 	    }).done(function (data) {
 	    	alert(data);
+	    	$("#"+mberId+"NoBtn").css("pointer-events", "none");
+	    	$("#"+mberId+"NoBtn").attr('disabled', true);
+	    	$("#"+mberId+"NoBtn").attr('onclick', '');
 	    	$("#"+mberId+"AcceptBtn").css("pointer-events", "none");
-	    	$("#"+mberId+"AcceptBtn").children().text("수락완료");
+	    	$("#"+mberId+"AcceptBtn").attr('disabled', true);
+	    	$("#"+mberId+"AcceptBtn").attr('onclick', '');
+	    	$("#"+mberId+"AcceptBtn").text("수락완료");
+	    })
+	    .fail(function() {
+	    })
+	}
+	
+	function fnFriendNo(mberId){
+		if(!confirm("친구신청을 거절하시겠습니까?")){
+			return false;
+		}
+		
+		$.ajax({
+	        type: "post",
+	        url: '/member/myFriendsView/friendNo.do',
+	        data: {
+	        	mberId : mberId
+	        }
+	    }).done(function (data) {
+	    	alert(data);
+	    	$("#"+mberId+"AcceptBtn").css("pointer-events", "none");
+	    	$("#"+mberId+"AcceptBtn").attr('disabled', true);
+	    	$("#"+mberId+"AcceptBtn").attr('onclick', '');
+	    	$("#"+mberId+"NoBtn").css("pointer-events", "none");
+	    	$("#"+mberId+"NoBtn").attr('disabled', true);
+	    	$("#"+mberId+"NoBtn").text("거절완료");
+	    	$("#"+mberId+"NoBtn").attr('onclick', '');
+	    })
+	    .fail(function() {
+	    })
+	}
+	
+	function fnFriendDel(mberId){
+		if(!confirm("친구관계를 끊으시겠습니?")){
+			return false;
+		}
+		
+		$.ajax({
+	        type: "post",
+	        url: '/member/myFriendsView/friendDel.do',
+	        data: {
+	        	mberId : mberId
+	        }
+	    }).done(function (data) {
+	    	alert(data);
+	    	$("#"+mberId+"MapBtn").css("pointer-events", "none");
+	    	$("#"+mberId+"MapBtn").attr('disabled', true);
+	    	$("#"+mberId+"MapBtn").attr('onclick', '');
+	    	$("#"+mberId+"DelBtn").css("pointer-events", "none");
+	    	$("#"+mberId+"DelBtn").attr('disabled', true);
+	    	$("#"+mberId+"DelBtn").text("거절완료");
+	    	$("#"+mberId+"DelBtn").attr('onclick', '');
 	    })
 	    .fail(function() {
 	    })

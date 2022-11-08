@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 
 <html xmlns:th="http://www.thymeleaf.org">
-	<div class="bottom-bar-wrapper bottom-bar" th:fragment="reviewInsert" >
-		<div class="insert-wrap" id="resizable">
-			<div class="bottom-bar" >
+	<div class="bottom-bar-wrapper bottom-bar mydiv" th:fragment="reviewInsert">
+		<div class="insert-wrap" id="resizable" style="overflow:auto; background-color: rgba(0, 0, 0, 0.5);">
+			<div class="bottom-bar">
 				<div class="title-area">
-				  <input th:name="title" th:id="title" placeholder="제목을 입력해주세요."/>
+				  <input class="fs-2" name="title" id="title" placeholder="제목을 입력해주세요."/>
 				</div>
 				<div class="insert-image-area">
-				  <div class="iw-file-input">
+				  <div class="iw-file-input h-auto">
 				  	<div class="images-insert-area">
 			  			<input class="file-input" type="file" id="attachFileIds" name="attachFileIds" multiple/>
-					  	<div class="fileList" id="fileList">사진은 10개까지 등록 가능합니다.</div>
+					  	<div class="fileList fs-3 fw-bold" id="fileList">사진은 10개까지 등록 가능합니다.</div>
 				  	</div>
 				  </div>
 				</div>
@@ -30,14 +30,14 @@
 					</div> 
 				</div>
 				<div class="location-info-area">
-				  <input th:name="address" id="addressInfo" placeholder="위치 정보가 표시됩니다."/>
+				  <input class="fs-3" name="address" id="addressInfo" placeholder="위치 정보가 표시됩니다."/>
 				</div>
 				<div class="review-area">
-				  <textarea  th:name="review" th:id="review" placeholder="후기를 입력해주세요."></textarea>
+				  <textarea class="fs-3" name="review" id="review" placeholder="후기를 입력해주세요."></textarea>
 				</div>
 				<div class="bottom-btn-area">
-				  <button type= "button" class="save-btn" th:onclick="fnSaveReview();">저장</button>
-				  <button type= "button" class="close-btn" th:onclick="fnClose(2);">취소</button>
+				  <button type= "button" class="btn btn-primary fs-3 ps-4 pe-4" th:onclick="fnSaveReview();">저장</button>
+				  <button type= "button" class="btn btn-secondary fs-3 ps-4 pe-4" th:onclick="fnClose(2);">취소</button>
 				</div>
 			</div>
 		</div>

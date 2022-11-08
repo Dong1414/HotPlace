@@ -49,21 +49,22 @@ public class MemberServiceImpl implements MemberService {
 		return memberMapper.searchById(memberVO);
 	};
 	
-	public String friendRequest(String mberFirstId, String mberSecondId) throws Exception{
+	public String friendRequest(String loginId, String mberId) throws Exception{
 		//이미 친구사이인지 확인
-		int fChack = memberMapper.friendCheck(mberFirstId,mberSecondId); 
+		int fChack = memberMapper.friendCheck(loginId,mberId); 
 		if(fChack > 0){
 			return "이미 친구관계인 사용자 입니다.";
 		}
-		
+		System.out.println(fChack + "이미친구");
 		//이미 보낸 신청이 있는지 확인
-		int rChack = memberMapper.requestCheck(mberFirstId,mberSecondId);
+		int rChack = memberMapper.requestCheck(loginId,mberId);
 		if(rChack > 0) {
-			return "이미 요청으르 보냈거나 상대가 보낸 요청이 있습니다.";
+			return "상대가 보낸 신청이 있습니다.";
 		}
+		System.out.println(fChack + "신청있음");
 		//신청 보내기
-		memberMapper.friendRequest(mberFirstId,mberSecondId);
-		return "요청 보냈습니다.";
+		memberMapper.friendRequest(loginId,mberId);
+		return "친구신청을 보냈습니다.";
 	};
 	
 	public List<MemberVO> friendRequestList(String loginId) throws Exception{
@@ -72,9 +73,8 @@ public class MemberServiceImpl implements MemberService {
 	
 	public String friendAccept(String loginId, String mberId) throws Exception{
 		
-		System.out.println(loginId + " , " + mberId);
-		//수락 히스토리 기록
-		memberMapper.friendAcceptHistory(loginId,mberId);
+		//요청 삭제
+		memberMapper.friendDelHistory(loginId,mberId);
 		//수락 친구 추가
 		memberMapper.friendAccept(loginId,mberId);
 		
@@ -83,5 +83,21 @@ public class MemberServiceImpl implements MemberService {
 	
 	public List<MemberVO> friendtList(String loginId) throws Exception{
 		return memberMapper.friendtList(loginId);
+	};
+
+	public String friendNo(String loginId, String mberId) throws Exception{
+		
+		//요청 삭제
+		memberMapper.friendDelHistory(loginId,mberId);
+		
+		return "거절되었습니다.";
+	};
+
+	public String friendDel(String loginId, String mberId) throws Exception{
+		
+		//친구 삭제
+		memberMapper.friendDel(loginId,mberId);
+		
+		return mberId + "님과 친구관계를 끊었습니다.";
 	};
 }

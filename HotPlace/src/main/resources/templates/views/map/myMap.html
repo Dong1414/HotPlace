@@ -27,7 +27,8 @@
 		<div th:replace="views/map/reviewDetail :: reviewDetail"></div>
 	</form>
 	
-	<button type="button" class="inser-area-button" onclick="fnInsertView();">등록하기</button>
+		<button type="button" class="inser-area-button btn btn-primary" onclick="fnInsertView();">등록하기</button>
+	
 	
 	<form id="insertForm" th:object="${reviewVO}" method="post" enctype="multipart/form-data">
 		<input type="hidden" th:name="lat" th:id="lat" />
@@ -234,6 +235,17 @@ function fnSaveReview(){
 	if(!confirm('등록하시겠습니까?')){
 		return false;
 	}
+	if(!$('#title').val()){
+		alert('제목을 입력해주세요.');
+	}
+	if(!$('#insertForm #addressInfo').val()){
+		alert('위치정보를 입력해주세요.');
+		return false;
+	}
+	if(!$('#review').val()){
+		alert('후기를 입력해주세요.');
+		return false;
+	}
     var formData = new FormData($('#insertForm')[0]);
 	$.ajax({
         type: "post",
@@ -329,8 +341,8 @@ $(document).ready(function(){
     });
 	
 	$( ".insert-wrap" ).resizable({
-		maxHeight: 1024,
-		minHeight: 500,
+		maxHeight: 638,
+		minHeight: 300,
 		handles : 'n'
     });
 });
@@ -354,8 +366,8 @@ function getClickHandler(lat, lng) {
         	$('.side-bar-wrapper').css('display', 'flex');
         	
         	$("#id").val(resultMap.result.id);
-    		$("#title").text(resultMap.result.title);
-    		$("#review").text(resultMap.result.review);
+    		$("#titleInfo").text(resultMap.result.title);
+    		$("#reviewInfo").text(resultMap.result.review);
     		$("#addressInfo").text(resultMap.result.address);
     		$('input:radio[name="rate"][value="'+resultMap.result.rating+'"]').prop('checked', true);
     		$('.swiper-wrapper').children().remove();
@@ -375,17 +387,17 @@ function getClickHandler(lat, lng) {
                	
     			for (var num=startpage; num<=endpage; num++) {
                     if (num == page) {
-                    	htmlStr += '<a href="#" style="font-weight:bold;" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                    	htmlStr += '<li class="page-item active"><a href="#" class="page-link fw-bold" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;">' + num + '</a></li>';
                     } else {
-                    	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                    	htmlStr += '<li class="page-item"><a href="#" class="page-link fw-bold" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;">' + num + '</a></li>';
                     }
                  }
                 if(resultMap.resultCnt > endpage){
-                	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;" class="page-btn"><i class="fas fa-angle-right"></a>';
+                	htmlStr += '<li class="page-item"><a href="#" class="page-link" aria-label="Next" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;"><span aria-hidden="true">&raquo;</span></a></li>';
                 }
-                $("#paginate").html(htmlStr);
+                $(".pagination").html(htmlStr);
     		}else{
-    			$("#paginate").html('');
+    			$(".pagination").html('');
     		}
         })
         .fail(function() {
@@ -410,8 +422,8 @@ function getReviewByPageNo(lat, lng, pageNo){
     	$('.side-bar-wrapper').css('display', 'flex');
     	
     	$("#id").val(resultMap.result.id);
-		$("#title").text(resultMap.result.title);
-		$("#review").text(resultMap.result.review);
+		$("#titleInfo").text(resultMap.result.title);
+		$("#reviewInfo").text(resultMap.result.review);
 		$("#addressInfo").text(resultMap.result.address);
 		$('input:radio[name="rate"][value="'+resultMap.result.rating+'"]').prop('checked', true);
 		$('.swiper-wrapper').children().remove();
@@ -430,23 +442,23 @@ function getReviewByPageNo(lat, lng, pageNo){
             var htmlStr = "";
             
             if(startpage > 5){
-            	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (startpage-1) + '); return false;" class="page-btn"><i class="fas fa-angle-left"/></a>';
+            	htmlStr += '<li class="page-item"><a href="#" class="page-link" aria-label="Previous" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (startpage-1) + '); return false;"><span aria-hidden="true">&laquo;</span></a></li>';
             	console.log(htmlStr);
             }
             
 			for (var num=startpage; num<=endpage; num++) {
                 if (num == page) {
-                	htmlStr += '<a href="#" style="font-weight:bold;" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                	htmlStr += '<li class="page-item active"><a href="#" class="page-link fw-bold" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;">' + num + '</a></li>';
                 } else {
-                	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;" class="page-btn">' + num + '</a>';
+                	htmlStr += '<li class="page-item"><a href="#" class="page-link fw-bold" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + num + '); return false;">' + num + '</a></li>';
                 }
              }
             if(resultMap.resultCnt > endpage){
-            	htmlStr += '<a href="#" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;" class="page-btn"><i class="fas fa-angle-right"/></a>';
+            	htmlStr += '<li class="page-item"><a href="#" class="page-link" aria-label="Next" onclick="getReviewByPageNo(' + resultMap.result.lat + ',' + resultMap.result.lng + ',' + (endpage+1) + '); return false;"><span aria-hidden="true">&raquo;</span></a></li>';
             }
-            $("#paginate").html(htmlStr);
+            $(".pagination").html(htmlStr);
 		}else{
-			$("#paginate").html('');
+			$(".pagination").html(htmlStr);
 		}
     })
     .fail(function() {

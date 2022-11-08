@@ -15,11 +15,11 @@ public interface MemberMapper {
 	
 	MemberVO loadUserByUserId(String mberId) throws Exception;
 
-	void friendRequest(String mberFirstId, String mberSecondId) throws Exception;
+	void friendRequest(String loginId, String mberId) throws Exception;
 
-	int friendCheck(String mberFirstId, String mberSecondId) throws Exception;
+	int friendCheck(String loginId, String mberId) throws Exception;
 
-	int requestCheck(String mberFirstId, String mberSecondId) throws Exception;
+	int requestCheck(String loginId, String mberId) throws Exception;
 
 	MemberVO searchById(MemberVO memberVO) throws Exception;
 
@@ -27,7 +27,9 @@ public interface MemberMapper {
 	
 	void friendAccept(String loginId, String mberId) throws Exception;
 	
-	void friendAcceptHistory(String loginId, String mberId) throws Exception;
-
 	List<MemberVO> friendtList(String loginId) throws Exception;
+
+	void friendDelHistory(String loginId, String mberId);
+
+	void friendDel(String loginId, String mberId);
 }

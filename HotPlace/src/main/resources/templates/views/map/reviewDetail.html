@@ -5,7 +5,7 @@
 		<div class="detail-wrap" id="resizable">
 			<div class="side-bar" >
 				<div class="title-area">
-				  <span th:name="title" th:id="title"></span>
+				  <span class="fs-2 fw-bold" th:name="title" id="titleInfo"></span>
 				</div>
 				<div class="image-area">
 				  <div class="iw-file-input">
@@ -34,18 +34,20 @@
 					</div> 
 				</div>
 				<div class="location-info-area">
-				  <span th:name="address" th:id="addressInfo"></span>
+				  <span class="fs-4" th:name="address" th:id="addressInfo"></span>
 				</div>
 				<div class="review-area">
-				  <span  th:name="review" th:id="review"></span>
+				  <span class="fs-4" th:name="review" th:id="reviewInfo"></span>
 				</div>
-				<div class="bottom-btn-area">
-				  <button type= "button" class="save-btn" onclick="fnModifyReview();">
+				<div class="text-right">
+				  <button type= "button" class="btn btn-primary fs-4 ps-4 pe-4 text-right me-4 mb-4" onclick="fnModifyReview();">
 				      수정
 				  </button>
 				</div>
-				<nav class="paginate" id="paginate">
-					
+				<nav aria-label="Page navigation example">
+					<ul class="pagination pagination-lg justify-content-center">
+					  
+					</ul>
 				</nav>
 			</div>
 		</div>

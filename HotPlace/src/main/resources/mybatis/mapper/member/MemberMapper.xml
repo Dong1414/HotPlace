@@ -47,8 +47,8 @@
 			VALUES
 				(
 					null
-					,#{mberFirstId}
-				    ,#{mberSecondId}
+					,#{loginId}
+				    ,#{mberId}
 				    ,"1"
 				    ,now()	
 				    ,now()
@@ -59,12 +59,12 @@
 	<select id="friendCheck" parameterType="String" resultType="int">
 		<![CDATA[  
 			SELECT
-				COUNT(id)
+				COUNT(mber_second_id)
 			FROM
 				 member_relationship
 			WHERE
-				mber_first_id IN(#{mberFirstId}, #{mberSecondId})
-				AND mber_second_id IN(#{mberFirstId}, #{mberSecondId})	 
+				mber_first_id = #{loginId}
+				AND mber_second_id = #{mberId}	 
 		]]>		
 	</select>
 	<select id="requestCheck" parameterType="String" resultType="int">
@@ -74,8 +74,8 @@
 			FROM
 				 member_relationship_history
 			WHERE
-				mber_first_id IN(#{mberFirstId}, #{mberSecondId})
-				AND mber_second_id IN(#{mberFirstId}, #{mberSecondId})	
+				mber_first_id = #{mberId}
+				AND mber_second_id = #{loginId}	
 				AND relation_type = "1"
 		]]>		
 	</select>
@@ -85,13 +85,17 @@
 			SELECT 
 				t1.mber_id as mberId,
 				t1.mber_name as mberName,
-				t2.relation_type as relationType
+				t2.relation_type as relationType,
+				t3.relation as relation
 			FROM 
 				member t1
 				LEFT OUTER JOIN member_relationship_history t2
-				ON t2.mber_first_id IN ( #{mberId}, #{loginId} )
-				AND t2.mber_second_id IN ( #{mberId}, #{loginId} ) 
-			WHERE 
+				ON t2.mber_first_id = #{loginId} 
+				AND t2.mber_second_id = #{mberId} 
+				LEFT OUTER JOIN member_relationship t3
+				ON t3.mber_first_id =  #{loginId}
+				AND t3.mber_second_id = #{mberId}
+			WHERE  
 				mber_id = #{mberId} and del_yn = "N";
 		]]>
 	</select>
@@ -117,48 +121,52 @@
 				AND del_yn = "N"
 		]]>
 	</select>	
-	
-	<update id="friendAcceptHistory" parameterType="String">
-		<![CDATA[
-			update 
-				member_relationship_history
-			set
-				relation_type = '3'
-			where
-				mber_first_id in(#{loginId}, #{mberId})
-				and mber_second_id	in(#{loginId}, #{mberId})
-		]]>
-	</update>
-
 	<insert id="friendAccept" parameterType="String">
 		<![CDATA[
 			insert into 
 				member_relationship
 			value(
-				null,
 				#{mberId},
 				#{loginId},
 				now(),
-				now()
+				now(),
+				"Y"
 			),
 			(
-				null,
 				#{loginId},
 				#{mberId},
 				now(),
-				now()
+				now(),
+				"Y"
 			)
 		]]>
 	</insert>	
 	<select id="friendtList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
 		<![CDATA[
 			SELECT
-				mber_second_id as mberSecondId
+				mber_second_id as mberId
 			FROM
 				member_relationship
 			WHERE 
 				mber_first_id = #{loginId}
 		]]>
 	</select>	
-	
+	<delete id="friendDelHistory" parameterType="String">
+		<![CDATA[
+			delete from
+				member_relationship_history
+			where
+				mber_first_id in(#{loginId}, #{mberId})
+				and mber_second_id	in(#{loginId}, #{mberId})
+		]]>
+	</delete>
+	<delete id="friendDel" parameterType="String">
+		<![CDATA[
+			delete from
+				member_relationship
+			where
+				mber_first_id in(#{loginId}, #{mberId})
+				and mber_second_id	in(#{loginId}, #{mberId})
+		]]>
+	</delete>
 </mapper>

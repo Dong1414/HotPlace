@@ -13,13 +13,13 @@
 					<div class="login-info">
 						<form id="loginForm" method="post">
 							<label class="none" for="id">아이디</label>
-							<input type="text" id="mberId" name="mberId" th:value="${mberId}" placeholder="아이디를 입력해주세요."/>
+							<input class="form-control fs-3 h-55" type="text" id="mberId" name="mberId" th:value="${mberId}" placeholder="아이디를 입력해주세요."/>
 							<label class="none" for="password">비밀번호</label>
-							<input type="password" id="mberPassword" name="mberPassword" placeholder="비밀번호를 입력해주세요."/>
+							<input class="form-control fs-3 h-55" type="password" id="mberPassword" name="mberPassword" placeholder="비밀번호를 입력해주세요."/>
 							<div th:if="${loginMsg != null}" th:text="${loginMsg}" class="mb1 red"></div>
-							<button class="login-action-btn" onclick="fnLoginAction();" type="submit">로그인</button>
-							<button class="naver-login-btn" type="button">네이버로그인</button>
-							<button class="kakao-login-btn" type="button">카카오로그인</button>
+							<button class="login-action-btn btn btn-primary fs-3 ps-4 pe-4 fw-bold" onclick="fnLoginAction();" type="submit">로그인</button>
+							<button class="naver-login-btn btn btn-success fs-3 ps-4 pe-4 fw-bold" type="button">네이버로그인</button>
+							<button class="kakao-login-btn btn btn-warning fs-3 ps-4 pe-4 fw-bold text-white" type="button">카카오로그인</button>
 						</form>
 					</div>
 					<nav class="member-area">

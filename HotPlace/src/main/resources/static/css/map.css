@@ -100,8 +100,6 @@ input[type="text"]{
 }
 
 .side-bar-wrapper  .side-bar > .title-area > #title {
-	font-size: 1.8rem;
-    font-weight: bold;
     color: #fff;
     box-shadow: none;
     background: none;
@@ -180,27 +178,13 @@ input[type="text"]{
 	color: #fff;
 }
 
- 
- 
-
 .fileList {
 	width: 100%;
 }
 
-.fileLine li {
-    padding:0 5px;
-    overflow:hidden;
-    text-overflow:ellipsis;
-    white-space:nowrap;
-    color: floralwhite;
-    font-weight: 600;
-}
 
 .fileLine li > i {
 	cursor: pointer;
-	font-size: 18px;
-	left: 50%;
-	top: 5%;
 }
 
 .detail-wrap{
@@ -231,7 +215,7 @@ input[type="text"]{
 	width: 100%;
     left: 0px;
     bottom: 0px;
-    height: 50rem;
+    height: 38rem;
     position: relative;
 }
 
@@ -240,13 +224,35 @@ input[type="text"]{
     position: absolute;
     top: 83%;
     left: 50%;
-    width: 120px;
-    height: 30px;
-    align-items: center;
+    width: 16rem;
+    height: 4rem;
+    font-size:2rem;
 }
 
 .paginate a{
 	color: white;
 	font-size: 1.7rem;	
 	padding: 1rem;
+}
+
+.page-link{
+    padding: var(--bs-pagination-padding-y) var(--bs-pagination-padding-x);
+    font-size: var(--bs-pagination-font-size);
+    color: white;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.active>.page-link, .page-link.active {
+    z-index: 3;
+    color: var(--bs-pagination-active-border-color);
+    background-color: white;
+    border-color: white;
+}	
+
+.iw-file-input{
+	min-height:10rem;
+}
+
+.bottom-bar{
+	background-color: transparent !important;
 }

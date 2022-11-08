@@ -45,6 +45,10 @@ a {
 	color: black;
 }
 
+p {
+	font-size: 1.5rem;	
+}
+
 button{
 	cursor: pointer;
 }
@@ -65,7 +69,7 @@ input, select{
     border: none;
     color: black;
     -webkit-appearance: none;
-}
+} 
 
 select{
 	height: 4rem;
@@ -74,9 +78,9 @@ select{
 
 input, textarea, select, button, table, select{
 	font-family: 'Noto Sans Kr', sans-serif;
-    font-size: 16px;
+     font-size: 16px;
     color: #323232;
-    font-weight: 400;	
+    font-weight: 400; 	
 }
 
 .star-rate {
@@ -181,4 +185,27 @@ input, textarea, select, button, table, select{
 }
 .mr1{
 	margin-right:1rem;
+}
+
+.sign-up-area{
+    text-align: left;
+    width: 100%;
+    height: auto;
+    box-sizing: border-box;
+    border: 1px solid #e5e5e5;
+    padding:1.3rem;
+    display: block;
+    min-height: 60rem;
+}
+
+.plus-padding{
+	padding: 3rem 1.6rem
+}
+
+.text-right{
+	text-align: right;
+}
+
+.h-55{
+	height: 5.5rem;
 }

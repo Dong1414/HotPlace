@@ -30,7 +30,8 @@ public class MemberVO{
 	String mberAuth="";
 	
 	String loginId = "";
-	String relationType = "";
+	String relationType = ""; //요청기록
+	String relation = ""; //친구인가
 	
 	String mberFirstId = "";
 	String mberSecondId = "";
@@ -139,6 +140,13 @@ public class MemberVO{
 	}
 	public void setMberSecondId(String mberSecondId) {
 		this.mberSecondId = mberSecondId;
+	}
+	
+	public String getRelation() {
+		return relation;
+	}
+	public void setRelation(String relation) {
+		this.relation = relation;
 	}
 	@Override
 	public String toString() {

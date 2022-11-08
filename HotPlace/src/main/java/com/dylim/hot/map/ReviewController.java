@@ -52,7 +52,7 @@ public class ReviewController {
 	
 	//지도 보기
 	@GetMapping("/map/getMyMapView.do")
-	public ModelAndView getMyMapView(ModelAndView mv, HttpServletRequest request,
+	public ModelAndView getMyMapView(ModelAndView mv, 
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
 		
 		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
@@ -203,5 +203,21 @@ public class ReviewController {
     	
     	return resultMap;
     }  
+    
+    @GetMapping("/wall/timeLineView.do")
+    @ResponseBody
+    public ModelAndView timeLineView(ModelAndView mv, 
+			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
+    	List<ReviewVO> resultList = new ArrayList<ReviewVO>();
+		
+		if(loginMember != null){
+			resultList = getReviews();
+			mv.addObject("loginId", loginMember.getMberId());
+		}
+		
+		mv.addObject("resultList", resultList);
+		mv.setViewName("views/map/myMap");
+    	return mv;
+    }
     
 }
