@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import com.dylim.hot.map.ReviewVO;
+import com.dylim.hot.member.MemberVO;
 
 public interface ReviewService {
 
 	void saveReview(ReviewVO reviewVO) throws Exception;
 
-	List<ReviewVO> getReviews(String mberId) throws Exception;
+	List<ReviewVO> getReviews(MemberVO memberVO) throws Exception;
 
 	ReviewVO getReview(ReviewVO reviewVO) throws Exception;
 

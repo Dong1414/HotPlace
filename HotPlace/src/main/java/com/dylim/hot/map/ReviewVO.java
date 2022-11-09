@@ -15,6 +15,7 @@ public class ReviewVO {
     String updatId; //수정자
     String attachFileMasterId = ""; //파일 마스터 아이디
     String attachFileId = ""; //파일 마스터 아이디
+    String openType;
     
     int pageNo = 1;
     int startPage = 0;
@@ -156,7 +157,16 @@ public class ReviewVO {
 	public void setEndPage(int endPage) {
 		this.endPage = endPage;
 	}
+	
 
+	public String getOpenType() {
+		return openType;
+	}
+
+	public void setOpenType(String openType) {
+		this.openType = openType;
+	}
+	
 	@Override
 	public String toString() {
 		return "ReviewVO [id=" + id + ", title=" + title + ", address=" + address + ", rating=" + rating + ", review="

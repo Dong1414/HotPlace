@@ -60,7 +60,7 @@ public class ReviewController {
 		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
 		
 		if(loginMember != null){
-			resultList = getReviews(loginMember.getMberId());
+			resultList = getReviews(loginMember);
 			mv.addObject("loginId", loginMember.getMberId());
 		}
 		
@@ -77,23 +77,28 @@ public class ReviewController {
 		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
 		
 		if(loginMember!=null) {
-			
-			boolean tn = memberservice.friendCheck(loginMember.getMberId(), memberVO.getMberId());
-			if(tn) {
-				resultList = getReviews(memberVO.getMberId());
+			boolean tf = memberservice.friendCheck(loginMember.getMberId(), memberVO.getMberId());
+			if(tf) {
+				memberVO.setIdentiFication("1");
+				resultList = getReviews(memberVO);
 			}else {
-				mv.addObject("msg", "친구관계만 볼 수 있습니다.");
+				memberVO.setIdentiFication("2");
+				resultList = getReviews(memberVO);
 			}
+		}else {
+			memberVO.setIdentiFication("2");
+			resultList = getReviews(memberVO);
 		}
 		
 		mv.addObject("resultList", resultList);
+		mv.addObject("mberId", memberVO.getMberId());
 		mv.setViewName("views/map/FriendMapView");
     	return mv;
     }
 	
 	//등록된 리뷰 불러오기
-    public List<ReviewVO> getReviews(String loginId) throws Exception{
-    	return seviewService.getReviews(loginId);
+    public List<ReviewVO> getReviews(MemberVO memberVO) throws Exception{
+    	return seviewService.getReviews(memberVO);
     }   
     
 	//저장
@@ -109,7 +114,7 @@ public class ReviewController {
     	}
     	seviewService.saveReview(reviewVO);
     	
-    	List<ReviewVO> result = getReviews(reviewVO.getRegistId());
+    	List<ReviewVO> result = getReviews(loginMember);
     	
     	return result;
     }
@@ -119,7 +124,6 @@ public class ReviewController {
     public ModelAndView updateReview(ModelAndView mv, @ModelAttribute("searchVO")ReviewVO reviewVO ) throws Exception{        
 
     	ReviewVO result = seviewService.getReview(reviewVO.getId());
-    	
     	if(Strings.isNotEmpty(result.getAttachFileMasterId()) && result.getAttachFileMasterId() != null) {
     		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
     		for(FileVO file : files) {
@@ -182,11 +186,12 @@ public class ReviewController {
     	ReviewVO reviewVO = new ReviewVO();
     	reviewVO.setLat(request.getParameter("lat"));
     	reviewVO.setLng(request.getParameter("lng"));
+    	reviewVO.setRegistId(request.getParameter("registId"));
     	if(request.getParameter("pageNo") != null && request.getParameter("pageNo") != "") {
     		reviewVO.setPageNo(Integer.parseInt(request.getParameter("pageNo")));
     	}
     	reviewVO.setPageNo(reviewVO.getPageNo());
-    	
+    	System.out.println("asdadasd");
     	ReviewVO result = seviewService.getReview(reviewVO); //리뷰 상세 데이터
     	int resultCnt = seviewService.getReviewCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
     	
@@ -230,7 +235,7 @@ public class ReviewController {
     	List<ReviewVO> resultList = new ArrayList<ReviewVO>();
 		
 		if(loginMember != null){
-			resultList = getReviews(loginMember.getMberId());
+			resultList = getReviews(loginMember);
 			mv.addObject("loginId", loginMember.getMberId());
 		}
 		

@@ -5,13 +5,14 @@ import java.util.List;
 import org.apache.ibatis.annotations.Mapper;
 
 import com.dylim.hot.map.ReviewVO;
+import com.dylim.hot.member.MemberVO;
 
 @Mapper
 public interface ReviewMapper {
 	
 	void saveReview(ReviewVO reviewVO) throws Exception;
 
-	List<ReviewVO> getReviews(String mberId) throws Exception;
+	List<ReviewVO> getReviews(MemberVO memberVO) throws Exception;
 
 	ReviewVO getReview(ReviewVO reviewVO) throws Exception;
 

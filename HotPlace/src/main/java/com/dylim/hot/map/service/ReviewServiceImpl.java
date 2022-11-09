@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.dylim.hot.map.ReviewVO;
 import com.dylim.hot.map.mapper.ReviewMapper;
+import com.dylim.hot.member.MemberVO;
 
 @Service
 public class ReviewServiceImpl implements ReviewService {
@@ -18,8 +19,8 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewMapper.saveReview(reviewVO);
 	}
 	
-	public List<ReviewVO> getReviews(String mberId) throws Exception {
-		return reviewMapper.getReviews(mberId);
+	public List<ReviewVO> getReviews(MemberVO memberVO) throws Exception {
+		return reviewMapper.getReviews(memberVO);
 	}
 	
 	public ReviewVO getReview(ReviewVO reviewVO) throws Exception {

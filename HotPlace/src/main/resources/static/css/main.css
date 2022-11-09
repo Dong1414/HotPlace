@@ -58,7 +58,7 @@ button{
 }
 
 
-input, select{
+/* input, select{
 	display: block;
     width: 100%;
     line-height: 1.36;
@@ -69,7 +69,7 @@ input, select{
     border: none;
     color: black;
     -webkit-appearance: none;
-} 
+}  */
 
 select{
 	height: 4rem;
@@ -211,4 +211,11 @@ input, textarea, select, button, table, select{
 
 .h-55{
 	height: 5.5rem;
+}
+.text-left{
+	text-align: left;
+}
+.open-area{
+	position:relative;
+	display:inline-block;
 }

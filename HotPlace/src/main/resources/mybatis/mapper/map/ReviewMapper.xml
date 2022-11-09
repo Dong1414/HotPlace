@@ -23,12 +23,12 @@
 				,now()
 				,#{attachFileMasterId}
 				,"N"
+				,#{openType}
 			)
 		]]>
 	</insert>
 	
-	<select id="getReviews" parameterType="string" resultType="com.dylim.hot.map.ReviewVO">
-		<![CDATA[     	
+	<select id="getReviews" parameterType="com.dylim.hot.member.MemberVO" resultType="com.dylim.hot.map.ReviewVO">
 			SELECT 
 				ANY_VALUE(id) as id  
 			    ,ANY_VALUE(title) as title
@@ -45,9 +45,13 @@
 			FROM map_review tb			
 			WHERE del_yn = "N"
 			AND regist_id = #{mberId}
+			<if test='identiFication.equals("1")'>
+				AND open_type != '3'
+			</if>
+			<if test='identiFication.equals("2")'>
+				AND open_type = '1'
+			</if>
 			group by lat,lng
-			;
-		]]>
 	</select>
 	
 	<select id="getReview" resultType="com.dylim.hot.map.ReviewVO" parameterType="com.dylim.hot.map.ReviewVO">
@@ -71,7 +75,8 @@
 						,attach_file_master_id as attachFileMasterId
 					FROM map_review tb,(SELECT @ROWNUM:= 0) RN_TB				
 					WHERE lat = #{lat} and lng = #{lng}
-					AND del_yn = "N"					
+					AND del_yn = "N"
+					AND regist_id = #{registId}					
 					ORDER BY registDt asc
 				)tb2
 			WHERE pageNo = #{pageNo}
@@ -85,6 +90,7 @@
 			FROM map_review tb			
 			WHERE lat = #{lat} and lng = #{lng}
 			AND del_yn = "N"
+			AND regist_id = #{registId}
 		]]>
 	</select>
 	
@@ -95,6 +101,7 @@
 			FROM map_review tb				
 			WHERE lat = #{lat} and lng = #{lng}
 			AND del_yn = "N"
+			AND regist_id = #{registId}
 			ORDER BY regist_dt asc
 			limit #{startPage},#{endPage}
 		]]>
@@ -113,7 +120,8 @@
 				visit_dt = #{visitDt},
 				update_id = "수정자",
 				update_dt = now(),
-				attach_file_master_id = #{attachFileMasterId}
+				attach_file_master_id = #{attachFileMasterId},
+				open_type = #{openType}
 			WHERE
 				id = #{id}
 		]]>
@@ -145,6 +153,7 @@
 			    ,regist_id as registId
 			    ,regist_dt as registDt
 				,attach_file_master_id as attachFileMasterId
+				,open_type as openType
 			FROM map_review tb			
 			WHERE id = #{id} 
 			AND del_yn = "N"

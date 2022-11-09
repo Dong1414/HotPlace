@@ -35,6 +35,8 @@ public class MemberVO{
 	
 	String mberFirstId = "";
 	String mberSecondId = "";
+	String identiFication = ""; //본인확인용 없을 시 본인 1일시 친구 2일시 남
+	
 	
 	public String getMberAuth() {
 		return mberAuth;
@@ -147,6 +149,13 @@ public class MemberVO{
 	}
 	public void setRelation(String relation) {
 		this.relation = relation;
+	}
+	
+	public String getIdentiFication() {
+		return identiFication;
+	}
+	public void setIdentiFication(String identiFication) {
+		this.identiFication = identiFication;
 	}
 	@Override
 	public String toString() {

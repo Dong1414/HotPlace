@@ -78,6 +78,32 @@
 								<input type="text" class="form-control fs-4" th:name="address" th:id="addressInfo" placeholder="위치 정보가 표시됩니다." th:value="${result.address}"/>
 							</td>
 						</tr>
+						<tr class="open-info-area">
+							<th>공개여부</th>
+							<td class="text-left">
+								<div class="d-inline-block">
+									<div class="form-check open-area me-3">
+									  <input class="form-check-input" type="radio" name="openType" id="openType1" value="1" th:checked="${result.openType eq '1'}"/>
+									  
+									  <label class="form-check-label" for="openType1">
+									    전체공개
+									  </label>
+									</div>
+									<div class="form-check open-area me-3">
+									  <input class="form-check-input" type="radio" name="openType" id="openType2" value="2" th:checked="${result.openType eq '2'}"/>
+									  <label class="form-check-label" for="openType2">
+									    친구공개
+									  </label>
+									</div>
+									<div class="form-check open-area me-3">
+									  <input class="form-check-input" type="radio" name="openType" id="openType3" value="3" th:checked="${result.openType eq '3'}"/>  
+									  <label class="form-check-label" for="openType3">
+									    비공개
+									  </label>
+									</div>
+								</div>
+							</td>
+						</tr>
 						<tr class="review-area">
 							<th>후기</th>
 							<td>
@@ -99,7 +125,6 @@
 <script th:inline="javascript">
 var fileCnt = [[${fileCnt}]];
 var fileContents = [];
-
 function fnMoidfyReview(){
 	
 	if(!confirm('수정하시겠습니까?')){
@@ -117,6 +142,10 @@ function fnMoidfyReview(){
 	}
 	if(!$('#addressInfo').val()){
 		alert('주소를 입력해주세요.');
+	}
+	if(!$('input:radio[name="openType"]:checked').val()){
+		alert('공개여부를 선택해주세요.');
+		return false;
 	}
 	if(!$('#review').text()){
 		alert('후기를 입력해주세요.');
