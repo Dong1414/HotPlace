@@ -20,11 +20,12 @@
 					,#{mberBrthd}
 					,#{mberTelNo}
 					,#{mberEmail}
-					,"등록자"
+					,#{mberId}
 					,now()
-					,"수정자"
+					,#{mberId}
 					,now()
 					,"N"
+					,#{mberNickName}
 				)
 		]]>
 	</insert>
@@ -34,6 +35,7 @@
 				mber_id as mberId,
 				mber_password as mberPassword,
 				mber_name as mberName,
+				mber_nick_name as mberNickName,
 				mber_brthd as mberBrthd,
 				mber_tel_no as mberTelNo,
 				mber_email as mberEmail
@@ -85,6 +87,7 @@
 			SELECT 
 				t1.mber_id as mberId,
 				t1.mber_name as mberName,
+				t1.mber_nick_name as mberNickName,
 				t2.relation_type as relationType,
 				t3.relation as relation
 			FROM 
@@ -103,7 +106,8 @@
 	<select id="friendRequestList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
 		<![CDATA[
 			SELECT
-				mber_id as mberId
+				mber_id as mberId,
+				mber_nick_name as mberNickName
 			FROM
 				member,
 				(
@@ -144,9 +148,10 @@
 	<select id="friendtList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
 		<![CDATA[
 			SELECT
-				mber_second_id as mberId
+				mber_second_id as mberId,
+				(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName
 			FROM
-				member_relationship
+				member_relationship tb1
 			WHERE 
 				mber_first_id = #{loginId}
 		]]>

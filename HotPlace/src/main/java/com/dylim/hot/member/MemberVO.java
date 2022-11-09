@@ -28,6 +28,7 @@ public class MemberVO{
 	String updateDt="";
 	String delYn="";
 	String mberAuth="";
+	String mberNickName="";
 	
 	String loginId = "";
 	String relationType = ""; //요청기록
@@ -156,6 +157,13 @@ public class MemberVO{
 	}
 	public void setIdentiFication(String identiFication) {
 		this.identiFication = identiFication;
+	}
+	
+	public String getMberNickName() {
+		return mberNickName;
+	}
+	public void setMberNickName(String mberNickName) {
+		this.mberNickName = mberNickName;
 	}
 	@Override
 	public String toString() {

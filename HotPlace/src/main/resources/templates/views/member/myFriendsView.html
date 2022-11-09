@@ -38,7 +38,7 @@
 														<img class="request-profile-img" src="/images/noImage.png"/>
 													</div>
 													<div class="user-name-box">
-														<span th:text="${result.mberId}"></span>
+														<span th:text="${result.mberNickName}"></span>
 													</div>
 													<div class="p12">
 														<th:block th:if="${result.relation == 'Y'}">
@@ -83,7 +83,7 @@
 												<img class="request-profile-img" src="/images/noImage.png"/>
 											</div>
 											<div class="user-name-box">
-												<span th:text="${member.mberId}"></span>
+												<span th:text="${member.mberNickName}"></span>
 											</div>
 											<div class="p12">
 												<div class="friend-add-box">
@@ -113,7 +113,7 @@
 												<img class="request-profile-img" src="/images/noImage.png"/>
 											</div>
 											<div class="user-name-box">
-												<span th:text="${myFriend.mberId}"></span>
+												<span th:text="${myFriend.mberNickName}"></span>
 											</div>
 											<div class="p12">
 												<div class="friend-add-box">

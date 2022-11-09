@@ -21,12 +21,25 @@
 							<label for="mberId">아이디<span class="red">*</span></label>
 							<div style="display: flex;">
 								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberId" name="mberId" placeholder="아이디를 입력해주세요." /> 
-								<button type="button" class="btn btn-outline-secondary w15 fs-4 ms-3" onclick="fnIdChk()">중복확인</button>
+								<button type="button" class="btn btn-outline-secondary fs-4 ms-3" onclick="fnIdChk()">중복확인</button>
 								<div class="id-chk-result-msg">
 									<ul>
 										<li><span class="red">※ 6 ~ 12자의 영문 소문자, 숫자만 사용가능</span></li>
 										<li><span id="falseMsg" class="red none">입력하신 아이디는 사용이 불가합니다.</span></li>
 										<li><span id="seccessMsg" class="blue none">입력하신 아이디는 사용이 가능합니다.</span></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label for="mberId">닉네임<span class="red">*</span></label>
+							<div style="display: flex;">
+								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberNickName" name="mberNickName" onchange="fnValidNNCheck(); return false;" placeholder="사용하실 닉네임을 입력해주세요." /> 
+								<div class="id-chk-result-msg">
+									<ul>
+										<li><span class="red">※ 최대 12자, 특수문자는 사용하실 수 없습니다.</span></li>
 									</ul>
 								</div>
 							</div>
@@ -87,7 +100,7 @@
 								<input class="w15 form-control fs-4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" />
 								<p class="side-margin-01">-</p>
 								<input class="w15 form-control fs-4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" />
-								<button type="button" class="btn btn-outline-secondary w15 fs-4 ms-3" id="phonChkRequest" style="width:10rem;" onclick="fnChkPhone()">인증번호요청</button>
+								<button type="button" class="btn btn-outline-secondary fs-4 ms-3" id="phonChkRequest" onclick="fnChkPhone();">인증번호요청</button>
 								<input type="hidden" id="mberTelNo" name="mberTelNo" />
 							</div>								
 						</div>
@@ -98,7 +111,7 @@
 							<label for="phonChk">인증번호<span class="red">*</span></label>
 							<div class="d-flex"> 
 								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="phonChk" name="phonChk" placeholder="인증번호를 입력하세요." />
-								<button type="button" id="phonChkBtn" class="btn btn-outline-secondary fs-4 ms-3" onclick="fnValPhonChek">인증</button>
+								<button type="button" id="phonChkBtn" class="btn btn-outline-secondary fs-4 ms-3" onclick="fnValPhonChek();">인증</button>
 							</div>
 						</div>
 					</div>					
@@ -181,6 +194,34 @@
 	            $("#mberId").focus();
 	            return false;
 	        }
+		}
+		function fnValidNNCheck(){
+			var nick = $("#mberNickName").val();
+			
+			if(nick != ""){
+				if(nick.length > 12){
+					alert("닉네임은 12자리 이내로 입력하여 주십시오.");
+					$("#mberNickName").val("");
+					$("#mberNickName").focus();
+					return false;
+				}
+				
+				var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+				if(special_pattern.test(nick) == true) {
+					alert("포함");
+					alert('특수문자는 사용하실 수 없습니다.')
+					$("#mberNickName").val("");
+					$("#mberNickName").focus("");
+					return false;
+				}
+				
+				if(nick.replaceAll(" ", "").length < 1){
+	                alert("공백으로만 입력하실 수 없습니다.");
+	                $("#mberNickName").val("");
+	                $("#mberNickName").focus();
+	                return false;
+	            }
+			}
 		}
 		
 		function fnPasswordChk(){
@@ -302,9 +343,10 @@
 			
 			if(!reg.test(email)){
 				alert("이메일 형식이 올바르지 않습니다.")
+				return false;
 			}
 			
-			return 
+			return true;
 
 		}
 		
@@ -313,7 +355,6 @@
 			if(!confirm('입력하신 정보로 회원가입 하시겠습니까?')){
 				return false;
 			}
-			
 				
 			if(!$('#mberId').val() || $('#mberbId').val()==''){
 				alert('아이디를 입력해주세요.');
@@ -324,6 +365,12 @@
 				alert("아이디 중복확인을 진행하시기 바랍니다.");
 		        $("#mberId").focus();
 		        return false;
+			};
+			
+			if(!$('#mberNickName').val() || $('#mberNickName').val()==''){
+				alert('닉네임을 입력해주세요.');
+				$('#mberNickName').focus();
+				return false;
 			};
 			
 			if(!$('#mberPassword').val() || $('#mberPassword').val()==''){
