@@ -17,7 +17,7 @@ public class MemberVO{
 
 	String id ="";
 	String mberId ="";
-	String mberPassword ="";
+	String mberPassword;
 	String mberName ="";
 	String mberBrthd="";
 	String mberTelNo="";
@@ -37,6 +37,10 @@ public class MemberVO{
 	String mberFirstId = "";
 	String mberSecondId = "";
 	String identiFication = ""; //본인확인용 없을 시 본인 1일시 친구 2일시 남
+	
+	String kakaoConnectId;
+	String naverConnectId;
+	String snsMod;
 	
 	
 	public String getMberAuth() {
@@ -164,6 +168,26 @@ public class MemberVO{
 	}
 	public void setMberNickName(String mberNickName) {
 		this.mberNickName = mberNickName;
+	}
+	
+	public String getKakaoConnectId() {
+		return kakaoConnectId;
+	}
+	public void setKakaoConnectId(String kakaoConnectId) {
+		this.kakaoConnectId = kakaoConnectId;
+	}
+	public String getNaverConnectId() {
+		return naverConnectId;
+	}
+	public void setNaverConnectId(String naverConnectId) {
+		this.naverConnectId = naverConnectId;
+	}
+	
+	public String getSnsMod() {
+		return snsMod;
+	}
+	public void setSnsMod(String snsMod) {
+		this.snsMod = snsMod;
 	}
 	@Override
 	public String toString() {

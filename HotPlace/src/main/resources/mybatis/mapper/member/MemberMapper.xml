@@ -9,12 +9,23 @@
 		]]>
 	</select>
 	<insert id="signUpInsert" parameterType="com.dylim.hot.member.MemberVO">
-		<![CDATA[  
 			INSERT INTO member
 			VALUES
 				(
 					null
-					,#{mberId}
+					<choose>
+						<when test='snsMod != null'>
+							<if test='snsMod.equals("n")'>
+								,concat(nextval('naver_seq'),"@",#{snsMod})
+							</if>
+							<if test='snsMod.equals("k")'>
+								,concat(nextval('kakao_seq'),"@",#{snsMod}) 
+							</if>
+						</when>
+						<otherwise>
+						,#{mberId}
+						</otherwise>
+					</choose>
 					,#{mberPassword}
 					,#{mberName}
 					,#{mberBrthd}
@@ -26,11 +37,12 @@
 					,now()
 					,"N"
 					,#{mberNickName}
+					,#{naverConnectId}
+					,#{kakaoConnectId}
+					
 				)
-		]]>
 	</insert>
-	<select id="loadUserByUserId" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
-		<![CDATA[
+	<select id="loadUserByUserId" parameterType="com.dylim.hot.member.MemberVO" resultType="com.dylim.hot.member.MemberVO">
 			SELECT 
 				mber_id as mberId,
 				mber_password as mberPassword,
@@ -39,8 +51,24 @@
 				mber_brthd as mberBrthd,
 				mber_tel_no as mberTelNo,
 				mber_email as mberEmail
-			FROM member WHERE mber_id = #{mberId} and del_yn = "N"			
-		]]>
+			FROM
+				member
+			WHERE
+				del_yn = "N"
+				<choose>
+					<when test='snsMod != null'>
+						<if test='snsMod.equals("n")'>
+							AND naver_connect_id = #{naverConnectId}
+						</if>
+						<if test='snsMod.equals("k")'>
+							AND kakao_connect_id = #{kakaoConnectId} 
+						</if>
+					</when>
+					<otherwise>
+						AND mber_id = #{mberId}
+					</otherwise>
+				</choose>
+			  			
 	</select>
 	
 	<insert id="friendRequest" parameterType="String">
@@ -174,4 +202,25 @@
 				and mber_second_id	in(#{loginId}, #{mberId})
 		]]>
 	</delete>
+	
+	<select id="snsIdCheck" parameterType="com.dylim.hot.member.MemberVO" resultType="com.dylim.hot.member.MemberVO">
+		SELECT 
+				mber_id as mberId,
+				mber_password as mberPassword,
+				mber_name as mberName,
+				mber_nick_name as mberNickName,
+				mber_brthd as mberBrthd,
+				mber_tel_no as mberTelNo,
+				mber_email as mberEmail
+			FROM
+				member
+			WHERE
+				del_yn = "N"
+				<if test='snsMod.equals("n")'>
+					AND naver_connect_id = #{naverConnectId}
+				</if>
+				<if test='snsMod.equals("k")'>
+					AND kakao_connect_id = #{kakaoConnectId} 
+				</if>
+	</select>
 </mapper>

@@ -1,5 +1,7 @@
 package com.dylim.hot.member;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -30,7 +32,7 @@ public class MemberController {
 	
 	//회원가입
 	@PostMapping("/member/signUpInsert.do")
-    public String signUpInsert(MemberVO memberVO) throws Exception{
+    public String signUpInsert(MemberVO memberVO, HttpServletRequest request) throws Exception{
 		
     	memberService.signUpInsert(memberVO);
     		
@@ -207,4 +209,24 @@ public class MemberController {
   	    return resultMsg;
   	}  	
   	
+  	//sns회원가입
+  	@PostMapping("/member/snsSignUp")
+  	public ModelAndView snsSignUp(ModelAndView mv, MemberVO memberVO, HttpServletRequest request) throws Exception {
+  		int min_val = 10000000;
+        int max_val = 99999999;
+        SecureRandom rand = new SecureRandom();
+        memberVO.setMberId(rand.nextInt((max_val - min_val) + 1) + min_val + "@" + memberVO.getSnsMod());
+  			
+  	    memberService.signUpInsert(memberVO);
+  	    
+  	    MemberVO loginVO = memberService.loadUserByUserId(memberVO);
+  	    
+  	  	if(loginVO != null) {
+	  	  	HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
+		    session.setAttribute(SessionConstants.LOGIN_MEMBER, loginVO);   // 세션에 로그인 회원 정보 보관
+		    session.setAttribute("loginMemberId", loginVO.getMberId());
+  	  	}
+		mv.setViewName("redirect:/"); 
+  	    return mv;
+  	}
 }

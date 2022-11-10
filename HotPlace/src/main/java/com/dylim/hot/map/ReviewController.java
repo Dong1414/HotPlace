@@ -1,5 +1,7 @@
 package com.dylim.hot.map;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,7 +45,8 @@ public class ReviewController {
 	private MemberService memberservice;
 	
 	@GetMapping("/")
-	public String main2() throws Exception{        
+	public String main2() throws Exception{
+
     	return "views/main";
     }
 	

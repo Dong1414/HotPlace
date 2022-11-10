@@ -2,6 +2,7 @@ package com.dylim.hot.member.service;
 
 import java.util.List;
 
+import org.apache.groovy.parser.antlr4.util.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,7 +20,9 @@ public class MemberServiceImpl implements MemberService {
 	private PasswordEncoder passwordEncoder;
 	
 	public void signUpInsert(MemberVO memberVO)throws Exception{
-		memberVO.setMberPassword(passwordEncoder.encode(memberVO.getMberPassword()));
+		if(!StringUtils.isEmpty(memberVO.getMberPassword())) {
+			memberVO.setMberPassword(passwordEncoder.encode(memberVO.getMberPassword()));
+		}
 		memberMapper.signUpInsert(memberVO);
 	};
 	
@@ -31,17 +34,23 @@ public class MemberServiceImpl implements MemberService {
 	};
 	
 	public MemberVO loadUserByUserId(MemberVO memberVO) throws Exception{
-		MemberVO result = memberMapper.loadUserByUserId(memberVO.getMberId());
-
-		if(result == null) {
-			return null;
-		}else {
-			if(!passwordEncoder.matches(memberVO.getMberPassword(), result.getMberPassword())) {
-			      System.out.println("비밀번호가 일치하지 않습니다.");
-			      return null;
-			   }
-		}
+		MemberVO result = new MemberVO();
 		
+		if(StringUtils.isEmpty(memberVO.getSnsMod())) {
+			result = memberMapper.loadUserByUserId(memberVO);
+
+			if(result == null) {
+				return null;
+			}else {
+				if(!passwordEncoder.matches(memberVO.getMberPassword(), result.getMberPassword())) {
+				      System.out.println("비밀번호가 일치하지 않습니다.");
+				      return null;
+				   }
+			}
+		}else {
+			result = memberMapper.loadUserByUserId(memberVO);
+		}
+				
 		return result;
 	};
 	
@@ -104,5 +113,14 @@ public class MemberServiceImpl implements MemberService {
 	public boolean friendCheck(String loginId, String mberId) throws Exception{
 		int fChack = memberMapper.friendCheck(loginId,mberId); 
 		return fChack > 0 ? true : false;
+	};
+	
+	public MemberVO snsIdCheck(MemberVO resultToken) throws Exception{
+		MemberVO result = memberMapper.snsIdCheck(resultToken);
+		if(result == null) {
+			return null;
+		}
+			
+		return result; 
 	};
 }

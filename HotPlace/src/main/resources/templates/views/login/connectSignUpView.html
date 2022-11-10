@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+	<!-- <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script> -->
+	<section class="form-wrap">
+		<div class="form-view-area">
+			<div class="form-area">
+				<div class="login-form">
+					<h1>SNS로 가입하기</h1>
+					<div class="login-info">
+						<form id="signForm" method="post" onsubmit="fnConnectSign(); return false;">
+							<div style="margin-top: 5rem;">
+								<label for="mberNickName">닉네임</label>
+								<input class="form-control mt-1 fs-3 h-55" type="text" id="mberNickName" name="mberNickName" placeholder="사용하실 닉네임을 입력해주세요."/>
+							</div>
+							<div class="mb1 red">※ 최대 12자, 특수문자는 사용하실 수 없습니다.</div>
+							<button class="login-action-btn btn btn-primary fs-3 ps-4 pe-4 fw-bold" type="submit">시작하기</button>
+							<input type="hidden" th:id="naverConnectId" th:name="naverConnectId" th:value="${result.naverConnectId}"/>
+							<input type="hidden" th:id="mberEmail" th:name="mberEmail" th:value="${result.mberEmail}"/>
+							<input type="hidden" th:id="mberName" th:name="mberName" th:value="${result.mberName}"/>
+							<input type="hidden" th:id="mberTelNo" th:name="mberTelNo" th:value="${result.mberTelNo}"/>
+							<input type="hidden" th:id="mberBrthd" th:name="mberBrthd" th:value="${result.mberBrthd}"/>
+							<input type="hidden" th:id="snsMod" th:name="snsMod" th:value="${result.snsMod}"/>
+						</form>
+					</div>			
+				</div>
+			</div>
+		</div>
+	</section>
+<script th:inline="javascript">
+function fnConnectSign(){
+	if(!fnValidNNCheck()){
+		return false;
+	}		
+	
+	$('#signForm').attr('action','/member/snsSignUp');
+	$('#signForm').submit();
+}
+
+function fnValidNNCheck(){
+	var nick = $("#mberNickName").val();
+	
+	if(nick != ""){
+		if(nick.length > 12){
+			alert("닉네임은 12자리 이내로 입력하여 주십시오.");
+			$("#mberNickName").val("");
+			$("#mberNickName").focus();
+			return false;
+		}
+		
+		var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+		if(special_pattern.test(nick) == true) {
+			alert('특수문자는 사용하실 수 없습니다.')
+			$("#mberNickName").val("");
+			$("#mberNickName").focus("");
+			return false;
+		}
+		
+		if(nick.replaceAll(" ", "").length < 1){
+            alert("공백으로만 입력하실 수 없습니다.");
+            $("#mberNickName").val("");
+            $("#mberNickName").focus();
+            return false;
+        }
+		return true;
+	}else{
+		alert("닉네임을 입력해주세요.");
+		return false;
+	}
+}
+</script>
+</th:block>
+</html>

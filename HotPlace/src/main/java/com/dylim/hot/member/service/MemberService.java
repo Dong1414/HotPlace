@@ -30,4 +30,6 @@ public interface MemberService {
 	
 	boolean friendCheck(String loginId, String mberId) throws Exception;
 
+	MemberVO snsIdCheck(MemberVO resultToken) throws Exception;
+
 }

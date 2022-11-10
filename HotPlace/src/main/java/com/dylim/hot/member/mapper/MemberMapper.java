@@ -13,7 +13,7 @@ public interface MemberMapper {
 
 	int idCheck(String id) throws Exception;
 	
-	MemberVO loadUserByUserId(String mberId) throws Exception;
+	MemberVO loadUserByUserId(MemberVO memberVO) throws Exception;
 
 	void friendRequest(String loginId, String mberId) throws Exception;
 
@@ -29,7 +29,10 @@ public interface MemberMapper {
 	
 	List<MemberVO> friendtList(String loginId) throws Exception;
 
-	void friendDelHistory(String loginId, String mberId);
+	void friendDelHistory(String loginId, String mberId) throws Exception;
 
-	void friendDel(String loginId, String mberId);
+	void friendDel(String loginId, String mberId) throws Exception;
+
+	MemberVO snsIdCheck(MemberVO resultToken) throws Exception;
+
 }
