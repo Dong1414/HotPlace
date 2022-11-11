@@ -1,4 +1,4 @@
-package com.dylim.hot.naver;
+package com.dylim.hot.loginapi;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
