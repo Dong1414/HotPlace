@@ -8,6 +8,10 @@
 	<form id="signUpForm" method="post">
 	<input type="hidden" id="mberIdCheck"/>
 	<input type="hidden" id="telNoCheck"/>
+	<input type="hidden" id="emailNoCheck"/>
+	<input type="hidden" id="telYn"/>
+	<input type="hidden" id="emailYn"/>
+	
 	<section class="form-wrap">
 		<div class="form-view-area plus-padding">
 			<div class="form-area">
@@ -105,20 +109,31 @@
 							</div>								
 						</div>
 					</div>
-					<div class="sign-up-input">
+					<div class="sign-up-input none" id="phonChkArea">
 						<div class="input-form">
-							
-							<label for="phonChk">인증번호<span class="red">*</span></label>
+							<label for="phonChk">휴대폰 인증번호<span class="red">*</span></label>
 							<div class="d-flex"> 
 								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="phonChk" name="phonChk" placeholder="인증번호를 입력하세요." />
-								<button type="button" id="phonChkBtn" class="btn btn-outline-secondary fs-4 ms-3" onclick="fnValPhonChek();">인증</button>
+								<button type="button" id="phonChkBtn" class="btn btn-outline-secondary fs-4 ms-3">인증</button>
 							</div>
 						</div>
 					</div>					
 					<div class="sign-up-input">
 						<div class="input-form">
 							<label for="email">이메일<span class="red">*</span></label>
-							<input class="form-control fs-4" type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." />
+							<div class="d-flex">
+								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." />
+								<button type="button" class="btn btn-outline-secondary fs-4 ms-3" id="emailChkRequest" onclick="fnChkEmail();">인증번호요청</button>
+							</div>
+						</div>
+					</div>
+					<div class="sign-up-input" id="emailChkArea">
+						<div class="input-form">
+							<label for="emailChk">이메일 인증번호<span class="red">*</span></label>
+							<div class="d-flex"> 
+								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="emailChk" name="emailChk" placeholder="인증번호를 입력하세요." />
+								<button type="button" id="emailChkBtn" class="btn btn-outline-secondary fs-4 ms-3">인증</button>
+							</div>
 						</div>
 					</div>
 					<div class="sign-up-input">
@@ -287,14 +302,53 @@
 	             $("#password_msg").prop("hidden", true);    
 	         }
 	     }
-
+		function fnChkEmail(){
+			if(!confirm("인증번호를 보내시겠습니까?")){
+				return false;
+			}
+			if(!$('#mberEmail').val()){
+				alert('이메일을 입력해주세요.');	
+			};
+			
+			var fromMail = $('#mberEmail').val();
+			
+			$.ajax({
+				type : "post",
+				url : '/mail/gmailSend.do',
+				data : {
+					fromMail: fromMail
+				}
+			}).done(function(res) {
+				alert("인증번호가 전송되었습니다.");
+				$('#emailChkRequest').text('완료');
+				$('#emailChkRequest').attr('disabled', true);
+				
+				$('#emailChkBtn').click(function(){
+                    if($.trim(res) == $('#emailChk').val()){
+                        alert('이메일 인증이 정상적으로 완료되었습니다.');
+                        $('#emailChk').text('완료');
+        				$('#emailChk').attr('disabled', true);
+        				$('#emailNoCheck').val(fromMail);
+        				$('#emailYn').val("Y");
+                    }else{
+                    	alert('인증번호가 올바르지 않습니다!');
+                    }
+                })
+			}).fail(function() {
+				alert('실패 하였습니다.');
+			})
+			
+		}
+		
 		function fnChkPhone() {
+			if(!confirm("인증번호를 보내시겠습니까?")){
+				return false;
+			}
 			if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
 				alert('전화번호를 입력해주세요.');
 				return false;
 			}
 			var phonNum = $('#telNm1').val() + $('#telNm2').val()+ $('#telNm3').val();
-			console.log(phonNum);
 		    
 			$.ajax({
 				type : "post",
@@ -313,6 +367,7 @@
                         $('#phonChk').text('완료');
         				$('#phonChk').attr('disabled', true);
         				$('#telNoCheck').val(phonNum);
+        				$('#telYn').val("Y");
                     }else{
                     	alert('인증번호가 올바르지 않습니다!');
                     }
@@ -404,10 +459,12 @@
 			}
 			$('#mberTelNo').val($('#telNm1').val() + $('#telNm2').val()+ $('#telNm3').val());
 			
-			if(!fnValTelNoCheck($('#mberTelNo').val())){
-				alert('휴대폰 인증을 진행해주세요.');
-				$('#telNm1').focus();
-				return false;
+			if($('#telYn').val() == 'Y'){
+				if(!fnValTelNoCheck($('#mberTelNo').val())){
+					alert('입력된 번호가 인증받은 번호와 다릅니다.');
+					$('#telNm1').focus();
+					return false;
+				}	
 			}
 			
 			if(!$('#mberEmail').val() || $('#mberEmail').val()==''){
@@ -415,10 +472,18 @@
 				$('#mberEmail').focus();
 				return false;
 			}
-			
+
 			if(!fnEmailCheck($('#mberEmail').val())){
 				return false;
 			};
+			
+			if($('#emailYn').val() == 'Y'){
+				if(!fnValTelNoCheck($('#mberTelNo').val())){
+					alert('입력된 이메일이 인증받은 이메일과 다릅니다.');
+					$('#mberEmail').focus();
+					return false;
+				}
+			}
 			
 			$('#signUpForm').attr('action', '/member/signUpInsert.do');
 			$('#signUpForm').submit();

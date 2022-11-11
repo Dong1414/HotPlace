@@ -42,6 +42,9 @@ public class MemberVO{
 	String naverConnectId;
 	String snsMod;
 	
+	String emailYn;
+	String telYn;
+	
 	
 	public String getMberAuth() {
 		return mberAuth;
@@ -188,6 +191,19 @@ public class MemberVO{
 	}
 	public void setSnsMod(String snsMod) {
 		this.snsMod = snsMod;
+	}
+	
+	public String getEmailYn() {
+		return emailYn;
+	}
+	public void setEmailYn(String emailYn) {
+		this.emailYn = emailYn;
+	}
+	public String getTelYn() {
+		return telYn;
+	}
+	public void setTelYn(String telYn) {
+		this.telYn = telYn;
 	}
 	@Override
 	public String toString() {
