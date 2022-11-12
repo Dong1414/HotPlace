@@ -39,6 +39,8 @@
 					,#{mberNickName}
 					,#{naverConnectId}
 					,#{kakaoConnectId}
+					,#{emailYn}
+					,#{telYn}
 					
 				)
 	</insert>

@@ -1,5 +1,7 @@
 package com.dylim.hot.mail;
 
+import java.math.BigInteger;
+import java.security.SecureRandom;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -57,11 +59,15 @@ public class GoogleMailController {
             // Subject
             message.setSubject("TripDiary : 이메일 인증번호입니다."); //메일 제목을 입력
             // Text
-            message.setText("인증번호: 1234");    //메일 내용을 입력
+            
+            SecureRandom random = new SecureRandom();
+            String state = String.valueOf(random.nextInt((99999 - 10000) + 1) + 10000);
+            
+            message.setText("인증번호: " + state);    //메일 내용을 입력
             // send the message
             Transport.send(message); ////전송
             System.out.println("message sent successfully...");
-            return "1234";
+            return state;
         } catch (AddressException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

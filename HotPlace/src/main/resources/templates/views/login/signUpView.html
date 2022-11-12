@@ -9,8 +9,8 @@
 	<input type="hidden" id="mberIdCheck"/>
 	<input type="hidden" id="telNoCheck"/>
 	<input type="hidden" id="emailNoCheck"/>
-	<input type="hidden" id="telYn"/>
-	<input type="hidden" id="emailYn"/>
+	<input type="hidden" id="telYn" value="N"/>
+	<input type="hidden" id="emailYn" value="N"/>
 	
 	<section class="form-wrap">
 		<div class="form-view-area plus-padding">
@@ -72,13 +72,13 @@
 					</div>
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="mberName">이름<span class="red">*</span></label>
+							<label for="mberName">이름</label>
 							<input class="form-control fs-4" type="text" id="mberName" name="mberName" placeholder="이름을 입력해주세요." />
 						</div>
 					</div>
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="mberBrthd">생년월일<span class="red">*</span></label>
+							<label for="mberBrthd">생년월일</label>
 							
 							<select class="w15 form-control fs-4" id="selYear">
 								<option value='' selected>-- 선택 --</option>
@@ -97,21 +97,25 @@
 					</div>
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="telNm">전화번호<span class="red">*</span></label>
-							<div class="d-flex"> 
-								<input class="w15 form-control fs-4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1" />
-								<p class="side-margin-01 fs-5">-</p>
-								<input class="w15 form-control fs-4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" />
-								<p class="side-margin-01">-</p>
-								<input class="w15 form-control fs-4" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" />
-								<button type="button" class="btn btn-outline-secondary fs-4 ms-3" id="phonChkRequest" onclick="fnChkPhone();">인증번호요청</button>
+							<label for="telNm">휴대폰번호</label>
+							<div> 
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1" />
+								<p class="side-margin-01 fs-5 d-inline-block">-</p>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" />
+								<p class="side-margin-01 d-inline-block">-</p>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" />
+								<button type="button" class="btn btn-outline-secondary fs-4 ms-3 d-inline-block" style="width:9.8rem;" id="phonChkRequest" onclick="fnChkPhone();">인증번호요청</button>
 								<input type="hidden" id="mberTelNo" name="mberTelNo" />
-							</div>								
+								<div><br>
+									<span class="red">※ (선택) 인증받은 휴대폰 번호만 아이디 찾기, 비밀번호 찾기에 사용 할 수 있습니다.</span>
+								</div>
+							</div>
 						</div>
+						
 					</div>
 					<div class="sign-up-input none" id="phonChkArea">
 						<div class="input-form">
-							<label for="phonChk">휴대폰 인증번호<span class="red">*</span></label>
+							<label for="phonChk">휴대폰 인증번호</label>
 							<div class="d-flex"> 
 								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="phonChk" name="phonChk" placeholder="인증번호를 입력하세요." />
 								<button type="button" id="phonChkBtn" class="btn btn-outline-secondary fs-4 ms-3">인증</button>
@@ -120,14 +124,17 @@
 					</div>					
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="email">이메일<span class="red">*</span></label>
-							<div class="d-flex">
-								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." />
-								<button type="button" class="btn btn-outline-secondary fs-4 ms-3" id="emailChkRequest" onclick="fnChkEmail();">인증번호요청</button>
+							<label for="email">이메일</label>
+							<div>
+								<input style="width:35rem;" class="form-control fs-4 d-inline-block" type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." />
+								<button type="button" class="btn btn-outline-secondary fs-4 ms-3 d-inline-block" style="width:9.8rem;" id="emailChkRequest" onclick="fnChkEmail();">인증번호요청</button>
+								<div><br>
+									<span class="red">※ (선택) 인증받은 이메일만 아이디 찾기, 비밀번호 찾기에 사용 할 수 있습니다.</span>
+								</div>
 							</div>
 						</div>
 					</div>
-					<div class="sign-up-input" id="emailChkArea">
+					<div class="sign-up-input none" id="emailChkArea">
 						<div class="input-form">
 							<label for="emailChk">이메일 인증번호<span class="red">*</span></label>
 							<div class="d-flex"> 
@@ -308,10 +315,13 @@
 			}
 			if(!$('#mberEmail').val()){
 				alert('이메일을 입력해주세요.');	
+				return false;
 			};
 			
 			var fromMail = $('#mberEmail').val();
-			
+
+			counterFn(15,2);
+
 			$.ajax({
 				type : "post",
 				url : '/mail/gmailSend.do',
@@ -320,14 +330,11 @@
 				}
 			}).done(function(res) {
 				alert("인증번호가 전송되었습니다.");
-				$('#emailChkRequest').text('완료');
-				$('#emailChkRequest').attr('disabled', true);
-				
+				$('#emailChkArea').css("display", "flex");
 				$('#emailChkBtn').click(function(){
                     if($.trim(res) == $('#emailChk').val()){
                         alert('이메일 인증이 정상적으로 완료되었습니다.');
-                        $('#emailChk').text('완료');
-        				$('#emailChk').attr('disabled', true);
+                        $('#emailChk').attr('disabled', true);
         				$('#emailNoCheck').val(fromMail);
         				$('#emailYn').val("Y");
                     }else{
@@ -337,7 +344,6 @@
 			}).fail(function() {
 				alert('실패 하였습니다.');
 			})
-			
 		}
 		
 		function fnChkPhone() {
@@ -349,7 +355,7 @@
 				return false;
 			}
 			var phonNum = $('#telNm1').val() + $('#telNm2').val()+ $('#telNm3').val();
-		    
+			counterFn(15, 1);
 			$.ajax({
 				type : "post",
 				url : '/sms/sendSms.do',
@@ -358,9 +364,7 @@
 				}
 			}).done(function(res) {
 				alert("인증번호가 전송되었습니다.");
-				$('#phonChkRequest').text('완료');
-				$('#phonChkRequest').attr('disabled', true);
-				
+				$('#phonChkArea').css("display", "flex");
 				$('#phonChkBtn').click(function(){
                     if($.trim(res) == $('#phonChk').val()){
                         alert('휴대폰 인증이 정상적으로 완료되었습니다.');
@@ -377,6 +381,33 @@
 			})
 
 		}
+		
+		function counterFn(cnt0,mod) {
+		    id0 = setInterval(count0Fn, 1000);
+		    function count0Fn() {
+		    	if(mod == 2){
+		    		$('#emailChkRequest').attr('disabled', true);
+				      cnt0--;
+				      if (cnt0 <= 0) {
+				        clearInterval(id0);
+				        $("#emailChkRequest").text("인증번호요청");
+			    		$('#emailChkRequest').attr('disabled', false);
+				      } else {
+				        $("#emailChkRequest").text(cnt0);
+				      }
+		    	}else{
+		    		$('#phonChkRequest').attr('disabled', true);
+				      cnt0--;
+				      if (cnt0 <= 0) {
+				        clearInterval(id0);
+				        $("#phonChkRequest").text("인증번호요청");
+			    		$('#phonChkRequest').attr('disabled', false);
+				      } else {
+				        $("#phonChkRequest").text(cnt0);
+				      }
+		    	}
+		    }
+		  }
 		
 		function fnValIdCheck(){
 			if($("#mberId").val() != $("#mberIdCheck").val()) {
@@ -439,18 +470,10 @@
 				}
 			}
 			
-			if(!$('#mberName').val() || $('#mberName').val()==''){
-				alert('이름을 입력해주세요.');
-				$('#mberName').focus();
-				return false;
+			if($("#selYear option:selected").val() != '' || $("#selMon option:selected").val() != '' || $("#selDay option:selected").val() != ''){
+				$('#mberBrthd').val($("#selYear option:selected").val()+$("#selMon option:selected").val()+$("#selDay option:selected").val())
 			}
 			
-			if($("#selYear option:selected").val() == '' || $("#selMon option:selected").val() == '' || $("#selDay option:selected").val() == ''){
-				alert('생년월일을 입력해주세요.');
-				$('#selYear').focus();
-				return false;
-			}
-			$('#mberBrthd').val($("#selYear option:selected").val()+$("#selMon option:selected").val()+$("#selDay option:selected").val())
 			
 			if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
 				alert('전화번호를 입력해주세요.');
