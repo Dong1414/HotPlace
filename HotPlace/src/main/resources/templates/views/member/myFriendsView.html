@@ -15,7 +15,7 @@
 					<form method="get"  id="searchFriend" onsubmit="fnSearchFriend();">
 						<div class="w100 d-flex justify-con-end">
 							<div class="mr1">
-								<input class="search-box" type="text" id="searchId" name="searchId" th:value="${searchId}" placeholder="아이디를 검색해주세요."/>
+								<input class="search-box" type="text" id="searchId" name="searchId" th:value="${searchId}" placeholder="닉네임을 검색해주세요."/>
 							</div>
 							<div>
 								<button class="search-btn"type="submit">검색</button>
@@ -26,11 +26,11 @@
 						<input type="hidden" id="mberId" name="mberId" />
 					</form>
 					<th:block th:if="${searchMod != null}">
-						<th:block th:if="${result != null}">
+						<th:block th:if="${resultList != null}">
 							<h3>검색결과</h3>
 							<div class="request-area">
 								<div style="background-color: antiquewhite;">	
-									<div class="request-box-size" >
+									<div th:each="result : ${resultList}" class="request-box-size" >
 										<div class="w100">
 											<div class="d-flex p-relative">
 												<div class="request-profile-box">
@@ -146,7 +146,7 @@
 	})
 	function fnSearchFriend(){
 		if($('#searchId').val() == null || $('#searchId').val() == ''){
-			alert('검색할 친구의 아이디를 입력해주세요.');
+			alert('검색할 친구의 닉네임을 입력해주세요.');
 			return false;
 		}
 		

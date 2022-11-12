@@ -113,11 +113,6 @@ public class MemberController {
   	    //나에게 들어온 요청목록
   	    List<MemberVO> results = memberService.friendRequestList(memberVO.getLoginId());
   	    
-  	    for( MemberVO asd : results) {
-  	    	
-  	    	System.out.println("asdasdasd " + asd.toString());
-  	    }
-  	    
 	  	if(results.isEmpty()) {
 	  		mv.addObject("results", null);
 	  	}else {
@@ -132,18 +127,13 @@ public class MemberController {
 	  	}
   	    
   	    if(Strings.isNotEmpty(searchId)) {
-	    	if(searchId.equals(memberVO.getLoginId())) {
-	    		mv.addObject("searchNoMsg","본인의 아이디는 검색 할 수 없습니다.");
-	    		return mv;
-	    	}
-	    	memberVO.setMberId(request.getParameter("searchId"));
-	    	MemberVO result = memberService.searchById(memberVO);
+	    	memberVO.setMberNickName(request.getParameter("searchId"));
+	    	List<MemberVO> resultList = memberService.searchByNickName(memberVO);
 	    	
-	    	if(Objects.isNull(result)) {
-	  	    	mv.addObject("result",null);
+	    	if(resultList.isEmpty()) {
+	  	    	mv.addObject("resultList",null);
 	  	    }else {
-	  	    	mv.addObject("result",result);
-	  	    	System.out.println(result.getRelationType());
+	  	    	mv.addObject("resultList",resultList);
 	  	    }
 	  	    mv.addObject("searchMod",1);
 	  	    mv.addObject("searchId",request.getParameter("searchId"));
@@ -227,6 +217,36 @@ public class MemberController {
 		    session.setAttribute("loginMemberId", loginVO.getMberId());
   	  	}
 		mv.setViewName("redirect:/"); 
+  	    return mv;
+  	}
+  	
+  		@GetMapping("/member/myPage.do")
+  	public ModelAndView myPage(ModelAndView mv, HttpServletRequest request, String searchId) throws Exception {
+  	    HttpSession session = request.getSession(false);
+  	    if (session == null) {
+  	    	mv.setViewName("redirect:/");
+  	        return mv;
+  	    }
+  	    mv.setViewName("views/member/myPage");
+  	    
+  	    MemberVO memberVO = new MemberVO();
+	    memberVO.setLoginId((String) session.getAttribute("loginMemberId"));
+	    
+	    memberVO = memberService.getByUserId(memberVO);
+	    
+	    String[] phonNum = memberVO.getMberTelNo().split("-");
+	    String[] brthd = memberVO.getMberBrthd().split("-");
+	    LocalDate now = LocalDate.now();
+  		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
+  		
+  		int formatedNow = Integer.parseInt(now.format(formatter)) - 100;
+  		
+  		mv.addObject("year", formatedNow);
+  		
+	    mv.addObject("member", memberVO);
+	    mv.addObject("phonNum", phonNum);
+	    mv.addObject("brthd", brthd);
+  	    
   	    return mv;
   	}
 }

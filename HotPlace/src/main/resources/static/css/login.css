@@ -143,6 +143,16 @@
     display: flex;
 }
 
+.label-span{
+    min-width: 17rem;
+    line-height: 1.36;
+    font-size: 1.8rem;
+    height: 5.5rem;
+    padding: 0.9rem 1.2rem;
+    color: black;
+    align-items: center;
+    display: flex;
+}
 .sign-up-input .input-form input{
 	height: 4rem;
 	border: 1px solid #e5e5e5;

@@ -21,7 +21,7 @@ public interface MemberMapper {
 
 	int requestCheck(String loginId, String mberId) throws Exception;
 
-	MemberVO searchById(MemberVO memberVO) throws Exception;
+	List<MemberVO> searchByNickName(MemberVO memberVO) throws Exception;
 
 	List<MemberVO> friendRequestList(String loginId) throws Exception;
 	
@@ -34,5 +34,7 @@ public interface MemberMapper {
 	void friendDel(String loginId, String mberId) throws Exception;
 
 	MemberVO snsIdCheck(MemberVO resultToken) throws Exception;
+
+	MemberVO getByUserId(MemberVO memberVO) throws Exception;
 
 }

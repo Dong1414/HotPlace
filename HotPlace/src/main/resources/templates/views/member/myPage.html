@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<form id="signUpForm" method="post">
+	<input type="hidden" id="mberIdCheck"/>
+	<input type="hidden" id="telNoCheck"/>
+	<input type="hidden" id="emailNoCheck"/>
+	<input type="hidden" id="telYn" value="N"/>
+	<input type="hidden" id="emailYn" value="N"/>
+	
+	<section class="form-wrap">
+		<div class="form-view-area plus-padding">
+			<div class="form-area">
+				<div class="sign-up-area">
+					<div class="sign-up-title">
+						<h1>MyPage</h1>
+					</div>
+					<h3>기본정보입력</h3>
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label class="label-span">아이디<span class="red">*</span></label>
+							<div style="display: flex;">
+								<span class="fs-4" th:text="${member.mberId}"></span> 
+							</div>
+						</div>
+					</div>
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label for="mberId">닉네임<span class="red">*</span></label>
+							<div style="display: flex;">
+								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberNickName" name="mberNickName" onchange="fnValidNNCheck(); return false;" th:value="${member.mberNickName}" placeholder="사용하실 닉네임을 입력해주세요." /> 
+								<div class="id-chk-result-msg">
+									<ul>
+										<li><span class="red">※ 최대 12자, 특수문자는 사용하실 수 없습니다.</span></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label for="mberName">이름</label>
+							<input style="width:35rem;" class="form-control fs-4" type="text" id="mberName" name="mberName" th:value="${member.mberName}" placeholder="이름을 입력해주세요." />
+						</div>
+					</div>
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label for="mberBrthd">생년월일</label>
+							
+							<select class="w15 form-control fs-4" id="selYear">
+								<option value=''>-- 선택 --</option>
+	 							<option th:each="num : ${#numbers.sequence(year,year+100)}" th:value="${num}" th:text="${num}" th:selected="${brthd[0]} eq ${num}"></option>
+							</select>
+							<p class="side-margin-01">년</p>
+							<select class="w15 form-control fs-4" id="selMon">
+								<option value='' selected>-- 선택 --</option>
+								<option th:each="num : ${#numbers.sequence(1,12)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:selected="${brthd[1]} eq ${num}"></option>
+							</select>
+							<p class="side-margin-01">월</p>
+							<select class="w15 form-control fs-4" id="selDay">
+								<option value='' selected>-- 선택 --</option>
+								<option th:each="num : ${#numbers.sequence(1,31)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:selected="${brthd[2]} eq ${num}"></option>
+							</select>
+							<p class="side-margin-01">일</p>
+							<input type="hidden" id="mberBrthd" name="mberBrthd"/>
+						</div>
+					</div>
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label for="telNm">휴대폰번호</label>
+							<div> 
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1" th:value="${phonNum[0]}"/>
+								<p class="side-margin-01 fs-5 d-inline-block">-</p>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" th:value="${phonNum[1]}"/>
+								<p class="side-margin-01 d-inline-block">-</p>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" th:value="${phonNum[2]}"/>
+								<button type="button" class="btn btn-outline-secondary fs-4 ms-3 d-inline-block" style="width:9.8rem; height:4rem;" id="phonChkRequest" onclick="fnChkPhone();">인증번호요청</button>
+								<input type="hidden" id="mberTelNo" name="mberTelNo" />
+								<div><br>
+									<span class="red">※ (선택) 인증받은 휴대폰 번호만 아이디 찾기, 비밀번호 찾기에 사용 할 수 있습니다.</span>
+								</div>
+							</div>
+						</div>
+						
+					</div>
+					<div class="sign-up-input none" id="phonChkArea">
+						<div class="input-form">
+							<label for="phonChk">휴대폰 인증번호</label>
+							<div class="d-flex"> 
+								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="phonChk" name="phonChk" placeholder="인증번호를 입력하세요." />
+								<button type="button" id="phonChkBtn" class="btn btn-outline-secondary fs-4 ms-3">인증</button>
+							</div>
+						</div>
+					</div>					
+					<div class="sign-up-input">
+						<div class="input-form">
+							<label for="email">이메일</label>
+							<div>
+								<input style="width:35rem;" class="form-control fs-4 d-inline-block" type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." th:value="${member.mberEmail}"/>
+								<button type="button" class="btn btn-outline-secondary fs-4 ms-3 d-inline-block" style="width:9.8rem; height:4rem;" id="emailChkRequest" onclick="fnChkEmail();">인증번호요청</button>
+								<div><br>
+									<span class="red">※ (선택) 인증받은 이메일만 아이디 찾기, 비밀번호 찾기에 사용 할 수 있습니다.</span>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="sign-up-input none" id="emailChkArea">
+						<div class="input-form">
+							<label for="emailChk">이메일 인증번호<span class="red">*</span></label>
+							<div class="d-flex"> 
+								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="emailChk" name="emailChk" placeholder="인증번호를 입력하세요." />
+								<button type="button" id="emailChkBtn" class="btn btn-outline-secondary fs-4 ms-3">인증</button>
+							</div>
+						</div>
+					</div>
+					<div class="sign-up-input">
+						<div style="text-align: center;">
+							<button type="button" class="btn btn-primary fs-3 ps-4 pe-4" onclick="fnSingUp();">회원가입</button>
+							<button type="button" class="btn btn-secondary fs-3 ps-4 pe-4" onclick="">취소</button>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+	</form>
+<script th:inline="javascript">
+	$(function(){
+		
+	})
+</script>
+</th:block>
+</html>

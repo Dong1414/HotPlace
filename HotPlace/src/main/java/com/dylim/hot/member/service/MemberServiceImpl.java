@@ -54,8 +54,8 @@ public class MemberServiceImpl implements MemberService {
 		return result;
 	};
 	
-	public MemberVO searchById(MemberVO memberVO) throws Exception{
-		return memberMapper.searchById(memberVO);
+	public List<MemberVO> searchByNickName(MemberVO memberVO) throws Exception{
+		return memberMapper.searchByNickName(memberVO);
 	};
 	
 	public String friendRequest(String loginId, String mberId) throws Exception{
@@ -122,5 +122,9 @@ public class MemberServiceImpl implements MemberService {
 		}
 			
 		return result; 
+	};
+	
+	public MemberVO getByUserId(MemberVO memberVO) throws Exception{
+		return memberMapper.getByUserId(memberVO);
 	};
 }

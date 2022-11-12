@@ -14,7 +14,7 @@ public interface MemberService {
 
 	MemberVO loadUserByUserId(MemberVO memberVO) throws Exception;
 
-	MemberVO searchById(MemberVO memberVO) throws Exception;
+	List<MemberVO> searchByNickName(MemberVO memberVO) throws Exception;
 
 	String friendRequest(String loginId, String mberId) throws Exception;
 	
@@ -31,5 +31,7 @@ public interface MemberService {
 	boolean friendCheck(String loginId, String mberId) throws Exception;
 
 	MemberVO snsIdCheck(MemberVO resultToken) throws Exception;
+
+	MemberVO getByUserId(MemberVO memberVO) throws Exception;
 
 }
