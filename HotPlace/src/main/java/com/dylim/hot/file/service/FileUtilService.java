@@ -15,6 +15,8 @@ public interface FileUtilService {
 	
 	String multiFileUpload(List<MultipartFile> multipartFiles) throws Exception;
 	
+	String fileUpload(MultipartFile multipartFile, String attachFileMasterId) throws Exception;
+	
 	boolean writeFile(MultipartFile multipartFile, String saveFileName) throws Exception;
 
 	FileVO getImage(String attachFileId) throws Exception;
@@ -23,6 +25,6 @@ public interface FileUtilService {
 
 	void deleteImage(String attachFileId) throws Exception;
 
-	String dropZoneUpload(MultipartHttpServletRequest request, String attchFileMasterId) throws Exception;
-	
+	String dropZoneUpload(MultipartHttpServletRequest request, String attachFileMasterId) throws Exception;
+
 }

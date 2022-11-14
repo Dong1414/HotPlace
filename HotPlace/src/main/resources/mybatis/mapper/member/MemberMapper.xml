@@ -41,6 +41,7 @@
 					,#{kakaoConnectId}
 					,#{emailYn}
 					,#{telYn}
+					,#{attachFileMasterId}
 					
 				)
 	</insert>
@@ -238,11 +239,27 @@
 				kakao_connect_id as kakaoConnectId,
 				naver_connect_id as naverConnectId,
 				tel_yn as telYn,
-				email_yn as emailYn
+				email_yn as emailYn,
+				attach_file_master_id as attachFileMasterId,
+				(select attach_file_id from attach_file where attach_file_master_id = tb1.attach_file_master_id and del_yn = "N") as attachFileId
 			FROM
-				member
+				member tb1
 			WHERE
 				del_yn = "N"
 				and mber_id = #{loginId}			  			
 	</select>
+	
+	<update id="memberModify" parameterType="com.dylim.hot.member.MemberVO" >
+			update member
+			set
+				mber_nick_name = #{mberNickName},
+				mber_brthd = #{mberBrthd},
+				mber_tel_no = #{mberTelNo},
+				mber_email = #{mberEmail},
+				tel_yn = #{telYn},
+				email_yn = #{emailYn}
+			WHERE
+				del_yn = "N"
+				and mber_id = #{mberId}			  			
+	</update>
 </mapper>

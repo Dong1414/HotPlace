@@ -5,12 +5,12 @@
 
 <th:block layout:fragment="content">
 	<link rel="stylesheet" th:href="@{/css/login.css}" />
-	<form id="signUpForm" method="post">
+	<form id="signUpForm" method="post" enctype="multipart/form-data">
 	<input type="hidden" id="mberIdCheck"/>
 	<input type="hidden" id="telNoCheck"/>
 	<input type="hidden" id="emailNoCheck"/>
-	<input type="hidden" id="telYn" value="N"/>
-	<input type="hidden" id="emailYn" value="N"/>
+	<input type="hidden" id="telYn" name="telYn" value="N"/>
+	<input type="hidden" id="emailYn" name="emailYn" value="N"/>
 	
 	<section class="form-wrap">
 		<div class="form-view-area plus-padding">
@@ -20,31 +20,35 @@
 						<h1>회원가입</h1>
 					</div>
 					<h3>기본정보입력</h3>
-					<div class="sign-up-input">
-						<div class="input-form">
-							<label for="mberId">아이디<span class="red">*</span></label>
-							<div style="display: flex;">
-								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberId" name="mberId" placeholder="아이디를 입력해주세요." /> 
-								<button type="button" class="btn btn-outline-secondary fs-4 ms-3" onclick="fnIdChk()">중복확인</button>
-								<div class="id-chk-result-msg">
-									<ul>
-										<li><span class="red">※ 6 ~ 12자의 영문 소문자, 숫자만 사용가능</span></li>
-										<li><span id="falseMsg" class="red none">입력하신 아이디는 사용이 불가합니다.</span></li>
-										<li><span id="seccessMsg" class="blue none">입력하신 아이디는 사용이 가능합니다.</span></li>
-									</ul>
+					<div class="sign-up-input input-profile">
+						<div class="profile-box">
+							<input type="file" id="profile-file" onchange="readURL(this);" name="file" class="profile-img">
+							<div class="profile-msg">프로필 이미지를<br>선택해주세요</div>
+						</div>
+						<div class="id-nick-area">
+							<div style="margin-top:1.5rem;">
+								<label for="mberId">아이디<span class="red">*</span></label>
+								<div class="id-box">
+									<input style="width:35rem;" class="form-control fs-4" type="text" id="mberId" name="mberId" placeholder="아이디를 입력해주세요." /> 
+									<button type="button" class="btn btn-outline-secondary fs-4 ms-3" onclick="fnIdChk()">중복확인</button>
+									<div class="id-chk-result-msg">
+										<ul>
+											<li><span class="red">※ 6 ~ 12자의 영문 소문자, 숫자만 사용가능</span></li>
+											<li><span id="falseMsg" class="red none">입력하신 아이디는 사용이 불가합니다.</span></li>
+											<li><span id="seccessMsg" class="blue none">입력하신 아이디는 사용이 가능합니다.</span></li>
+										</ul>
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="sign-up-input">
-						<div class="input-form">
-							<label for="mberId">닉네임<span class="red">*</span></label>
-							<div style="display: flex;">
-								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberNickName" name="mberNickName" onchange="fnValidNNCheck(); return false;" placeholder="사용하실 닉네임을 입력해주세요." /> 
-								<div class="id-chk-result-msg">
-									<ul>
-										<li><span class="red">※ 최대 12자, 특수문자는 사용하실 수 없습니다.</span></li>
-									</ul>
+							<div>
+								<label for="mberId">닉네임<span class="red">*</span></label>
+								<div class="id-box" style="margin-bottom:0px;">
+									<input style="width:35rem;" class="form-control fs-4" type="text" id="mberNickName" name="mberNickName" onchange="fnValidNNCheck(); return false;" placeholder="사용하실 닉네임을 입력해주세요." /> 
+									<div class="id-chk-result-msg">
+										<ul>
+											<li><span class="red">※ 최대 12자, 특수문자는 사용하실 수 없습니다.</span></li>
+										</ul>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -138,7 +142,7 @@
 						<div class="input-form">
 							<label for="emailChk">이메일 인증번호<span class="red">*</span></label>
 							<div class="d-flex"> 
-								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="emailChk" name="emailChk" placeholder="인증번호를 입력하세요." />
+								<input class="form-control fs-4" style="width:18rem;" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="emailChk" placeholder="인증번호를 입력하세요." />
 								<button type="button" id="emailChkBtn" class="btn btn-outline-secondary fs-4 ms-3">인증</button>
 							</div>
 						</div>
@@ -351,10 +355,10 @@
 				return false;
 			}
 			if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
-				alert('전화번호를 입력해주세요.');
+				alert('휴대폰 번호를 입력해주세요.');
 				return false;
 			}
-			var phonNum = $('#telNm1').val() + $('#telNm2').val()+ $('#telNm3').val();
+			var phonNum = $('#telNm1').val() + '-' +  $('#telNm2').val() +'-' + $('#telNm3').val();
 			counterFn(15, 1);
 			$.ajax({
 				type : "post",
@@ -471,16 +475,16 @@
 			}
 			
 			if($("#selYear option:selected").val() != '' || $("#selMon option:selected").val() != '' || $("#selDay option:selected").val() != ''){
-				$('#mberBrthd').val($("#selYear option:selected").val()+$("#selMon option:selected").val()+$("#selDay option:selected").val())
+				$('#mberBrthd').val($("#selYear option:selected").val() + '-' + $("#selMon option:selected").val() + '-' + $("#selDay option:selected").val())
 			}
 			
 			
 			if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
-				alert('전화번호를 입력해주세요.');
+				alert('휴대폰 번호를 입력해주세요.');
 				$('#telNm1').focus();
 				return false;
 			}
-			$('#mberTelNo').val($('#telNm1').val() + $('#telNm2').val()+ $('#telNm3').val());
+			$('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val() + '-' + $('#telNm3').val());
 			
 			if($('#telYn').val() == 'Y'){
 				if(!fnValTelNoCheck($('#mberTelNo').val())){
@@ -507,9 +511,29 @@
 					return false;
 				}
 			}
-			
+			if($('#emailYn').val() == 'N' && $('#telYn').val() == 'N'){
+				alert('이메일, 휴대폰 중 하나는 인증을 받아야합니다.');
+				return false;
+			}
 			$('#signUpForm').attr('action', '/member/signUpInsert.do');
 			$('#signUpForm').submit();
+		}
+		
+		function readURL(input) {
+			if (input.files && input.files[0]) {
+				var reader = new FileReader();
+					reader.onload = function(e) {
+					if($("#preview").length <= 0){
+						$(".profile-msg").remove();
+						$(".profile-box").append("<img id='preview' class='w-100 h-100'/>");	
+					}
+					$('#preview').attr('src', e.target.result);
+				};
+				reader.readAsDataURL(input.files[0]);
+			} else {
+				$("#preview").remove();
+				$(".profile-box").append("<div class='profile-msg'>프로필 이미지를<br>선택해주세요</div>");
+			}
 		}
 	</script>
 </th:block>

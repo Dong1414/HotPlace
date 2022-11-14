@@ -30,13 +30,13 @@ public class FileUtilServiceImpl implements FileUtilService {
 	@Autowired
 	private FileUtilMapper fileUtilMapper;
 	
-	public String dropZoneUpload(MultipartHttpServletRequest request, String attchFileMasterId) throws Exception{
+	public String dropZoneUpload(MultipartHttpServletRequest request, String attachFileMasterId) throws Exception{
 		
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		 
-		String fileMsterId = attchFileMasterId;
+		String fileMsterId = attachFileMasterId;
 		
-		if(Strings.isEmpty(attchFileMasterId)){
+		if(Strings.isEmpty(attachFileMasterId)){
 			fileMsterId = UUID.randomUUID().toString();
 			saveFileMaster(fileMsterId);
 		}
@@ -136,6 +136,56 @@ public class FileUtilServiceImpl implements FileUtilService {
         }
 	}
 	
+	public String fileUpload(MultipartFile multipartFile, String attachFileMasterId) throws Exception {
+		// upload
+		
+		String fileMsterId = attachFileMasterId;
+		System.out.println(attachFileMasterId);
+		if(Strings.isEmpty(fileMsterId)){
+			fileMsterId = UUID.randomUUID().toString();
+			saveFileMaster(fileMsterId);
+		}
+		
+        try {
+            	log.debug("Uploading.. {}", " / " + multipartFile.getOriginalFilename());
+	            // 파일 정보
+	            String originFilename = multipartFile.getOriginalFilename();
+	            String extName = originFilename.substring(originFilename.lastIndexOf("."), originFilename.length());
+	            long size = multipartFile.getSize();
+	
+	            // 서버에서 저장 할 파일 이름 ( attachFileId, fildNm );
+	            String saveFileName = UUID.randomUUID().toString();            
+	            
+	
+	            FileVO fileInfo = new FileVO();
+	            fileInfo.setAttachFileMasterId(fileMsterId);
+	            fileInfo.setAttachFileId(saveFileName);
+	            fileInfo.setOriginFileName(originFilename);
+	            fileInfo.setSaveFileName(saveFileName);
+	            fileInfo.setFileSize(size);
+	            fileInfo.setFileExt(extName);
+	            fileInfo.setSavePath(SAVE_PATH + saveFileName);
+	            fileInfo.setPrefixPath(PREFIX_URL + saveFileName);
+	            
+	            // 파일저장
+	            saveFile(fileInfo);
+	            // 실제 파일 저장
+	            boolean fileSaveYn = writeFile(multipartFile, saveFileName);
+	
+	            if (fileSaveYn) {
+	                throw new Exception("Error on File Writing..");
+	            }
+	
+				writeFile(multipartFile, saveFileName);
+            return fileMsterId;
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+	}
+	
 	// 파일을 실제로 write 하는 메서드
     public boolean writeFile(MultipartFile multipartFile, String saveFileName)throws IOException {
     	
@@ -172,6 +222,10 @@ public class FileUtilServiceImpl implements FileUtilService {
     
     public void deleteImage(String attachFileId) throws Exception{
     	fileUtilMapper.deleteImage(attachFileId);
+    };
+    
+    public void fileModify(MultipartFile meltipartFile, String attachFileMasterId) throws Exception{
+    	fileUtilMapper.fileModify(meltipartFile, attachFileMasterId);
     };
 }
 

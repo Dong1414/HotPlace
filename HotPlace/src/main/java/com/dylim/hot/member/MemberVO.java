@@ -29,6 +29,9 @@ public class MemberVO{
 	String delYn="";
 	String mberAuth="";
 	String mberNickName="";
+	String attachFileMasterId;
+	String attachFileId;
+	String attachFileUrl;
 	
 	String loginId = "";
 	String relationType = ""; //요청기록
@@ -204,6 +207,26 @@ public class MemberVO{
 	}
 	public void setTelYn(String telYn) {
 		this.telYn = telYn;
+	}
+	public String getAttachFileMasterId() {
+		return attachFileMasterId;
+	}
+	public void setAttachFileMasterId(String attachFileMasterId) {
+		this.attachFileMasterId = attachFileMasterId;
+	}
+	
+	public String getAttachFileId() {
+		return attachFileId;
+	}
+	public void setAttachFileId(String attachFileId) {
+		this.attachFileId = attachFileId;
+	}
+	
+	public String getAttachFileUrl() {
+		return attachFileUrl;
+	}
+	public void setAttachFileUrl(String attachFileUrl) {
+		this.attachFileUrl = attachFileUrl;
 	}
 	@Override
 	public String toString() {

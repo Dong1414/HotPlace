@@ -34,4 +34,6 @@ public interface MemberService {
 
 	MemberVO getByUserId(MemberVO memberVO) throws Exception;
 
+	void memberModify(MemberVO memberVO) throws Exception;
+
 }

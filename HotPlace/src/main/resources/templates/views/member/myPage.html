@@ -5,12 +5,13 @@
 
 <th:block layout:fragment="content">
 	<link rel="stylesheet" th:href="@{/css/login.css}" />
-	<form id="signUpForm" method="post">
-	<input type="hidden" id="mberIdCheck"/>
+	<form id="modifyForm" method="post" enctype="multipart/form-data">
 	<input type="hidden" id="telNoCheck"/>
 	<input type="hidden" id="emailNoCheck"/>
-	<input type="hidden" id="telYn" value="N"/>
-	<input type="hidden" id="emailYn" value="N"/>
+	<input type="hidden" id="telYn" name="telYn" th:value="${member.telYn}"/>
+	<input type="hidden" id="emailYn" name="emailYn" th:value="${member.emailYn}"/>
+	<input type="hidden" id="attachFileMasterId" name="attachFileMasterId" th:value="${member.attachFileMasterId}"/>
+	<input type="hidden" id="attachFileId" name="attachFileId" th:value="${member.attachFileId}"/>
 	
 	<section class="form-wrap">
 		<div class="form-view-area plus-padding">
@@ -20,31 +21,37 @@
 						<h1>MyPage</h1>
 					</div>
 					<h3>기본정보입력</h3>
-					<div class="sign-up-input">
-						<div class="input-form">
-							<label class="label-span">아이디<span class="red">*</span></label>
-							<div style="display: flex;">
-								<span class="fs-4" th:text="${member.mberId}"></span> 
-							</div>
+					<div class="sign-up-input input-profile">
+						<div class="profile-box">
+							<input type="file" id="profile-file" onchange="readURL(this);" name="file" class="profile-img">
+							<img th:if="${member.attachFileMasterId != null}" id='preview' class='w-100 h-100' th:src="${member.attachFileUrl}"/>
+							<div th:unless="${member.attachFileMasterId != null}" class="profile-msg">프로필 이미지를<br>선택해주세요</div>
 						</div>
-					</div>
-					<div class="sign-up-input">
-						<div class="input-form">
-							<label for="mberId">닉네임<span class="red">*</span></label>
-							<div style="display: flex;">
-								<input style="width:35rem;" class="form-control fs-4" type="text" id="mberNickName" name="mberNickName" onchange="fnValidNNCheck(); return false;" th:value="${member.mberNickName}" placeholder="사용하실 닉네임을 입력해주세요." /> 
-								<div class="id-chk-result-msg">
-									<ul>
-										<li><span class="red">※ 최대 12자, 특수문자는 사용하실 수 없습니다.</span></li>
-									</ul>
+						<div class="id-nick-area">
+							<div style="margin-top:4.5rem;">
+								<div class="text-area">
+									<div class="modify-id">아이디<span class="red">*</span></div>
+									<span class="fs-2" th:text="${member.mberId}"></span>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div class="sign-up-input">
-						<div class="input-form">
-							<label for="mberName">이름</label>
-							<input style="width:35rem;" class="form-control fs-4" type="text" id="mberName" name="mberName" th:value="${member.mberName}" placeholder="이름을 입력해주세요." />
+							<div class="d-flex" style="align-items:center;">
+								<label for="mberId" style="min-width:5rem;">닉네임<span class="red">*</span></label>
+								<div class="id-box d-flex" style="margin-bottom:0px;">
+									<input style="width:35rem; height:4rem;" class="form-control fs-4" type="text" id="mberNickName" name="mberNickName" onchange="fnValidNNCheck(); return false;" th:value="${member.mberNickName}" placeholder="사용하실 닉네임을 입력해주세요." /> 
+									<div class="id-chk-result-msg">
+										<ul>
+											<li><span class="red">※ 최대 12자, 특수문자는 사용하실 수 없습니다.</span></li>
+										</ul>
+									</div>
+								</div>
+							</div>
+							<div>
+								<div class="text-area">
+									<div></div>
+									<div class="modify-name" >이름</div>
+									<span class="fs-2" th:text="${member.mberName}"></span>
+								</div>
+							</div>							
 						</div>
 					</div>
 					<div class="sign-up-input">
@@ -53,17 +60,20 @@
 							
 							<select class="w15 form-control fs-4" id="selYear">
 								<option value=''>-- 선택 --</option>
-	 							<option th:each="num : ${#numbers.sequence(year,year+100)}" th:value="${num}" th:text="${num}" th:selected="${brthd[0]} eq ${num}"></option>
+	 							<option th:each="num : ${#numbers.sequence(year,year+100)}" th:value="${num}" th:text="${num}" th:if="${brthd != null}" th:selected="${brthd[0]} eq ${num}"></option>
+	 							<option th:each="num : ${#numbers.sequence(year,year+100)}" th:value="${num}" th:text="${num}" th:unless="${brthd != null}"></option>
 							</select>
 							<p class="side-margin-01">년</p>
 							<select class="w15 form-control fs-4" id="selMon">
 								<option value='' selected>-- 선택 --</option>
-								<option th:each="num : ${#numbers.sequence(1,12)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:selected="${brthd[1]} eq ${num}"></option>
+								<option th:each="num : ${#numbers.sequence(1,12)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:if="${brthd != null}" th:selected="${brthd[1]} eq ${num}"></option>
+								<option th:each="num : ${#numbers.sequence(1,12)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:unless="${brthd != null}"></option>
 							</select>
 							<p class="side-margin-01">월</p>
 							<select class="w15 form-control fs-4" id="selDay">
 								<option value='' selected>-- 선택 --</option>
-								<option th:each="num : ${#numbers.sequence(1,31)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:selected="${brthd[2]} eq ${num}"></option>
+								<option th:each="num : ${#numbers.sequence(1,31)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:if="${brthd != null}" th:selected="${brthd[2]} eq ${num}"></option>
+								<option th:each="num : ${#numbers.sequence(1,31)}" th:value="${#numbers.formatInteger(num,2)}" th:text="${num}" th:unless="${brthd != null}"></option>
 							</select>
 							<p class="side-margin-01">일</p>
 							<input type="hidden" id="mberBrthd" name="mberBrthd"/>
@@ -71,13 +81,19 @@
 					</div>
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="telNm">휴대폰번호</label>
+							<label for="telNm">휴대폰번호
+								<i style="color: #1dd112; margin-left:0.5rem;" th:if="${member.telYn eq 'Y'}"class="fa-solid fa-circle-check"></i>
+								<i style="color: red; margin-left:0.5rem;" th:unless="${member.telYn eq 'Y'}"class="fa-solid fa-circle-xmark"></i>
+							</label>
 							<div> 
-								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1" th:value="${phonNum[0]}"/>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1" th:if="${phonNum != null}" th:value="${phonNum[0]}"/>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1" th:unless="${phonNum != null}"/>
 								<p class="side-margin-01 fs-5 d-inline-block">-</p>
-								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" th:value="${phonNum[1]}"/>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" th:if="${phonNum != null}" th:value="${phonNum[1]}"/>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2" th:unless="${phonNum != null}"/>
 								<p class="side-margin-01 d-inline-block">-</p>
-								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" th:value="${phonNum[2]}"/>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" th:if="${phonNum != null}" th:value="${phonNum[2]}"/>
+								<input class="w15 form-control fs-4 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3" th:unless="${phonNum != null}"/>
 								<button type="button" class="btn btn-outline-secondary fs-4 ms-3 d-inline-block" style="width:9.8rem; height:4rem;" id="phonChkRequest" onclick="fnChkPhone();">인증번호요청</button>
 								<input type="hidden" id="mberTelNo" name="mberTelNo" />
 								<div><br>
@@ -98,7 +114,10 @@
 					</div>					
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="email">이메일</label>
+							<label for="email">이메일
+								<i style="color: #1dd112; margin-left:0.5rem;" th:if="${member.emailYn eq 'Y'}"class="fa-solid fa-circle-check"></i>
+								<i style="color: red; margin-left:0.5rem;" th:unless="${member.emailYn eq 'Y'}"class="fa-solid fa-circle-xmark"></i>
+							</label>
 							<div>
 								<input style="width:35rem;" class="form-control fs-4 d-inline-block" type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." th:value="${member.mberEmail}"/>
 								<button type="button" class="btn btn-outline-secondary fs-4 ms-3 d-inline-block" style="width:9.8rem; height:4rem;" id="emailChkRequest" onclick="fnChkEmail();">인증번호요청</button>
@@ -119,7 +138,7 @@
 					</div>
 					<div class="sign-up-input">
 						<div style="text-align: center;">
-							<button type="button" class="btn btn-primary fs-3 ps-4 pe-4" onclick="fnSingUp();">회원가입</button>
+							<button type="button" class="btn btn-primary fs-3 ps-4 pe-4" onclick="fnSingUp();">수정</button>
 							<button type="button" class="btn btn-secondary fs-3 ps-4 pe-4" onclick="">취소</button>
 						</div>
 					</div>
@@ -129,9 +148,229 @@
 	</section>
 	</form>
 <script th:inline="javascript">
-	$(function(){
+
+	function fnValidNNCheck(){
+		var nick = $("#mberNickName").val();
 		
-	})
+		if(nick != ""){
+			if(nick.length > 12){
+				alert("닉네임은 12자리 이내로 입력하여 주십시오.");
+				$("#mberNickName").val("");
+				$("#mberNickName").focus();
+				return false;
+			}
+			
+			var special_pattern = /[`~!@#$%^&*|\\\'\";:\/?]/gi;
+			if(special_pattern.test(nick) == true) {
+				alert('특수문자는 사용하실 수 없습니다.')
+				$("#mberNickName").val("");
+				$("#mberNickName").focus("");
+				return false;
+			}
+			
+			if(nick.replaceAll(" ", "").length < 1){
+                alert("공백으로만 입력하실 수 없습니다.");
+                $("#mberNickName").val("");
+                $("#mberNickName").focus();
+                return false;
+            }
+		}
+	}
+	function fnChkEmail(){
+		if(!confirm("인증번호를 보내시겠습니까?")){
+			return false;
+		}
+		if(!$('#mberEmail').val()){
+			alert('이메일을 입력해주세요.');	
+			return false;
+		};
+		
+		var fromMail = $('#mberEmail').val();
+
+		counterFn(15,2);
+
+		$.ajax({
+			type : "post",
+			url : '/mail/gmailSend.do',
+			data : {
+				fromMail: fromMail
+			}
+		}).done(function(res) {
+			alert("인증번호가 전송되었습니다.");
+			$('#emailChkArea').css("display", "flex");
+			$('#emailChkBtn').click(function(){
+                   if($.trim(res) == $('#emailChk').val()){
+					alert('이메일 인증이 정상적으로 완료되었습니다.');
+					$('#emailChk').attr('disabled', true);
+					$('#emailNoCheck').val(fromMail);
+					$('#emailYn').val("Y");
+                   }else{
+                   	alert('인증번호가 올바르지 않습니다!');
+                   }
+               })
+		}).fail(function() {
+			alert('실패 하였습니다.');
+		})
+	}
+	
+	function fnChkPhone() {
+		if(!confirm("인증번호를 보내시겠습니까?")){
+			return false;
+		}
+		if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
+			alert('휴대폰 번호를 입력해주세요.');
+			return false;
+		}
+		var phonNum = $('#telNm1').val() + '-' +$('#telNm2').val()+ '-' +$('#telNm3').val();
+		counterFn(15, 1);
+		$.ajax({
+			type : "post",
+			url : '/sms/sendSms.do',
+			data : {
+				phonNum: phonNum
+			}
+		}).done(function(res) {
+			alert("인증번호가 전송되었습니다.");
+			$('#phonChkArea').css("display", "flex");
+			$('#phonChkBtn').click(function(){
+                   if($.trim(res) == $('#phonChk').val()){
+                       alert('휴대폰 인증이 정상적으로 완료되었습니다.');
+                       $('#phonChk').text('완료');
+       				$('#phonChk').attr('disabled', true);
+       				$('#telNoCheck').val(phonNum);
+       				$('#telYn').val("Y");
+                   }else{
+                   	alert('인증번호가 올바르지 않습니다!');
+                   }
+               })
+		}).fail(function() {
+			alert('실패 하였습니다.');
+		})
+
+	}
+	
+	function counterFn(cnt0,mod) {
+	    id0 = setInterval(count0Fn, 1000);
+	    function count0Fn() {
+	    	if(mod == 2){
+	    		$('#emailChkRequest').attr('disabled', true);
+			      cnt0--;
+			      if (cnt0 <= 0) {
+			        clearInterval(id0);
+			        $("#emailChkRequest").text("인증번호요청");
+		    		$('#emailChkRequest').attr('disabled', false);
+			      } else {
+			        $("#emailChkRequest").text(cnt0);
+			      }
+	    	}else{
+	    		$('#phonChkRequest').attr('disabled', true);
+			      cnt0--;
+			      if (cnt0 <= 0) {
+			        clearInterval(id0);
+			        $("#phonChkRequest").text("인증번호요청");
+		    		$('#phonChkRequest').attr('disabled', false);
+			      } else {
+			        $("#phonChkRequest").text(cnt0);
+			      }
+	    	}
+	    }
+	  }
+	
+	function fnValTelNoCheck(no){
+		if(no != $("#telNoCheck").val()) {
+            return false;            
+        }
+        return true;
+	}
+	
+	function fnValEmailNoCheck(no){
+		if(no != $("#emailNoCheck").val()) {
+            return false;            
+        }
+        return true;
+	}
+	
+	function fnEmailCheck(email) {
+
+		var reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
+		
+		if(!reg.test(email)){
+			alert("이메일 형식이 올바르지 않습니다.")
+			return false;
+		}
+		
+		return true;
+
+	}
+	
+	function fnSingUp(){
+		
+		if(!confirm('입력하신 정보로 수정 하시겠습니까?')){
+			return false;
+		}
+		
+		if(!$('#mberNickName').val() || $('#mberNickName').val()==''){
+			alert('닉네임을 입력해주세요.');
+			$('#mberNickName').focus();
+			return false;
+		};
+		
+		if($("#selYear option:selected").val() != '' || $("#selMon option:selected").val() != '' || $("#selDay option:selected").val() != ''){
+			$('#mberBrthd').val($("#selYear option:selected").val()+'-' +$("#selMon option:selected").val()+'-' +$("#selDay option:selected").val())
+		}
+		
+		if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
+			alert('휴대폰 번호를 입력해주세요.');
+			$('#telNm1').focus();
+			return false;
+		}
+		$('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val()+ '-' + $('#telNm3').val());
+		
+		if($('#telNoCheck').val()){
+			if(!fnValTelNoCheck($('#mberTelNo').val())){
+				alert('입력된 번호가 인증받은 번호와 다릅니다.');
+				$('#telNm1').focus();
+				return false;
+			}	
+		}
+		
+		if(!$('#mberEmail').val() || $('#mberEmail').val()==''){
+			alert('이메일을 입력해주세요.');
+			$('#mberEmail').focus();
+			return false;
+		}
+
+		if(!fnEmailCheck($('#mberEmail').val())){
+			return false;
+		};
+		
+		if($('#emailNoCheck').val()){
+			if(!fnValEmailNoCheck($('#mberEmail').val())){
+				alert('입력된 이메일이 인증받은 이메일과 다릅니다.');
+				$('#mberEmail').focus();
+				return false;
+			}
+		}
+		
+		$('#modifyForm').attr('action', '/member/memberModify.do');
+		$('#modifyForm').submit();
+	}
+	function readURL(input) {
+		if (input.files && input.files[0]) {
+			var reader = new FileReader();
+				reader.onload = function(e) {
+				if($("#preview").length <= 0){
+					$(".profile-msg").remove();
+					$(".profile-box").append("<img id='preview' class='w-100 h-100'/>");	
+				}
+				$('#preview').attr('src', e.target.result);
+			};
+			reader.readAsDataURL(input.files[0]);
+		} else {
+			$("#preview").remove();
+			$(".profile-box").append("<div class='profile-msg'>프로필 이미지를<br>선택해주세요</div>");
+		}
+	}
 </script>
 </th:block>
 </html>

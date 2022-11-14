@@ -37,4 +37,6 @@ public interface MemberMapper {
 
 	MemberVO getByUserId(MemberVO memberVO) throws Exception;
 
+	void memberModify(MemberVO memberVO) throws Exception;
+
 }

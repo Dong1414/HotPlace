@@ -127,4 +127,8 @@ public class MemberServiceImpl implements MemberService {
 	public MemberVO getByUserId(MemberVO memberVO) throws Exception{
 		return memberMapper.getByUserId(memberVO);
 	};
+
+	public void memberModify(MemberVO memberVO) throws Exception{
+		memberMapper.memberModify(memberVO);
+	};
 }

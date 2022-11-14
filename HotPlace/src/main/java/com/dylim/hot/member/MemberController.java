@@ -16,12 +16,16 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.dylim.hot.SessionConstants;
+import com.dylim.hot.file.service.FileUtilService;
 import com.dylim.hot.member.service.MemberService;
 
 @Controller
@@ -29,10 +33,16 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService memberService;
+	@Autowired
+	private FileUtilService fileUtilService;
 	
 	//회원가입
 	@PostMapping("/member/signUpInsert.do")
-    public String signUpInsert(MemberVO memberVO, HttpServletRequest request) throws Exception{
+    public String signUpInsert(MemberVO memberVO, @RequestParam("file") MultipartFile meltipartFile) throws Exception{
+		
+		if(!meltipartFile.isEmpty()) {
+			memberVO.setAttachFileMasterId(fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId()));
+    	}
 		
     	memberService.signUpInsert(memberVO);
     		
@@ -70,7 +80,7 @@ public class MemberController {
   			// 로그인 성공 처리
   		    HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
   		    session.setAttribute(SessionConstants.LOGIN_MEMBER, result);   // 세션에 로그인 회원 정보 보관
-  		    session.setAttribute("loginMemberId", result.getMberId());
+  		    session.setAttribute(SessionConstants.LOGIN_MEMBER_ID, result.getMberId());
   			mv.setViewName("redirect:/map/getMyMapView.do"); 
   		}
   		return mv;
@@ -214,13 +224,13 @@ public class MemberController {
   	  	if(loginVO != null) {
 	  	  	HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
 		    session.setAttribute(SessionConstants.LOGIN_MEMBER, loginVO);   // 세션에 로그인 회원 정보 보관
-		    session.setAttribute("loginMemberId", loginVO.getMberId());
+		    session.setAttribute(SessionConstants.LOGIN_MEMBER_ID, loginVO.getMberId());
   	  	}
 		mv.setViewName("redirect:/"); 
   	    return mv;
   	}
   	
-  		@GetMapping("/member/myPage.do")
+	@GetMapping("/member/myPage.do")
   	public ModelAndView myPage(ModelAndView mv, HttpServletRequest request, String searchId) throws Exception {
   	    HttpSession session = request.getSession(false);
   	    if (session == null) {
@@ -234,19 +244,48 @@ public class MemberController {
 	    
 	    memberVO = memberService.getByUserId(memberVO);
 	    
-	    String[] phonNum = memberVO.getMberTelNo().split("-");
-	    String[] brthd = memberVO.getMberBrthd().split("-");
+	    if(!Strings.isEmpty(memberVO.getMberTelNo())) {
+	    	String[] phonNum = memberVO.getMberTelNo().split("-");
+	    	mv.addObject("phonNum", phonNum);
+	    }
+	    if(!Strings.isEmpty(memberVO.getMberBrthd())) {
+	    	String[] brthd = memberVO.getMberBrthd().split("-");
+	    	mv.addObject("brthd", brthd);
+	    }
+	    if(!Strings.isEmpty(memberVO.getAttachFileId())) {
+	    	memberVO.setAttachFileUrl("/file/getImage.do?attachFileId="+memberVO.getAttachFileId());
+	    }
+	    
 	    LocalDate now = LocalDate.now();
   		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
   		
   		int formatedNow = Integer.parseInt(now.format(formatter)) - 100;
   		
-  		mv.addObject("year", formatedNow);
-  		
+  		mv.addObject("year", formatedNow);  		
 	    mv.addObject("member", memberVO);
-	    mv.addObject("phonNum", phonNum);
-	    mv.addObject("brthd", brthd);
+	    
+	    
   	    
   	    return mv;
   	}
+  		
+  		
+	//sns회원가입
+	@PostMapping("/member/memberModify.do")
+	public ModelAndView memberModify(ModelAndView mv, MemberVO memberVO, @RequestParam("file") MultipartFile meltipartFile,
+			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
+		memberVO.setMberId(loginMemberId);
+		if(!meltipartFile.isEmpty()) {
+			System.out.println("bbb");
+			fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId());
+			System.out.println("ddd");
+			fileUtilService.deleteImage(memberVO.getAttachFileId());
+			System.out.println("Ccc");
+    	}
+		
+		memberService.memberModify(memberVO);
+		
+		mv.setViewName("redirect:/"); 
+		    return mv;
+	}	
 }

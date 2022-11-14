@@ -26,7 +26,7 @@ public class SmsController {
             String ran = Integer.toString(rand.nextInt(10));
             numStr+=ran;
         }
- 
+        phonNum = phonNum.replace("-","");
         System.out.println("수신자 번호 : " + phonNum);
         System.out.println("인증번호 : " + numStr);
         smsService.certifiedPhoneNumber(phonNum,numStr);

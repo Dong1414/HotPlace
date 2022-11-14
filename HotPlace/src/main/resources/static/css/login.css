@@ -326,3 +326,54 @@
 .kakao{
 	background-color: #FEE500;
 }
+
+.input-profile{
+	width:100%; 
+	height: 25rem; 
+	background-color:bisque; 
+	display:flex;	
+}
+.profile-box{
+	height:25rem; 
+	width:25rem; 
+	display:inline-block; 
+	border: 5px dashed rgba(0, 0, 0, 0.3);
+	background-color: aliceblue;
+}
+.profile-img{
+	width:25rem; 
+	height:25rem; 
+	opacity:0; 
+	cursor:pointer; 
+	position: absolute; 
+	z-index:20
+}
+.id-nick-area{
+	display:inline-block; 
+	width:auto; 
+	height:100%;
+	margin-left:3rem;
+}
+.id-box{
+	display:flex; 
+	margin-left:1rem; 
+	margin-bottom:3rem;
+}
+.profile-msg{
+	height: 100%;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+.text-area{
+	padding: 0.9rem 1.2rem;
+	font-size: 1.8rem;
+}
+.modify-id,
+.modify-name{
+	min-width:8rem;
+	padding-right:1.2rem;
+	display:inline-block;
+}
