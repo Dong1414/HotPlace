@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+	<section class="form-wrap">
+		<div class="form-view-area">
+			<div class="form-area">
+				<div class="login-form" style="max-width: 82.3rem;">
+					<h1>비밀번호변경</h1>
+					<div style="padding: 2rem;background-color: antiquewhite;margin-bottom: 2rem;">
+						<ul>
+							<li><span class="red">※ 영문(대소문자구분), 숫자, 특수문자(!@#$^&*만 허용)를 혼용하여 9~16자를 입력하여 주십시오.</span></li>
+							<li><span class="red">※ 입력 오류 방지를 위하여 한번 더 입력해 주세요.</span></li>
+						</ul>
+					</div>
+					<div class="login-info">
+						<form id="updateForm" method="post">
+							<label class="" for="mberName">현재비밀번호</label>
+							<input class="form-control fs-3 h-55" type="password" id="oldPassword" placeholder="현재 비밀번호를 입력해주세요." onkeyup="return submitName(event);"/>
+							<label for="mberEmail">변경할 비밀번호</label>
+							<input class="form-control fs-3 h-55 " type="password" id="newPassword" name="mberPassword" onchange="fnPasswordChk(); return false;" placeholder="변경할 비밀번호를 입력해주세요." onkeyup="return submitName(event);"/>
+							
+							<label for="mberTelNo">변경할 비밀번호 확인</label>
+							<input class="form-control fs-3 h-55 " type="password" id="newPassword2" onchange="fnValidPssrdCheck(); return false;" placeholder="변경할 비밀번호 확인을 입력해주세요." onkeyup="return submitName(event);"/>
+							<div id="password_msg">
+								<p class="red">비밀번호가 일치하지 않습니다.</p>
+							</div>
+							<button class="login-action-btn btn btn-primary fs-3 ps-4 pe-4 fw-bold"  type="button" onclick="fnUpdatePw();">OK</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<script th:inline="javascript">
+$(function(){
+	$("#password_msg").prop("hidden", true);
+})
+
+function fnUpdatePw(){
+	if(!confirm("비밀번호를 변경하시겠습니까?")){
+		return false;	
+	}
+	
+	if(!$('#oldPassword').val()){
+		alert("현재 비밀번호를 입력해주세요.");
+		return false;
+	}
+	if(!$('#newPassword').val()){
+		alert("변경할 비밀번호를 입력해주세요.");
+		return false;
+	}
+	if(!$('#newPassword2').val()){
+		alert("변경할 비밀번호 확인을 입력해주세요.");
+		return false;
+	}
+	
+	if($('#oldPassword').val() == $('#newPassword').val()){
+		alert("현재비밀번호와 변경할 비밀번호가 같습니다.");
+		return false;
+	}
+	
+	var oldPw = $('#oldPassword').val();
+	var flag = false;
+	$.ajax({
+		type : "post",
+		url : '/member/pwCheck.do',
+		data: {
+        	mberPassword: oldPw
+        },
+        async: false,
+	}).done(function(result) {
+		flag = result;
+	}).fail(function() {
+		alert('실패 하였습니다.');
+	});
+	if(!flag){
+		alert("현재 비밀번호가 일치하지 않습니다.");
+		return false;
+	}
+	$("#updateForm").attr("action", "/member/myPage/memberPwModify.do");
+	$('#updateForm').submit();
+}
+
+	function fnPasswordChk(){
+       var pw = $("#newPassword").val();
+       var num = pw.search(/[0-9]/g);
+       var eng = pw.search(/[a-z]/ig);
+       var spe = /([a-zA-Z0-9].*[!,@,#,$,^,&,*])|([!,@,#,$,^,&,*].*[a-zA-Z0-9])/;
+       
+       if(pw != ""){
+           if(pw.length < 9 || pw.length > 16){
+               alert("비밀번호는 9자리 ~ 16자리 이내로 입력하여 주십시오.");
+               $("#newPassword").val("");
+               $("#newPassword").focus();
+               return false;
+           }
+           
+           if(pw.search(/₩s/) != -1){
+               alert("비밀번호는 공백없이 입력하여 주십시요.");
+               $("#newPassword").val("");
+               $("#newPassword").focus();
+               return false;
+           }
+           
+           // 비밀번호의 특수문자만 남겨 해당특수문자를 비교한다.
+           var tmp = pw.replace(/[A-za-z]/g,"");
+           tmp = tmp.replace(/[0-9]/g,"");
+           
+           if(tmp != ""){
+               for (var i = 0; i < tmp.length; i++) {
+                   if(tmp.charAt(i) == "!"){
+                   }else if(tmp.charAt(i) == "@"){
+                   }else if(tmp.charAt(i) == "#"){
+                   }else if(tmp.charAt(i) == "$"){
+                   }else if(tmp.charAt(i) == "^"){
+                   }else if(tmp.charAt(i) == "&"){
+                   }else if(tmp.charAt(i) == "*"){
+                   }else{
+                       alert("비밀번호는 특수문자는 !@#$^&*만 입력하여 주십시오.");
+                       $("#newPassword").val("");
+                       $("#newPassword").focus();
+                       return false;
+                   }
+               } 
+           }
+           if(!spe.test(pw)){
+               alert("비밀번호는 영문(대소문자구분), 숫자, 특수문자(!@#$^&*만 허용)를 혼용하여 9~16자를 입력하여 주십시오.");
+               $("#newPassword").val("");
+               $("#newPassword").focus();
+               return false;
+           }
+       }
+    }
+
+function fnValidPssrdCheck(){
+        if($("#newPassword").val() != "" && $("#newPassword2").val() != ""){
+            if($("#newPassword").val() != $("#newPassword2").val()) {
+                alert("비밀번호와 비밀번호 확인에 입력한 비밀번호가 일치하지 않습니다.");
+                $("#password_msg").prop("hidden", false);
+                $("#passwordChk").val("");
+                $("#passwordChk").focus();
+                return false;            
+            }
+            $("#password_msg").prop("hidden", true);    
+        }
+    }
+function submitName(e) {
+    if (e.code === 'Enter') {
+    	fnUpdatePw();
+    }
+}
+</script>
+</th:block>
+</html>

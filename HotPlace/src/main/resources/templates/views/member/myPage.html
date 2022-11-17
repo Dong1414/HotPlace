@@ -137,6 +137,7 @@
 					</div>
 					<div class="sign-up-input">
 						<div style="text-align: center;">
+							<button type="button" class="btn btn-warning fs-3 ps-4 pe-4" onclick="fnUpdatePassword();">비밀번호변경</button>
 							<button type="button" class="btn btn-primary fs-3 ps-4 pe-4" onclick="fnSingUp();">수정</button>
 							<button type="button" class="btn btn-secondary fs-3 ps-4 pe-4" onclick="">취소</button>
 						</div>
@@ -369,6 +370,11 @@
 			$("#preview").remove();
 			$(".profile-box").append("<div class='profile-msg'>프로필 이미지를<br>선택해주세요</div>");
 		}
+	}
+	
+	function fnUpdatePassword(){
+		$('#modifyForm').attr('action', '/member/myPage/memberPwModifyView.do');
+		$('#modifyForm').submit();
 	}
 </script>
 </th:block>

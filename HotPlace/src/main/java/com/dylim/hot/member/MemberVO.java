@@ -48,7 +48,7 @@ public class MemberVO{
 	String emailYn;
 	String telYn;
 	
-	
+	String lastPwDt;
 	public String getMberAuth() {
 		return mberAuth;
 	}
@@ -227,6 +227,13 @@ public class MemberVO{
 	}
 	public void setAttachFileUrl(String attachFileUrl) {
 		this.attachFileUrl = attachFileUrl;
+	}
+	
+	public String getLastPwDt() {
+		return lastPwDt;
+	}
+	public void setLastPwDt(String lastPwDt) {
+		this.lastPwDt = lastPwDt;
 	}
 	@Override
 	public String toString() {

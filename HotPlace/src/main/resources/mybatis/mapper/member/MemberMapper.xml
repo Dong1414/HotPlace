@@ -42,6 +42,7 @@
 					,#{emailYn}
 					,#{telYn}
 					,#{attachFileMasterId}
+					,now()
 					
 				)
 	</insert>
@@ -53,7 +54,8 @@
 				mber_nick_name as mberNickName,
 				mber_brthd as mberBrthd,
 				mber_tel_no as mberTelNo,
-				mber_email as mberEmail
+				mber_email as mberEmail,
+				last_pw_dt as lastPwDt
 			FROM
 				member
 			WHERE
@@ -274,6 +276,8 @@
 				</if>
 				,tel_yn as telYn
 				,email_yn as emailYn
+				,naver_connect_id as naverConnectId
+				,kakao_connect_id as kakaoConnectId
 			FROM
 				member
 			WHERE
@@ -293,6 +297,7 @@
 			update member
 			set
 				mber_password = #{mberPassword}
+				,last_pw_dt = now()
 			WHERE
 				del_yn = "N"
 				and mber_id = #{mberId}			  			

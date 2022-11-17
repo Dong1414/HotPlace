@@ -1,8 +1,9 @@
 package com.dylim.hot.member;
 
-import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
@@ -13,15 +14,12 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -79,6 +77,7 @@ public class MemberController {
   			mv.addObject("loginMsg", "아이디 또는 비밀번호가 일치하지않습니다.");
   			mv.addObject("mberId", memberVO.getMberId());
   			mv.setViewName("views/login/loginView");
+  			return mv;
   			
   		}else {
   			// 로그인 성공 처리
@@ -87,6 +86,17 @@ public class MemberController {
   		    session.setAttribute(SessionConstants.LOGIN_MEMBER_ID, result.getMberId());
   			mv.setViewName("redirect:/map/getMyMapView.do"); 
   		}
+  		
+  		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 년-월-일로만 Format되게 구현
+  		LocalDate now = LocalDate.now();
+        LocalDate endDate = LocalDate.parse(result.getLastPwDt(), dateTimeFormatter);
+        LocalDateTime date1 = now.atStartOfDay();
+        LocalDateTime date2 = endDate.atStartOfDay();
+        int betweenDays = Math.abs((int) Duration.between(date1, date2).toDays()) ;
+  		if(betweenDays > 90) {
+  			mv.setViewName("redirect:/member/lastPwDtOverView.do");
+  		}
+        System.out.println(betweenDays + "aaaaaa");
   		return mv;
   	}
   	
@@ -308,6 +318,18 @@ public class MemberController {
 			mv.setViewName("views/login/findIdView");
 			return mv;
 		};
+		
+		if(!Strings.isEmpty(memberVO.getNaverConnectId())) {
+			mv.addObject("msg", "네이버 아이디로 가입된 회원입니다. 네이버 로그인을 이용해주세요.");
+			mv.setViewName("views/login/findPwView");
+			return mv;
+		}
+		if(!Strings.isEmpty(memberVO.getKakaoConnectId())) {
+			mv.addObject("msg", "카카오 아이디로 가입된 회원입니다. 카카오 로그인을 이용해주세요.");
+			mv.setViewName("views/login/findPwView");
+			return mv;
+		}
+		
 		mv.addObject("result", result);
 		mv.setViewName("views/login/findResultIdView");
   	    return mv;
@@ -329,8 +351,18 @@ public class MemberController {
 			return mv;
 		};
 		
+		if(!Strings.isEmpty(memberVO.getNaverConnectId())) {
+			mv.addObject("msg", "네이버 아이디로 가입된 회원입니다. 네이버 로그인을 이용해주세요.");
+			mv.setViewName("views/login/findPwView");
+			return mv;
+		}
+		if(!Strings.isEmpty(memberVO.getKakaoConnectId())) {
+			mv.addObject("msg", "카카오 아이디로 가입된 회원입니다. 카카오 로그인을 이용해주세요.");
+			mv.setViewName("views/login/findPwView");
+			return mv;
+		}
+		
 		if(!Strings.isEmpty(memberVO.getMberEmail()) && result.getEmailYn().equals("Y")) {
-            
             String pw = getRamdomPassword(12);
             memberVO.setMberPassword(pw);
             memberService.changePw(memberVO);
@@ -346,6 +378,47 @@ public class MemberController {
 		
 		mv.addObject("result", result);
 		mv.setViewName("views/login/findResultPwView");
+  	    return mv;
+  	}
+	
+	@PostMapping("/member/myPage/memberPwModifyView.do")
+  	public ModelAndView memberPwModifyView(ModelAndView mv, MemberVO memberVO) throws Exception {
+		mv.setViewName("views/member/memberPwModifyView");
+  	    return mv;
+  	}
+
+	@PostMapping("/member/pwCheck.do")
+	@ResponseBody
+  	public boolean pwCheck(ModelAndView mv, MemberVO memberVO,
+  			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
+		memberVO.setMberId(loginMemberId);
+		MemberVO result = memberService.loadUserByUserId(memberVO);
+		
+		if(result == null) {
+			System.out.println("tlfvo");
+			return false;
+		}
+		System.out.println("akwdma");
+  	    return true;
+  	}
+
+	@PostMapping("/member/myPage/memberPwModify.do")
+  	public String memberPwModify(MemberVO memberVO, HttpServletRequest request,
+  			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
+		memberVO.setMberId(loginMemberId);
+		memberService.changePw(memberVO);
+		System.out.println("asdasdasd");
+		HttpSession session = request.getSession(false);
+  	    if (session != null) {
+  	        session.invalidate();   // 세션 날림
+  	    } 
+  	    return "redirect:/";
+  	}
+	
+	
+	@GetMapping("/member/lastPwDtOverView.do")
+  	public ModelAndView lastPwDtOverView(ModelAndView mv) throws Exception {
+		mv.setViewName("views/member/lastPwDtOverView");
   	    return mv;
   	}
 	
@@ -371,4 +444,5 @@ public class MemberController {
 
         return sb.toString();
     }
+	
 }
