@@ -131,4 +131,13 @@ public class MemberServiceImpl implements MemberService {
 	public void memberModify(MemberVO memberVO) throws Exception{
 		memberMapper.memberModify(memberVO);
 	};
+	
+	public MemberVO findLoginId(MemberVO memberVO) throws Exception{
+		return memberMapper.findLoginId(memberVO);
+	};
+	
+	public void changePw(MemberVO memberVO) throws Exception{
+		memberVO.setMberPassword(passwordEncoder.encode(memberVO.getMberPassword()));
+		memberMapper.changePw(memberVO);
+	};
 }

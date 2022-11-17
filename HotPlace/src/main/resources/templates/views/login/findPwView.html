@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+	<section class="form-wrap">
+		<div class="form-view-area">
+			<div class="form-area">
+				<div class="login-form">
+					<h1>비밀번호 찾기</h1>
+					<div class="d-block" style="text-align:right;">
+						<div class="form-check open-area me-3">
+						  <input class="form-check-input" type="radio" name="serachType" id="emailBtn" value="1" checked/>
+						  <label class="form-check-label" for="openType1">
+						    이메일
+						  </label>
+						</div>
+						<div class="form-check open-area me-3">
+						  <input class="form-check-input" type="radio" name="serachType" id="telBtn" value="2"/>
+						  <label class="form-check-label" for="openType2">
+						    휴대폰
+						  </label>
+						</div>
+					</div>
+					<div class="login-info">
+						<form id="searchForm" method="post" onsubmit="fnSearchId(); return false;">
+							<label class="" for="mberId">아이디</label>
+							<input class="form-control fs-3 h-55" type="text" id="mberId" name="mberId" placeholder="아이디를 입력해주세요."/>
+							<label class="" for="mberName">이름</label>
+							<input class="form-control fs-3 h-55" type="text" id="mberName" name="mberName" placeholder="이름을 입력해주세요."/>
+							<div class="eamilSearch">
+								<label for="mberEmail">이메일로 찾기</label>
+								<input class="form-control fs-3 h-55 " type="text" id="mberEmail" name="mberEmail" placeholder="이메일을 입력해주세요." />
+							</div>
+							<div class="telSearch none">
+								<label for="mberTelNo">휴대폰으로 찾기</label>
+								<div> 
+									<input style="width:31%;" class="w15 form-control fs-4 h-55 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm1"/>
+									<p class=" fs-5 d-inline-block">-</p>
+									<input style="width:31%;" class="w15 form-control fs-4 h-55 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm2"/>
+									<p class=" d-inline-block">-</p>
+									<input style="width:32%;" class="w15 form-control fs-4 h-55 d-inline-block" oninput="this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');" type="text" id="telNm3"/>
+									<input type="hidden" id="mberTelNo" name="mberTelNo" />
+								</div>
+							</div>
+							<div th:if="${loginMsg != null}" th:text="${loginMsg}" class="mb1 red"></div>
+							<button class="login-action-btn btn btn-primary fs-3 ps-4 pe-4 fw-bold"  type="submit">OK</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<script th:inline="javascript">
+$(function(){
+	if([[${msg}]]){
+		alert([[${msg}]]);
+	}
+})
+
+$('input:radio[name="serachType"]').click(function(){
+	//1 이메일 2 휴대폰
+	var check = $('input:radio[name="serachType"]:checked').val();
+	if(check == '1'){
+		$('.telSearch').addClass('none');
+		$('.eamilSearch').removeClass('none');
+		$('#searchForm')[0].reset();
+	}else{
+		$('.eamilSearch').addClass('none');
+		$('.telSearch').removeClass('none');
+		$('#searchForm')[0].reset();
+	}
+});
+
+function fnSearchId(){
+	if(!$('#mberId').val()){
+		alert('아이디를 입력해주세요.');
+		$('#mberName').focus();
+		return false;
+	};
+	
+	if(!fnIdChk($('#mberId').val())){
+		return false;
+	};
+	
+	if(!$('#mberName').val()){
+		alert('이름을 입력해주세요.');
+		$('#mberName').focus();
+		return false;
+	};
+	
+	if($('input:radio[name="serachType"]:checked').val() == '1'){
+		if(!$('#mberEmail').val()){
+			alert('이메일을 입력해주세요.');
+			$('#mberEmail').focus();
+			return false;
+		}
+	}else{
+		if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
+			alert('휴대폰 번호를 입력해주세요.');
+			$('#telNm1').focus();
+			return false;
+		}
+		$('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val() + '-' + $('#telNm3').val());
+	}
+	
+	$('#searchForm').attr('action', '/member/findLoginPw.do');
+	$('#searchForm').submit();
+}
+
+
+function fnIdChk(id){
+	
+	if(id.length < 6){
+        alert("아이디는 6 ~ 12자로 입력하여 주십시오.");
+        $("#mberId").focus();
+        return false;
+    }
+    
+    var blank_pattern = /[\s]/g; // 공백패턴 
+	
+    if(blank_pattern.test(id) == true){
+        alert("공백문자가 존재합니다.\r\n확인하고 다시입력하여주십시오.");
+        $("#mberId").focus();
+        return false;
+    }
+  	
+    //아이디 only number인지 체크
+    var onlynum_pattern = /^[0-9]*$/;
+    if (onlynum_pattern.test(id)) {
+        alert("숫자로만 이루어진 아이디는 사용할 수 없습니다.");
+        return false;
+    }
+    
+    // 아이디 문자 유효성 검사
+    var pattern_engnum = /^[a-z0-9]*$/;
+    
+    if(!(pattern_engnum.test(id)) ){ // 아이디가 적합하면 중복검사 시작
+    	alert("아이디는 영문 소문자, 숫자만 입력하여 주십시오.");
+        $("#mberId").focus();
+        return false;
+    }
+   	return true;
+}
+</script>
+</th:block>
+</html>

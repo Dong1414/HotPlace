@@ -13,6 +13,7 @@ public class WebConfig implements WebMvcConfigurer{
                 //.addPathPatterns("/login/*")
         		.addPathPatterns("/map/getMyMapView/saveReview.do")
         		.addPathPatterns("/member/myFriendsView*")
+        		.addPathPatterns("/member/myPage*")
                 .addPathPatterns("/map/updateReview*")
         		.excludePathPatterns("/*");// 해당 경로는 인터셉터가 가로채지 않는다.
     }

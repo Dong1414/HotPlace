@@ -18,7 +18,7 @@ public class SmsController {
 	//본인확인문자발송
     @PostMapping("/sms/sendSms.do")    
     @ResponseBody
-    public String deleteReview(String phonNum) throws Exception{
+    public String sendSms(String phonNum) throws Exception{
     	
     	Random rand  = new Random();
         String numStr = "";

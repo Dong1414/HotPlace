@@ -65,7 +65,7 @@
 								</div>
 							</div>
 						</th:block>
-						<th:block th:unless="${result != null}">
+						<th:block th:unless="${resultList != null}">
 							<h3>검색결과</h3>
 							<div class="no-search">
 								<span>검색결과가 존재하지 않습니다.</span>	
@@ -137,13 +137,6 @@
 		</div>
 	</section>
 <script th:inline="javascript">
-	$(function(){
-		 
-		if([[${searchNoMsg}]]){
-			alert([[${searchNoMsg}]]);
-		}
-			
-	})
 	function fnSearchFriend(){
 		if($('#searchId').val() == null || $('#searchId').val() == ''){
 			alert('검색할 친구의 닉네임을 입력해주세요.');

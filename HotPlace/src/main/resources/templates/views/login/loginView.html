@@ -14,10 +14,10 @@
 					<h1>LOGIN</h1>
 					<div class="login-info">
 						<form id="loginForm" method="post" onsubmit="fnLoginAction(); return false;">
-							<label class="none" for="id">아이디</label>
+							<label class="" for="id">아이디</label>
 							<input class="form-control fs-3 h-55" type="text" id="mberId" name="mberId" th:value="${mberId}" placeholder="아이디를 입력해주세요."/>
-							<label class="none" for="password">비밀번호</label>
-							<input class="form-control fs-3 h-55" type="password" id="mberPassword" name="mberPassword" placeholder="비밀번호를 입력해주세요."/>
+							<label class="" for="password">비밀번호</label>
+							<input class="form-control fs-3 h-55 mb-4" type="password" id="mberPassword" name="mberPassword" placeholder="비밀번호를 입력해주세요."/>
 							<div th:if="${loginMsg != null}" th:text="${loginMsg}" class="mb1 red"></div>
 							<button class="login-action-btn btn btn-primary fs-3 ps-4 pe-4 fw-bold"  type="submit">로그인</button>
 							
@@ -37,8 +37,8 @@
 						<a href="/login/signUpView.do">회원가입</a>
 						<nav class="member-find">
 							<ul>
-								<li><a href="#">아이디찾기</a></li>
-								<li><a href="#">비밀번호찾기</a></li>
+								<li><a href="/member/findLoginIdView.do">아이디 찾기</a></li>
+								<li><a href="/member/findLoginPwView.do">비밀번호 찾기</a></li>
 							</ul>
 						</nav>
 					</nav>

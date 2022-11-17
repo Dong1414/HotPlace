@@ -262,4 +262,39 @@
 				del_yn = "N"
 				and mber_id = #{mberId}			  			
 	</update>
+	
+	<select id="findLoginId" parameterType="com.dylim.hot.member.MemberVO" resultType="com.dylim.hot.member.MemberVO">
+		SELECT 
+				mber_id as mberId
+				<if test='mberEmail != null and !mberEmail.equals("")'>
+					,mber_email as mberEmail
+				</if>
+				<if test='mberTelNo != null and !mberTelNo.equals("")'>
+					,mber_tel_no as mberTelNo
+				</if>
+				,tel_yn as telYn
+				,email_yn as emailYn
+			FROM
+				member
+			WHERE
+				del_yn = "N"
+				and mber_name = #{mberName}
+				<if test='mberEmail != null and !mberEmail.equals("")'>
+					and mber_email = #{mberEmail}
+					and email_yn = 'Y'
+				</if>
+				<if test='mberTelNo != null and !mberTelNo.equals("")'>
+					and mber_tel_no = #{mberTelNo}
+					and tel_yn = 'Y'
+				</if>
+	</select>
+	
+	<update id="changePw" parameterType="com.dylim.hot.member.MemberVO" >
+			update member
+			set
+				mber_password = #{mberPassword}
+			WHERE
+				del_yn = "N"
+				and mber_id = #{mberId}			  			
+	</update>
 </mapper>

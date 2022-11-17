@@ -47,8 +47,7 @@
 							</div>
 							<div>
 								<div class="text-area">
-									<div></div>
-									<div class="modify-name" >이름</div>
+									<div class="modify-name">이름<span class="red">*</span></div>
 									<span class="fs-2" th:text="${member.mberName}"></span>
 								</div>
 							</div>							
@@ -81,7 +80,7 @@
 					</div>
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="telNm">휴대폰번호
+							<label for="mberTelNo">휴대폰번호
 								<i style="color: #1dd112; margin-left:0.5rem;" th:if="${member.telYn eq 'Y'}"class="fa-solid fa-circle-check"></i>
 								<i style="color: red; margin-left:0.5rem;" th:unless="${member.telYn eq 'Y'}"class="fa-solid fa-circle-xmark"></i>
 							</label>
@@ -352,7 +351,7 @@
 			}
 		}
 		
-		$('#modifyForm').attr('action', '/member/memberModify.do');
+		$('#modifyForm').attr('action', '/member/myPage/memberModify.do');
 		$('#modifyForm').submit();
 	}
 	function readURL(input) {

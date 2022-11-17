@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+	<!-- <script type="text/javascript" src="https://static.nid.naver.com/js/naverLogin_implicit-1.0.3.js" charset="utf-8"></script> -->
+	<section class="form-wrap">
+		<div class="form-view-area">
+			<div class="form-area">
+				<div class="login-form">
+					<h1>아이디찾기</h1>
+					<div class="mb-4"><span>다음 정보로 가입된 아이디가 있습니다.</span></div>
+					<div class="box-tb-solid">
+						<p class="box-i-set">
+							<i class="fa-solid fa-user"></i>
+						</p>
+						<div class="d-inline-block">
+							<ul class="ms-4">
+								<li>
+									<strong>아이디</strong>
+									<span th:text=${result.mberId}></span>
+								</li>
+								<li th:if="${result.mberEmail != null}">
+									<strong>이메일</strong>
+									<span th:text=${result.mberEmail}></span>
+								</li>
+								<li th:if="${result.mberTelNo != null}">
+									<strong>휴대폰</strong>
+									<span th:text=${result.mberTelNo}></span>
+								</li>
+							</ul>
+						</div>
+					</div>
+					<div class="sp-array-messege" style="background: #e7e7e7; margin-top: 3rem; padding: 1rem 0;">
+						<p style="padding-left:3rem; margin-bottom:0px;">고객님의 아이디 찾기가 성공적으로 이루어졌습니다.</p>
+					</div>
+					<div class="bottom-btn-area" style="text-align: center; margin-top: 3rem;">
+						<button type= "button" class="btn btn-primary fs-3 ps-4 pe-4" onclick="location.href='/login/loginView.do'">로그인</button>
+						<button type= "button" class="btn btn-secondary fs-3 ps-4 pe-4" onclick="location.href='/member/findLoginPwView.do'">비밀번호찾기</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<script th:inline="javascript">
+$(function(){
+	if([[${msg}]]){
+		alert(msg);
+	}
+})
+
+</script>
+</th:block>
+</html>

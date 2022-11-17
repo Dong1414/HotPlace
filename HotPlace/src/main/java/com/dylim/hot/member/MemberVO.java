@@ -20,8 +20,8 @@ public class MemberVO{
 	String mberPassword;
 	String mberName ="";
 	String mberBrthd="";
-	String mberTelNo="";
-	String mberEmail="";
+	String mberTelNo;
+	String mberEmail;
 	String registId="";
 	String registDt="";
 	String updateId="";

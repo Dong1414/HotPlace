@@ -4,6 +4,7 @@ import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -26,7 +27,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.dylim.hot.SessionConstants;
 import com.dylim.hot.file.service.FileUtilService;
+import com.dylim.hot.mail.GoogleMailController;
 import com.dylim.hot.member.service.MemberService;
+import com.dylim.hot.sms.service.SmsServiceImpl;
 
 @Controller
 public class MemberController {
@@ -35,6 +38,8 @@ public class MemberController {
 	private MemberService memberService;
 	@Autowired
 	private FileUtilService fileUtilService;
+	@Autowired
+	private SmsServiceImpl smsServiceImpl;
 	
 	//회원가입
 	@PostMapping("/member/signUpInsert.do")
@@ -52,7 +57,6 @@ public class MemberController {
     @GetMapping("/member/idCheck.do")
 	@ResponseBody
 	public boolean id(String id) throws Exception{
-    	System.out.println("aaaaaaaa " + id);
     	
     	boolean result = memberService.idCheck(id);
     	return result;
@@ -270,8 +274,8 @@ public class MemberController {
   	}
   		
   		
-	//sns회원가입
-	@PostMapping("/member/memberModify.do")
+	//내 정보 수정
+	@PostMapping("/member/myPage/memberModify.do")
 	public ModelAndView memberModify(ModelAndView mv, MemberVO memberVO, @RequestParam("file") MultipartFile meltipartFile,
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);
@@ -287,5 +291,84 @@ public class MemberController {
 		
 		mv.setViewName("redirect:/"); 
 		    return mv;
-	}	
+	}
+	
+	@GetMapping("/member/findLoginIdView.do")
+  	public ModelAndView findLoginIdView(ModelAndView mv) throws Exception {
+		mv.setViewName("views/login/findIdView");
+  	    return mv;
+  	}
+	
+	@GetMapping("/member/findLoginId.do")
+  	public ModelAndView findLoginId(ModelAndView mv, MemberVO memberVO) throws Exception {
+		
+		MemberVO result = memberService.findLoginId(memberVO);
+		if(Objects.isNull(result)) {
+			mv.addObject("msg", "입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.");
+			mv.setViewName("views/login/findIdView");
+			return mv;
+		};
+		mv.addObject("result", result);
+		mv.setViewName("views/login/findResultIdView");
+  	    return mv;
+  	}
+	
+	@GetMapping("/member/findLoginPwView.do")
+  	public ModelAndView findLoginPwView(ModelAndView mv) throws Exception {
+		mv.setViewName("views/login/findPwView");
+  	    return mv;
+  	}
+	
+	@PostMapping("/member/findLoginPw.do")
+  	public ModelAndView findLoginPw(ModelAndView mv, MemberVO memberVO) throws Exception {
+		
+		MemberVO result = memberService.findLoginId(memberVO);
+		if(Objects.isNull(result)) {
+			mv.addObject("msg", "입력하신 정보로 가입 된 회원 아이디는 존재하지 않습니다.");
+			mv.setViewName("views/login/findPwView");
+			return mv;
+		};
+		
+		if(!Strings.isEmpty(memberVO.getMberEmail()) && result.getEmailYn().equals("Y")) {
+            
+            String pw = getRamdomPassword(12);
+            memberVO.setMberPassword(pw);
+            memberService.changePw(memberVO);
+			String msg = GoogleMailController.gmailSendPw(memberVO.getMberEmail(), pw);
+			
+		}else if(!Strings.isEmpty(memberVO.mberTelNo) && result.getTelYn().equals("Y")) { 
+			String pw = getRamdomPassword(12);
+            memberVO.setMberPassword(pw);
+            memberService.changePw(memberVO);
+            memberVO.setMberTelNo(memberVO.getMberTelNo().replace("-", ""));
+			smsServiceImpl.certifiedPw(memberVO.getMberTelNo(), pw);
+		}
+		
+		mv.addObject("result", result);
+		mv.setViewName("views/login/findResultPwView");
+  	    return mv;
+  	}
+	
+	//임시 비밀번호 생성기
+	public String getRamdomPassword(int size) {
+        char[] charSet = new char[] {
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z',
+                'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
+                '!', '@', '#', '$', '%', '^', '&' };
+
+        StringBuffer sb = new StringBuffer();
+        SecureRandom sr = new SecureRandom();
+        sr.setSeed(new Date().getTime());
+
+        int idx = 0;
+        int len = charSet.length;
+        for (int i=0; i<size; i++) {
+            // idx = (int) (len * Math.random());
+            idx = sr.nextInt(len);    // 강력한 난수를 발생시키기 위해 SecureRandom을 사용한다.
+            sb.append(charSet[idx]);
+        }
+
+        return sb.toString();
+    }
 }

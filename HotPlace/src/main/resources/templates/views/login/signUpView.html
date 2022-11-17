@@ -76,7 +76,7 @@
 					</div>
 					<div class="sign-up-input">
 						<div class="input-form">
-							<label for="mberName">이름</label>
+							<label for="mberName">이름<span class="red">*</span></label>
 							<input class="form-control fs-4" type="text" id="mberName" name="mberName" placeholder="이름을 입력해주세요." />
 						</div>
 					</div>
@@ -472,6 +472,12 @@
 					$('#passwordChk').focus();
 					return false;
 				}
+			}
+			
+			if(!$('#mberName').val() || $('#mberName').val()==''){
+				alert('이름을 입력해주세요.');
+				$('#mberName').focus();
+				return false;
 			}
 			
 			if($("#selYear option:selected").val() != '' || $("#selMon option:selected").val() != '' || $("#selDay option:selected").val() != ''){

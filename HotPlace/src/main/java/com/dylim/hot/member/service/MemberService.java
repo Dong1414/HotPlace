@@ -36,4 +36,8 @@ public interface MemberService {
 
 	void memberModify(MemberVO memberVO) throws Exception;
 
+	MemberVO findLoginId(MemberVO memberVO) throws Exception;
+
+	void changePw(MemberVO memberVO) throws Exception;
+
 }
