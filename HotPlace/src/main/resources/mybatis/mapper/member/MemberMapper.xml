@@ -302,4 +302,26 @@
 				del_yn = "N"
 				and mber_id = #{mberId}			  			
 	</update>
+	
+	<update id="deleteMember" parameterType="com.dylim.hot.member.MemberVO" >
+			update member
+			set
+				mber_password = null
+				,mber_name = null
+				,mber_brthd = null
+				,mber_tel_no = null
+				,mber_email = null
+				,regist_id = null
+				,update_dt = now()
+				,del_yn = 'Y'
+				,mber_nick_name = null
+				,naver_connect_id = null
+				,kakao_connect_id = null
+				,email_yn = null
+				,tel_yn = null
+				,attach_file_master_id = null
+			WHERE
+				del_yn = "N"
+				and mber_id = #{mberId}			  			
+	</update>
 </mapper>

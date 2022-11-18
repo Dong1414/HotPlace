@@ -25,5 +25,9 @@ public interface ReviewService {
 	List<ReviewVO> getReviewPaging(ReviewVO reviewVO) throws Exception;
 
 	void firstFile(ReviewVO reviewVO) throws Exception;
+
+	List<ReviewVO> getTiemLineReviews(ReviewVO reviewVO) throws Exception;
+
+	int getTiemLineReviewsCnt(ReviewVO reviewVO) throws Exception;
 	
 }

@@ -140,4 +140,8 @@ public class MemberServiceImpl implements MemberService {
 		memberVO.setMberPassword(passwordEncoder.encode(memberVO.getMberPassword()));
 		memberMapper.changePw(memberVO);
 	};
+	
+	public void deleteMember(MemberVO memberVO) throws Exception{
+		memberMapper.deleteMember(memberVO);
+	};
 }

@@ -43,4 +43,6 @@ public interface MemberMapper {
 
 	void changePw(MemberVO memberVO) throws Exception;
 
+	void deleteMember(MemberVO memberVO) throws Exception;
+
 }

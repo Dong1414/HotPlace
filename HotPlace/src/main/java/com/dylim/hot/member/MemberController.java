@@ -407,7 +407,6 @@ public class MemberController {
   			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);
 		memberService.changePw(memberVO);
-		System.out.println("asdasdasd");
 		HttpSession session = request.getSession(false);
   	    if (session != null) {
   	        session.invalidate();   // 세션 날림
@@ -420,6 +419,25 @@ public class MemberController {
   	public ModelAndView lastPwDtOverView(ModelAndView mv) throws Exception {
 		mv.setViewName("views/member/lastPwDtOverView");
   	    return mv;
+  	}
+	
+	@GetMapping("/member/memberSecessionView.do")
+  	public ModelAndView memberSecessionView(ModelAndView mv) throws Exception {
+		mv.setViewName("views/member/memberSecessionView");
+  	    return mv;
+  	}
+	
+	
+	@PostMapping("/member/memberSecessionView.do")
+  	public String memberSecessionView(MemberVO memberVO, HttpServletRequest request,
+  			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
+		memberVO.setMberId(loginMemberId);
+		memberService.deleteMember(memberVO);
+		HttpSession session = request.getSession(false);
+  	    if (session != null) {
+  	        session.invalidate();   // 세션 날림
+  	    } 
+  	    return "redirect:/";
   	}
 	
 	//임시 비밀번호 생성기

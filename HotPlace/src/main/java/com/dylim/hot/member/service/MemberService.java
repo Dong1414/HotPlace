@@ -40,4 +40,6 @@ public interface MemberService {
 
 	void changePw(MemberVO memberVO) throws Exception;
 
+	void deleteMember(MemberVO memberVO) throws Exception;
+
 }

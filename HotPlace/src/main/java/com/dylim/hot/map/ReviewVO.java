@@ -1,5 +1,9 @@
 package com.dylim.hot.map;
 
+import java.util.List;
+
+import com.dylim.hot.file.FileVO;
+
 public class ReviewVO {
 	String id; //아이디
     String title; //제목
@@ -16,11 +20,21 @@ public class ReviewVO {
     String attachFileMasterId = ""; //파일 마스터 아이디
     String attachFileId = ""; //파일 마스터 아이디
     String openType;
-    
+    String mberId;
+    //상세페이지용 페이징
     int pageNo = 1;
     int startPage = 0;
     int endPage = 0;
     
+    //타임라인용 페이징
+    int startRowNum = 1;
+  	int endRowNum;
+  	int rowCount = 4;
+  	int totalPageCount;
+
+  	
+  	List<FileVO> files;
+  	
 	public String getId() {
 		return id;
 	}
@@ -167,6 +181,54 @@ public class ReviewVO {
 		this.openType = openType;
 	}
 	
+	public String getMberId() {
+		return mberId;
+	}
+
+	public void setMberId(String mberId) {
+		this.mberId = mberId;
+	}
+
+	public int getStartRowNum() {
+		return startRowNum;
+	}
+
+	public void setStartRowNum(int startRowNum) {
+		this.startRowNum = startRowNum;
+	}
+
+	public int getEndRowNum() {
+		return endRowNum;
+	}
+
+	public void setEndRowNum(int endRowNum) {
+		this.endRowNum = endRowNum;
+	}
+
+	public int getRowCount() {
+		return rowCount;
+	}
+
+	public void setRowCount(int rowCount) {
+		this.rowCount = rowCount;
+	}
+
+	public int getTotalPageCount() {
+		return totalPageCount;
+	}
+
+	public void setTotalPageCount(int totalPageCount) {
+		this.totalPageCount = totalPageCount;
+	}
+	
+	public List<FileVO> getFiles() {
+		return files;
+	}
+
+	public void setFiles(List<FileVO> files) {
+		this.files = files;
+	}
+
 	@Override
 	public String toString() {
 		return "ReviewVO [id=" + id + ", title=" + title + ", address=" + address + ", rating=" + rating + ", review="

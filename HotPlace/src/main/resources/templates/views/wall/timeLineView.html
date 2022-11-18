@@ -4,8 +4,274 @@
 	layout:decorate="/layouts/layout">
 
 <th:block layout:fragment="content">
-	<link rel="stylesheet" th:href="@{/css/login.css}" />
+<!-- swiper jQuery -->
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<!-- swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css" />
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<!-- swiper jQuery -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<section class="container">
+<th:block th:each="result : ${results}">
+	<div class="item">
+	<div class="article-profile">
+		<div class="space-between">
+			<div style="display:flex;">
+				<div class="article-profile-image">
+					<img src="/file/getImage.do?attachFileId=1024aa3b-d30b-4e1d-9029-04498ed682a8"/>
+				</div>
+				<div class="article-profile-left">
+					<div class="nickname" th:text="${result.registId}"></div>
+					<div class="region-name" th:text="${result.registDt}">시간</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div th:if="${result.files != null}" class="article-images">
+		<div class="swiper" style="height:450px;">	
+		  	<div id="test-slide" class="swiper-container">
+			    <ul class="swiper-wrapper">
+			    	<li th:each="file : ${result.files}" class="swiper-slide">
+			    		<img th:src="@{/file/getImage.do?attachFileId=} + ${file.attachFileId}">
+			    	</li>
+			    </ul>
+			    <div class="swiper-pagination"></div>
+			<div class="swiper-button-prev"></div>
+			<div class="swiper-button-next"></div>
+			</div>
+		</div>
+	</div>
+	<div class="article-description">
+		<div th:text="${result.review}">
+		</div>
+	</div>
+	</div>
+</th:block>	
+</section>
+	
+<style>
+
+.article-images{
+	position: relative;
+    width: 729px;
+    margin: 0 auto;
+}
+.article-profile{
+	width: 677px;
+    margin: 0 auto;	
+}
+.article-description{
+	padding: 32px 0;
+    width: 677px;
+    margin: 0 auto;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.space-between{
+	display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+.article-profile .article-profile-image{
+    display: inline-block;
+}
+.article-profile .article-profile-image img{
+	width: 40px;
+    height: 40px;
+    object-fit: cover;
+    -webkit-border-radius: 50%;
+}
+.article-profile .article-profile-left{
+    display: inline-block;
+    margin-left: 8px;
+}
+.article-profile .article-profile-left .nickname{
+	font-size: 15px;
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -0.6px;
+    color: #212529;
+}
+.article-profile .article-profile-left .region-name{
+	font-size: 13px;
+    line-height: 1.46;
+    letter-spacing: -0.6px;
+    color: #212529;
+}
+</style>
+	
 <script th:inline="javascript">
+var swiper = new Swiper("#test-slide", {
+    cssMode: true,
+    navigation: {
+      nextEl: ".swiper-button-next",
+      prevEl: ".swiper-button-prev",
+    },
+    pagination: {
+      el: ".swiper-pagination",
+    },
+    mousewheel: true,
+    keyboard: true,
+    observer: true,
+    observeParents: true,
+});
+
+//페이지가 처음 로딩될 때 1page를 보여주기 때문에 초기값을 1로 지정한다.
+let currentPage = [[${pageNo}]];
+let totalPage = [[${totalPageCount}]];
+//현재 페이지가 로딩중인지 여부를 저장할 변수이다.
+let isLoading=false;
+
+//웹브라우저의 창을 스크롤 할 때 마다 호출되는 함수 등록
+
+var timerForDebounce;
+$(window).on("scroll",function(){
+  if (timerForDebounce) {
+    clearTimeout(timerForDebounce);
+  }
+  timerForDebounce = setTimeout(function() {
+	//위로 스크롤된 길이
+	    let scrollTop=$(window).scrollTop();
+	    //웹브라우저의 창의 높이
+	    let windowHeight=$(window).height();
+	    //문서 전체의 높이
+	    let documentHeight=$(document).height();
+	    //바닥까지 스크롤 되었는 지 여부를 알아낸다.
+	    let isBottom=scrollTop+windowHeight + 10 >= documentHeight;
+
+	    if(isBottom){
+	        //만일 현재 마지막 페이지라면
+	        if(currentPage == totalPage || isLoading){
+	        	console.log("RMx");
+	        	console.log(totalPage);
+	        	console.log(currentPage);
+	            return; //함수를 여기서 끝낸다.
+	        }
+	        //현재 로딩 중이라고 표시한다.
+	        isLoading=true;
+	        //로딩바를 띄우고
+	        //$(".back-drop").show();
+	        //요청할 페이지 번호를 1 증가시킨다.
+	        currentPage++;
+	        //추가로 받아올 페이지를 서버에 ajax 요청을 하고
+	        console.log("inscroll"+currentPage);
+	        GetList(currentPage);
+	    }
+  }, 500);
+});
+
+
+/* $(window).on("scroll",function(){
+    //위로 스크롤된 길이
+    let scrollTop=$(window).scrollTop();
+    //웹브라우저의 창의 높이
+    let windowHeight=$(window).height();
+    //문서 전체의 높이
+    let documentHeight=$(document).height();
+    //바닥까지 스크롤 되었는 지 여부를 알아낸다.
+    let isBottom=scrollTop+windowHeight + 10 >= documentHeight;
+
+    if(isBottom){
+        //만일 현재 마지막 페이지라면
+        if(currentPage == totalPage || isLoading){
+        	console.log("RMx");
+        	console.log(totalPage);
+        	console.log(currentPage);
+            return; //함수를 여기서 끝낸다.
+        }
+        //현재 로딩 중이라고 표시한다.
+        isLoading=true;
+        //로딩바를 띄우고
+        //$(".back-drop").show();
+        //요청할 페이지 번호를 1 증가시킨다.
+        currentPage++;
+        //추가로 받아올 페이지를 서버에 ajax 요청을 하고
+        console.log("inscroll"+currentPage);
+        GetList(currentPage);
+
+    }; 
+}); */
+var cc = 1;
+const GetList = function(currentPage){
+		$.ajax({
+	        type: "get",
+	        url: '/wall/timeLineAjaxPage.do?pageNo=' + currentPage,
+	        cache: false,
+            contentType: false,
+            processData: false,        
+            dataType: "json"
+	    }).done(function (resultMap) {
+	    	var resultsSize = resultMap.results.length;
+	    	var target = $(".container");
+	    	var results = resultMap.results;
+	    	
+	    	if(results){
+		    	for(var i = 0; i < resultsSize; i++){
+		    		
+		    		 let str = '';
+		    		str += '<div class="item">'
+		    		str += '<div class="article-profile">';	    	
+		    		str += '<div class="space-between">'; 
+			    	str += '<div style="display:flex;">'; 	    		
+		    		str += '<div class="article-profile-image">';	    	
+		    		str += '<img src="/file/getImage.do?attachFileId=1024aa3b-d30b-4e1d-9029-04498ed682a8"/>'; 
+			    	str += '</div>';	    		
+			    	if(resultMap.results[i]){
+			    		str += '<div class="article-profile-left">';
+			    		str += '<div class="nickname">' + resultMap.results[i].registId + '</div>';	    	
+			    		str += '<div class="region-name">' + resultMap.results[i].registDt + '</div>';
+			    		str += '</div>';
+			    	}
+			    	str += '</div>';			
+		    		str += '</div>';	    	
+			    	str += '</div>';
+			    	
+			    	if(results[i].files != null && results[i].files != ''){
+			    		str +=	'<div class="article-images">'
+		    			str += '<div class="swiper" style="height:450px;">';	    	
+			    		str += '<div id="test-slide" class="swiper-container">'; 
+				    	str += '<ul class="swiper-wrapper">';
+				    	for(var j = 0; j <results[i].files.length; j++){
+				    		if(results[i].files[j]){
+				    			str += '<li class="swiper-slide">';
+				    			console.log(results[i].files[j].attachFileId)
+				    			str += '<img src="/file/getImage.do?attachFileId='+resultMap.results[i].files[j].attachFileId+'">';
+					    		str += '</li>';	
+				    		}
+				    		
+				    	}
+				    	str += '</ul>';
+				    	str += '<div class="swiper-pagination"></div>';
+				    	str += '<div class="swiper-button-prev"></div>';
+				    	str += '<div class="swiper-button-next"></div>';
+				    	str += '</div>';
+				    	str += '</div>';
+				    	str += '</div>'; 
+			    	}
+			    	str += '<div class="article-description">';
+			    	if(resultMap.results[i]){
+			    	str += '<div>'+resultMap.results[i].review;
+			    	}
+			    	str += '</div>';
+			    	str += '</div>';
+			    	str += '</div>';
+			    	target.append(str);	
+		    	}
+	    	}
+	    	
+	    	isLoading = false;
+	    	swiper.update();
+	    	
+	    })
+	    .fail(function() {
+	    }) 
+		
+      
+      
+}
+
 </script>
 </th:block>
 </html>

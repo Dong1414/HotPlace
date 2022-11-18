@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+	<link rel="stylesheet" th:href="@{/css/login.css}" />
+	<script src="https://static.nid.naver.com/js/naveridlogin_js_sdk_2.0.2.js" charset="utf-8"></script>
+	<section class="form-wrap">
+		<div class="form-view-area">
+			<div class="form-area">
+				<div class="login-form" style="max-width: 82.3rem;">
+					<h1>회원탈퇴</h1>
+					<div style="padding: 2rem;background-color: antiquewhite;margin-bottom: 2rem;">
+						<ul>
+							<li><span class="red">※ 비밀번호를 한번 더 입력해주세요.</span></li>
+						</ul>
+					</div>
+					<div class="login-info">
+						<form id="deleteForm" method="post">
+							<label class="" for="mberName">비밀번호</label>
+							<input class="form-control fs-3 h-55" type="password" id="mberPassword" name="mberPassword"placeholder="비밀번호를 입력해주세요." onkeyup="return submitName(event);"/>
+							<button class="login-action-btn btn btn-primary fs-3 ps-4 pe-4 fw-bold"  type="button" onclick="fnMemberSecession();">탈퇴하기</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+<script th:inline="javascript">
+
+function fnMemberSecession(){
+	if(!confirm("회원탈퇴 하시겠습니까?")){
+		return false;	
+	}
+	
+	if(!$('#mberPassword').val()){
+		alert("비밀번호를 입력해주세요.");
+		return false;
+	}
+	
+	var pw = $('#mberPassword').val();
+	var flag = false;
+	$.ajax({
+		type : "post",
+		url : '/member/pwCheck.do',
+		data: {
+        	mberPassword: pw
+        },
+        async: false,
+	}).done(function(result) {
+		flag = result;
+	}).fail(function() {
+		alert('실패 하였습니다.');
+	});
+	if(!flag){
+		alert("비밀번호가 일치하지 않습니다.");
+		return false;
+	}
+	$("#deleteForm").attr("action", "/member/memberSecessionView.do");
+	$('#deleteForm').submit();
+}
+
+function submitName(e) {
+    if (e.code === 'Enter') {
+    	fnMemberSecession();
+    }
+}
+</script>
+</th:block>
+</html>

@@ -194,11 +194,11 @@ public class ReviewController {
     		reviewVO.setPageNo(Integer.parseInt(request.getParameter("pageNo")));
     	}
     	reviewVO.setPageNo(reviewVO.getPageNo());
-    	System.out.println("asdadasd");
+    	
     	ReviewVO result = seviewService.getReview(reviewVO); //리뷰 상세 데이터
     	int resultCnt = seviewService.getReviewCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
     	
-    	int limit = 5;
+    	int limit = 2;
     	
     	// 총 페이지수
         int maxpage = resultCnt; 
@@ -232,19 +232,93 @@ public class ReviewController {
     }  
     
     @GetMapping("/wall/timeLineView.do")
-    @ResponseBody
-    public ModelAndView timeLineView(ModelAndView mv, 
-			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
-    	List<ReviewVO> resultList = new ArrayList<ReviewVO>();
-		
-		if(loginMember != null){
-			resultList = getReviews(loginMember);
-			mv.addObject("loginId", loginMember.getMberId());
-		}
-		
-		mv.addObject("resultList", resultList);
-		mv.setViewName("views/map/myMap");
+    public ModelAndView timeLineView(ModelAndView mv,HttpServletRequest request) throws Exception{ 
+    	ReviewVO reviewVO = new ReviewVO();	
+    	HttpSession session = request.getSession(false);
+  	    if(session != null) {
+  	    	reviewVO.setMberId((String) session.getAttribute("loginMemberId"));  	    	
+  	    }
+  	    //전체 게시글 수
+  	    int resultCnt = seviewService.getTiemLineReviewsCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
+  	  
+  	  	//페이지당 게시물 갯수
+  	    int pageRowCount = 4;
+  	    //현재 페이지 초기화
+	  	int pageNo = 1;
+	  	String startpage = request.getParameter("pageNo");
+	  	if(startpage != null) {
+	  		pageNo = Integer.parseInt(startpage);
+	  	}
+	  	
+	  	//몇번째 게시글부터 가져올건지
+	  	int startRowNum = 0 + (pageNo-1) * pageRowCount;
+	  	
+	  	//몇개씩 가져올건지
+	  	int rowCount = pageRowCount;
+	  	
+	  	//총 몇페이지인지
+	  	int totalPageCount = (int) Math.ceil(resultCnt) / (int) pageRowCount;
+	  	
+	  	reviewVO.setStartRowNum(startRowNum);
+	  	reviewVO.setRowCount(rowCount);
+	  	
+	  	List<ReviewVO> results = seviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
+	  	
+	  	for(int i = 0; i < results.size(); i++) {
+	  		if(results.get(i).getAttachFileMasterId() != null && !results.get(i).getAttachFileMasterId().equals("")) {
+	  			List<FileVO> files = fileUtilService.getImages(results.get(i).getAttachFileMasterId());
+		  		results.get(i).setFiles(files);
+	  		}
+	  	}
+	  	
+	  	mv.addObject("totalPageCount", totalPageCount);
+	  	mv.addObject("results", results);
+	  	mv.addObject("pageNo", pageNo);
+	  	mv.addObject("resultCnt", resultCnt);
+
+	  	mv.setViewName("views/wall/timeLineView");
+	  	
     	return mv;
+    }
+    
+    @GetMapping("/wall/timeLineAjaxPage.do")
+    @ResponseBody
+    public Map<String, Object> timeLineAjaxPage(HttpServletRequest request) throws Exception{
+    	Map<String, Object> resultMap = new HashMap<String, Object>();
+    	ReviewVO reviewVO = new ReviewVO();	
+    	
+  	    //전체 게시글 수
+  	    int resultCnt = seviewService.getTiemLineReviewsCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
+  	  
+  	  	//페이지당 게시물 갯수
+  	    int pageRowCount = 4;
+  	    //현재 페이지 초기화
+  	    String startpage = request.getParameter("pageNo");
+	  	int pageNo = Integer.parseInt(startpage);
+	  	
+	  	//몇번째 게시글부터 가져올건지
+	  	int startRowNum = 0 + (pageNo-1) * pageRowCount;
+	  	
+	  	//몇개씩 가져올건지
+	  	int rowCount = pageRowCount;
+	  	
+	  	
+	  	reviewVO.setStartRowNum(startRowNum);
+	  	reviewVO.setRowCount(rowCount);
+	  	
+	  	List<ReviewVO> results = seviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
+	  	
+	  	for(int i = 0; i < results.size(); i++) {
+	  		if(results.get(i).getAttachFileMasterId() != null && !results.get(i).getAttachFileMasterId().equals("")) {
+	  			List<FileVO> files = fileUtilService.getImages(results.get(i).getAttachFileMasterId());
+		  		results.get(i).setFiles(files);
+	  		}
+	  	}
+	  	
+	  	resultMap.put("results", results);
+	  	resultMap.put("pageNo", pageNo);
+
+    	return resultMap;
     }
     
 }

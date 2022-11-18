@@ -49,4 +49,10 @@ public class ReviewServiceImpl implements ReviewService {
 	public void firstFile(ReviewVO reviewVO) throws Exception{
 		reviewMapper.firstFile(reviewVO);
 	};
+	public List<ReviewVO> getTiemLineReviews(ReviewVO reviewVO) throws Exception{
+		return reviewMapper.getTiemLineReviews(reviewVO);
+	};
+	public int getTiemLineReviewsCnt(ReviewVO reviewVO) throws Exception{
+		return reviewMapper.getTiemLineReviewsCnt(reviewVO);
+	};
 }

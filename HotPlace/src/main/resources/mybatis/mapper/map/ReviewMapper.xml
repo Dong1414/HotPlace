@@ -170,5 +170,35 @@
 		]]>
 	</update>
 	
+	<select id="getTiemLineReviews" parameterType="com.dylim.hot.map.ReviewVO" resultType="com.dylim.hot.map.ReviewVO">
+		select 
+			id  
+		    ,title
+		    ,review
+		    ,address
+		    ,rating
+		    ,lat
+		    ,lng
+		    ,visit_dt as visitDt
+		    ,regist_id as registId
+		    ,regist_dt as registDt
+			,attach_file_master_id as attachFileMasterId 
+		from 
+			map_review 
+		where 
+			open_type = '1' 
+		order by 
+			regist_dt desc 
+		limit #{startRowNum}, #{rowCount};
+	</select>
+	
+	<select id="getTiemLineReviewsCnt" parameterType="com.dylim.hot.map.ReviewVO" resultType="int">
+		select 
+			count(id)  
+		from 
+			map_review 
+		where 
+			open_type = '1' 
+	</select>
 	
 </mapper>
