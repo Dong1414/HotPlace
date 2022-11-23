@@ -55,4 +55,7 @@ public class ReviewServiceImpl implements ReviewService {
 	public int getTiemLineReviewsCnt(ReviewVO reviewVO) throws Exception{
 		return reviewMapper.getTiemLineReviewsCnt(reviewVO);
 	};
+	public ReviewVO getTiemLineReview(ReviewVO reviewVO) throws Exception{
+		return reviewMapper.getTiemLineReview(reviewVO);
+	};
 }

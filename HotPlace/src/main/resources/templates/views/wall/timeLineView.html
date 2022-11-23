@@ -48,6 +48,9 @@
 		<div class="article-description">
 			<div th:text="${result.review}">
 			</div>
+			<div class="repleArea">
+				<a th:href="|/wall/timeLineDetailView.do?id=@{${result.id}}|">댓글()</a>
+			</div>
 		</div>
 	</div>
 </th:block>	

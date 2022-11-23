@@ -321,4 +321,29 @@ public class ReviewController {
     	return resultMap;
     }
     
+    @GetMapping("/wall/timeLineDetailView.do")
+    public ModelAndView timeLineDetailView(ModelAndView mv,HttpServletRequest request) throws Exception{ 
+    	ReviewVO reviewVO = new ReviewVO();	
+    	HttpSession session = request.getSession(false);
+  	    if(session != null) {
+  	    	reviewVO.setMberId((String) session.getAttribute("loginMemberId"));  	    	
+  	    }
+	  	reviewVO.setId((String)request.getParameter("id"));
+	  	ReviewVO result = seviewService.getTiemLineReview(reviewVO); //리뷰 상세 데이터
+	  	
+	  	if(result == null) {
+	  		mv.setViewName("redirect:" + request.getHeader("Referer"));
+	    	return mv;
+	  	}
+	  	
+  		if(result.getAttachFileMasterId() != null && !result.getAttachFileMasterId().equals("")) {
+  			List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
+	  		result.setFiles(files);
+	  	}
+	  	
+	  	mv.addObject("result", result);
+	  	mv.setViewName("views/wall/timeLineDetailView");
+	  	
+    	return mv;
+    }
 }

@@ -220,4 +220,43 @@
 			open_type = '1' 
 	</select>
 	
+	<select id="getTiemLineReview" parameterType="com.dylim.hot.map.ReviewVO" resultType="com.dylim.hot.map.ReviewVO">
+		select 
+			id  
+		    ,title
+		    ,review
+		    ,address
+		    ,rating
+		    ,lat
+		    ,lng
+		    ,open_type as openType
+		    ,visit_dt as visitDt
+		    ,regist_id as registId
+		    ,DATE_FORMAT(regist_dt, "%Y-%m-%d") as registDt
+			,attach_file_master_id as attachFileMasterId 
+		from 
+			map_review
+			<if test='mberId != null'>
+				,
+				(SELECT
+					mber_second_id as mberId,
+						(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName
+					FROM
+						member_relationship tb1
+					WHERE 
+						mber_first_id = #{mberId}) tb2
+			</if> 
+		where 
+			<choose>
+				<when test='mberId != null'>
+					open_type in(1,2)
+					and regist_id in (tb2.mberId, #{mberId})
+				</when>
+				<otherwise>
+					open_type in(1)
+				</otherwise>
+			</choose>
+			and id = #{id}
+	</select>
+	
 </mapper>

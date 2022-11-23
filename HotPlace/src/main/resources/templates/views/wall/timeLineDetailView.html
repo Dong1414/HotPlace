@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="/layouts/layout">
+
+<th:block layout:fragment="content">
+<!-- swiper jQuery -->
+<script src="https://unpkg.com/swiper/swiper-bundle.js"></script>
+<script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+<!-- swiper CSS -->
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.css" />
+<link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css" />
+<!-- swiper jQuery -->
+<script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+<link rel="stylesheet" th:href="@{/css/timeLine.css}" />
+<section class="container" style="margin-top:2rem;">
+	<div class="item mb-4">
+		<div class="article-profile">
+			<div class="space-between">
+				<div class="d-flex">
+						<a class="mini-map" th:href="|/map/FriendMapView.do?mberId=@{${result.registId}}|">지도보기</a>
+					<div class="article-profile-image">
+						<img src="/file/getImage.do?attachFileId=1024aa3b-d30b-4e1d-9029-04498ed682a8"/>
+					</div>
+					<div class="article-profile-left">
+						<div class="nickname text-left" th:text="${result.registId}"></div>
+						<div class="region-name" th:text="${result.registDt}">시간</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div th:if="${result.files != null}" class="article-images">
+			<div class="mt-4">	
+			  	<div class="list-slide swiper">
+				    <ul class="swiper-wrapper">
+				    	<li th:each="file : ${result.files}" class="swiper-slide">
+				    		<img th:src="@{/file/getImage.do?attachFileId=} + ${file.attachFileId}">
+				    	</li>
+				    </ul>
+				    <div class="swiper-pagination"></div>
+				<div class="swiper-button-prev"></div>
+				<div class="swiper-button-next"></div>
+				</div>
+			</div>
+		</div>
+		<div class="article-description">
+			<div th:text="${result.review}">
+			</div>
+			<form method="post" id="repleInsertForm">
+			<input type="hidden" name="reviewId" id="reviewId" th:value="${result.id}"/>
+			<div class="repleArea">
+				<div><a th:href="|/wall/timeLineDetailView.do?id=@{${result.id}}|">댓글()</a></div>
+				<div style="background-color: rgba(233, 233, 233, 0.5);">
+					<div class="article-profile padding-15">
+						<div class="bg-white">
+							<div class="bg-white padding-15">
+								<div class="nickname text-left" th:text="${result.registId}"></div>
+								<textarea class="reple-box" name="repleCts" id="repleCts" maxlength="200" placeholder="댓글을 달아주세요"></textarea>
+								<div class="text-right" >
+									<span class="textCount">0</span>
+									<span class="textTotal">/200</span>
+								</div>
+							</div>
+							<div class="reple-insert-area">
+								<button type="button" class="btn btn-primary fs-3 ps-4 pe-4" onclick="fnRepleInsert();">등록</button>
+							</div>
+						</div>
+						<div class="space-between">
+							<div class="d-flex">
+								<div class="article-profile-image">
+									<img src="/file/getImage.do?attachFileId=1024aa3b-d30b-4e1d-9029-04498ed682a8"/>
+								</div>
+								<div class="article-profile-left">
+									<div class="nickname text-left" th:text="${result.registId}"></div>
+									<div class="region-name" th:text="${result.registDt}">시간</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			</form>
+		</div>
+	</div>
+</section>
+	
+<style>
+.padding-15{
+	padding: 1.5rem;
+}
+
+.reple-box{
+border: none; box-shadow: none; width:100%; resize:none;
+}
+
+.reple-insert-area{
+border-top:1px solid #ededed; text-align:right; margin-bottom:1.5rem;
+}
+</style>
+	
+<script th:inline="javascript">
+$(function(){
+	fnSwSet();
+})
+
+function fnSwSet(){
+	var swiper = new Swiper('.list-slide', {
+	    observer: true,
+	    observeParents: true,
+	    effect: "flip",
+        grabCursor: true,
+	    navigation: {
+	        nextEl: '.swiper-button-next',
+	        prevEl: '.swiper-button-prev',
+	    },
+	    pagination: {
+	        el: ".swiper-pagination",
+	        clickable : true,
+		},
+	});
+}
+
+$('#repleCts').keyup(function (e) {
+	let content = $(this).val();
+    
+    // 글자수 세기
+    if (content.length == 0 || content == '') {
+    	$('.textCount').text('0');
+    } else {
+    	$('.textCount').text(content.length);
+    }
+    
+    // 글자수 제한
+    if (content.length > 200) {
+    	// 200자 부터는 타이핑 되지 않도록
+        $(this).val($(this).val().substring(0, 200));
+        // 200자 넘으면 알림창 뜨도록
+        alert('글자수는 200자까지 입력 가능합니다.');
+    };
+});
+
+function fnRepleInsert(){
+	var formData = new FormData($('#repleInsertForm')[0]);
+	$.ajax({
+        type: "post",
+        url: '/reple/repleInsert.do',
+        cache: false,
+        contentType: false,
+        processData: false,        
+        data: formData,
+    }).done(function (data) {
+    	alert("등록되었습니다.");
+    	window.location.reload()
+    })
+    .fail(function() {
+    })
+}
+</script>
+</th:block>
+</html>

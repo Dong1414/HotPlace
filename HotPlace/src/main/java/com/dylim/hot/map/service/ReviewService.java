@@ -29,5 +29,7 @@ public interface ReviewService {
 	List<ReviewVO> getTiemLineReviews(ReviewVO reviewVO) throws Exception;
 
 	int getTiemLineReviewsCnt(ReviewVO reviewVO) throws Exception;
+
+	ReviewVO getTiemLineReview(ReviewVO reviewVO) throws Exception;
 	
 }
