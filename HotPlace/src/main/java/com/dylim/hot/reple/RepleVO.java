@@ -15,6 +15,9 @@ public class RepleVO {
     String registDt; // 위도
     String updateId; // 경도
     String updateDt; //방문일자
+    String attachFileMasterId; 
+    String attachFileId; //프로필 사진
+    String mberNickName;
 	public String getId() {
 		return id;
 	}
@@ -63,6 +66,31 @@ public class RepleVO {
 	public void setUpdateDt(String updateDt) {
 		this.updateDt = updateDt;
 	}
-    
-    
+	public String getAttachFileMasterId() {
+		return attachFileMasterId;
+	}
+	public void setAttachFileMasterId(String attachFileMasterId) {
+		this.attachFileMasterId = attachFileMasterId;
+	}
+	
+	public String getAttachFileId() {
+		return attachFileId;
+	}
+	public void setAttachFileId(String attachFileId) {
+		this.attachFileId = attachFileId;
+	}
+	
+	public String getMberNickName() {
+		return mberNickName;
+	}
+	public void setMberNickName(String mberNickName) {
+		this.mberNickName = mberNickName;
+	}
+	@Override
+	public String toString() {
+		return "RepleVO [id=" + id + ", reviewId=" + reviewId + ", repleCts=" + repleCts + ", repleId=" + repleId
+				+ ", registId=" + registId + ", registDt=" + registDt + ", updateId=" + updateId + ", updateDt="
+				+ updateDt + ", attachFileMasterId=" + attachFileMasterId + "]";
+	}
+	
 }

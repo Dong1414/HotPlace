@@ -10,5 +10,9 @@ import com.dylim.hot.reple.RepleVO;
 public interface RepleService {
 
 	void repleInsert(RepleVO repleVO) throws Exception;
+
+	List<RepleVO> getRepleList(String id) throws Exception;
+
+	void repleDelete(RepleVO id) throws Exception;
 	
 }

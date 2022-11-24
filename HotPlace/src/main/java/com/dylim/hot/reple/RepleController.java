@@ -54,7 +54,38 @@ public class RepleController {
   	    }
     	
   	    repleService.repleInsert(repleVO);
-  	    System.out.println("aaaaaaaaaaaaaaa");
     	return "등록되었습니다.";
+    }
+    
+    //ajax 조회 
+    @PostMapping("/reple/getRepleList.do")    
+    @ResponseBody
+    public List<RepleVO> repleInsert(HttpServletRequest request) throws Exception{
+    	
+    	List<RepleVO> repleResults = repleService.getRepleList((String)request.getParameter("id"));
+  	    
+    	return repleResults;
+    }
+    
+    
+	@PostMapping("/reple/repleDelete.do")    
+    @ResponseBody
+    public String repleDelete(RepleVO repleVO, HttpServletRequest request) throws Exception{
+		
+		HttpSession session = request.getSession(false);
+  	    if(session == null) {
+  	    	return "로그인 후 이용할 수 있습니다.";  	    	
+  	    }else {
+  	    	
+  	    	if(repleVO.getRegistId().equals((String)session.getAttribute("loginMemberId"))) {
+  	    		repleVO.setRegistId((String)session.getAttribute("loginMemberId"));
+  	    	}else {
+  	    		return "등록자만 삭제 할 수 있습니다.";
+  	    	}
+  	    }
+  	    
+    	repleService.repleDelete(repleVO);
+  	    
+    	return "삭제되었습니다.";
     }
 }

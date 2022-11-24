@@ -33,6 +33,8 @@ import com.dylim.hot.file.service.FileUtilService;
 import com.dylim.hot.map.service.ReviewService;
 import com.dylim.hot.member.MemberVO;
 import com.dylim.hot.member.service.MemberService;
+import com.dylim.hot.reple.RepleVO;
+import com.dylim.hot.reple.service.RepleService;
 
 @Controller
 public class ReviewController {
@@ -43,6 +45,8 @@ public class ReviewController {
 	private FileUtilService fileUtilService;
 	@Autowired
 	private MemberService memberservice;
+	@Autowired
+	private RepleService repleService;
 	
 	@GetMapping("/")
 	public String main2() throws Exception{
@@ -270,7 +274,9 @@ public class ReviewController {
 		  		results.get(i).setFiles(files);
 	  		}
 	  	}
-	  	
+	  	for( ReviewVO aa : results) {
+	  		System.out.println(aa.getRepleCnt() + "xxxxxxxxxxx");
+	  	}
 	  	mv.addObject("totalPageCount", totalPageCount);
 	  	mv.addObject("results", results);
 	  	mv.addObject("pageNo", pageNo);
@@ -281,6 +287,8 @@ public class ReviewController {
     	return mv;
     }
     
+    
+    //ajax
     @GetMapping("/wall/timeLineAjaxPage.do")
     @ResponseBody
     public Map<String, Object> timeLineAjaxPage(HttpServletRequest request) throws Exception{
@@ -340,7 +348,14 @@ public class ReviewController {
   			List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
 	  		result.setFiles(files);
 	  	}
-	  	
+  		
+  		List<RepleVO> repleResults = repleService.getRepleList(result.getId());
+  		if(repleResults.size() <= 0) {
+  			mv.addObject("repleResults", null);
+  		}else {
+  			mv.addObject("repleResults", repleResults);
+  		}
+  		
 	  	mv.addObject("result", result);
 	  	mv.setViewName("views/wall/timeLineDetailView");
 	  	

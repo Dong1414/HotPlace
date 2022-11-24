@@ -22,10 +22,10 @@
 				<div class="d-flex">
 						<a class="mini-map" th:href="|/map/FriendMapView.do?mberId=@{${result.registId}}|">지도보기</a>
 					<div class="article-profile-image">
-						<img src="/file/getImage.do?attachFileId=1024aa3b-d30b-4e1d-9029-04498ed682a8"/>
+						<img th:src="|/file/getImage.do?attachFileId=${result.attachFileId}|" onerror="this.src='/images/noImage.png';"/>
 					</div>
 					<div class="article-profile-left">
-						<div class="nickname text-left" th:text="${result.registId}"></div>
+						<div class="nickname text-left" th:text="${result.mberNickName}"></div>
 						<div class="region-name" th:text="${result.registDt}">시간</div>
 					</div>
 				</div>
@@ -49,7 +49,8 @@
 			<div th:text="${result.review}">
 			</div>
 			<div class="repleArea">
-				<a th:href="|/wall/timeLineDetailView.do?id=@{${result.id}}|">댓글()</a>
+				<a th:if="${result.repleCnt != '' && result.repleCnt != null}" th:href="|/wall/timeLineDetailView.do?id=@{${result.id}}|" th:text="|댓글(${result.repleCnt})|"></a>
+				<a th:unless="${result.repleCnt != '' && result.repleCnt != null}" th:href="|/wall/timeLineDetailView.do?id=@{${result.id}}|">댓글(0)</a>
 			</div>
 		</div>
 	</div>
@@ -154,11 +155,11 @@ const GetList = function(currentPage){
 			    	str += '<a href="/map/FriendMapView.do?mberId='+results[i].registId+'">지도보기</a>'
 			    	str += '</div>'
 		    		str += '<div class="article-profile-image">';	    	
-		    		str += '<img src="/file/getImage.do?attachFileId=1024aa3b-d30b-4e1d-9029-04498ed682a8"/>'; 
+		    		str += '<img src="/file/getImage.do?attachFileId='+results[i].attachFileId+'" onerror="this.src=\'/images/noImage.png\'"/>'; 
 			    	str += '</div>';	    		
 			    	if(resultMap.results[i]){
 			    		str += '<div class="article-profile-left">';
-			    		str += '<div class="nickname text-left">' + resultMap.results[i].registId + '</div>';	    	
+			    		str += '<div class="nickname text-left">' + resultMap.results[i].mberNickName + '</div>';	    	
 			    		str += '<div class="region-name">' + resultMap.results[i].registDt + '</div>';
 			    		str += '</div>';
 			    	}
@@ -174,7 +175,6 @@ const GetList = function(currentPage){
 				    	for(var j = 0; j <results[i].files.length; j++){
 				    		if(results[i].files[j]){
 				    			str += '<li class="swiper-slide">';
-				    			console.log(results[i].files[j].attachFileId)
 				    			str += '<img src="/file/getImage.do?attachFileId='+resultMap.results[i].files[j].attachFileId+'">';
 					    		str += '</li>';	
 				    		}
@@ -189,9 +189,16 @@ const GetList = function(currentPage){
 			    	}
 			    	str += '<div class="article-description">';
 			    	if(resultMap.results[i]){
-			    	str += '<div>'+resultMap.results[i].review;
+				    	str += '<div>'+resultMap.results[i].review+'<div>';
+				    	str += '<div class="repleArea">'
+				    	if(resultMap>results[i].repleCnt > 0){
+				    		str += '<a href="/wall/timeLineDetailView.do?id='+resultMap.results[i].id+'">댓글('+resultMap.results[i].repleCnt+')</a>'	
+				    	}else{
+				    		str += '<a href="/wall/timeLineDetailView.do?id='+resultMap.results[i].id+'">댓글(0)</a>'
+				    	}
+				    	str += '</div>'
 			    	}
-			    	str += '</div>';
+			    	
 			    	str += '</div>';
 			    	str += '</div>';
 			    	target.append(str);	

@@ -123,6 +123,19 @@ a{
    	display:none;
 }
 
+.mini-del{
+	right:374px;
+    position: absolute;
+    border: 1px solid #ebebeb;
+    background: white;
+    padding: 5px;
+    width: 8rem;
+    font-size: 1.3rem;
+    border-radius: 8px;
+    cursor: pointer;
+   	display:none;
+}
+
 .space-between:hover  .mini-map{
 	display: block;
 }

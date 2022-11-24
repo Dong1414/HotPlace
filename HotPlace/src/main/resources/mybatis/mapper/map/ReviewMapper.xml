@@ -172,35 +172,41 @@
 	
 	<select id="getTiemLineReviews" parameterType="com.dylim.hot.map.ReviewVO" resultType="com.dylim.hot.map.ReviewVO">
 		select 
-			id  
-		    ,title
-		    ,review
-		    ,address
-		    ,rating
-		    ,lat
-		    ,lng
-		    ,open_type as openType
-		    ,visit_dt as visitDt
-		    ,regist_id as registId
-		    ,DATE_FORMAT(regist_dt, "%Y-%m-%d") as registDt
-			,attach_file_master_id as attachFileMasterId 
+			tb3.id  
+			,(select mber_nick_name from member where mber_id = tb3.regist_id) as mberNickName
+		    ,tb3.title
+		    ,tb3.review
+		    ,tb3.address
+		    ,tb3.rating
+		    ,tb3.lat
+		    ,tb3.lng
+		    ,tb3.open_type as openType
+		    ,tb3.visit_dt as visitDt
+		    ,tb3.regist_id as registId
+		    ,DATE_FORMAT(tb3.regist_dt, "%Y-%m-%d") as registDt
+			,tb3.attach_file_master_id as attachFileMasterId 
+			,(select count(id) from reple where review_id = tb3.id) as repleCnt
+			,(select attach_file_id 
+				from 
+					attach_file tb4,
+					(select attach_file_master_id from member where mber_id = tb3.regist_id) tb5
+					where tb5.attach_file_master_id = tb4.attach_file_master_id and del_yn = 'N') as attachFileId  
 		from 
-			map_review
-			<if test='mberId != null'>
-				,
-				(SELECT
-					mber_second_id as mberId,
-						(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName
-					FROM
-						member_relationship tb1
-					WHERE 
-						mber_first_id = #{mberId}) tb2
-			</if> 
+			map_review tb3
 		where 
 			<choose>
 				<when test='mberId != null'>
 					open_type in(1,2)
-					and regist_id in (tb2.mberId, #{mberId})
+					and regist_id in (
+						SELECT
+							mber_second_id as mberId
+		
+						FROM
+							member_relationship tb1
+						WHERE 
+							mber_first_id = #{mberId}
+						)
+					or regist_id = #{mberId}
 				</when>
 				<otherwise>
 					open_type in(1)
@@ -222,35 +228,30 @@
 	
 	<select id="getTiemLineReview" parameterType="com.dylim.hot.map.ReviewVO" resultType="com.dylim.hot.map.ReviewVO">
 		select 
-			id  
-		    ,title
-		    ,review
-		    ,address
-		    ,rating
-		    ,lat
-		    ,lng
-		    ,open_type as openType
-		    ,visit_dt as visitDt
-		    ,regist_id as registId
-		    ,DATE_FORMAT(regist_dt, "%Y-%m-%d") as registDt
-			,attach_file_master_id as attachFileMasterId 
+			tb3.id  
+			,(select mber_nick_name from member where mber_id = tb3.regist_id) as mberNickName
+		    ,tb3.title
+		    ,tb3.review
+		    ,tb3.address
+		    ,tb3.rating
+		    ,tb3.lat
+		    ,tb3.lng
+		    ,tb3.open_type as openType
+		    ,tb3.visit_dt as visitDt
+		    ,tb3.regist_id as registId
+		    ,DATE_FORMAT(tb3.regist_dt, "%Y-%m-%d") as registDt
+			,tb3.attach_file_master_id as attachFileMasterId
+			,(select attach_file_id 
+				from 
+					attach_file tb4,
+					(select attach_file_master_id from member where mber_id = tb3.regist_id) tb5
+					where tb5.attach_file_master_id = tb4.attach_file_master_id and del_yn = 'N') as attachFileId  
 		from 
-			map_review
-			<if test='mberId != null'>
-				,
-				(SELECT
-					mber_second_id as mberId,
-						(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName
-					FROM
-						member_relationship tb1
-					WHERE 
-						mber_first_id = #{mberId}) tb2
-			</if> 
+			map_review tb3
 		where 
 			<choose>
 				<when test='mberId != null'>
 					open_type in(1,2)
-					and regist_id in (tb2.mberId, #{mberId})
 				</when>
 				<otherwise>
 					open_type in(1)

@@ -21,6 +21,8 @@ public class ReviewVO {
     String attachFileId = ""; //파일 마스터 아이디
     String openType;
     String mberId;
+    String mberNickName;
+    
     //상세페이지용 페이징
     int pageNo = 1;
     int startPage = 0;
@@ -34,6 +36,8 @@ public class ReviewVO {
 
   	
   	List<FileVO> files;
+  	
+  	String repleCnt;
   	
 	public String getId() {
 		return id;
@@ -227,6 +231,22 @@ public class ReviewVO {
 
 	public void setFiles(List<FileVO> files) {
 		this.files = files;
+	}
+	
+	public String getRepleCnt() {
+		return repleCnt;
+	}
+
+	public void setRepleCnt(String repleCnt) {
+		this.repleCnt = repleCnt;
+	}
+	
+	public String getMberNickName() {
+		return mberNickName;
+	}
+
+	public void setMberNickName(String mberNickName) {
+		this.mberNickName = mberNickName;
 	}
 
 	@Override

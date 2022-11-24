@@ -20,4 +20,12 @@ public class RepleServiceImpl implements RepleService {
 	public void repleInsert(RepleVO repleVO) throws Exception{
 		repleMapper.repleInsert(repleVO);	
 	};
+	
+	public List<RepleVO> getRepleList(String id) throws Exception{
+		return repleMapper.getRepleList(id);
+	};
+	
+	public void repleDelete(RepleVO id) throws Exception{
+		repleMapper.repleDelete(id);
+	};
 }

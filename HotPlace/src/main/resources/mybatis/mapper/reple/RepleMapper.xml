@@ -18,4 +18,30 @@
 			,now()
 		)
 	</insert>
+	
+	<select id="getRepleList" parameterType="com.dylim.hot.reple.RepleVO" resultType="com.dylim.hot.reple.RepleVO">
+		select 
+			tb1.id 
+			,tb1.review_id as reviewId
+			,(select mber_nick_name from member where mber_id = tb1.regist_id) as mberNickName
+			,tb1.reple_cts as repleCts
+			,tb1.reple_id as repleId
+			,tb1.regist_id as registId
+			,tb1.regist_dt as registDt
+			,(select attach_file_id 
+				from 
+					attach_file tb3,
+					(select attach_file_master_id from member where mber_id = tb1.regist_id) tb2
+					where tb3.attach_file_master_id = tb2.attach_file_master_id and del_yn = 'N') as attachFileId 
+		from
+			reple tb1
+		where
+			review_id = #{id}
+		order by regist_id desc
+	</select>
+	
+	<delete id="repleDelete" parameterType="com.dylim.hot.reple.RepleVO">
+		delete from reple where id = #{id} and regist_id = #{registId}
+	</delete>
+	
 </mapper>
