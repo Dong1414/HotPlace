@@ -19,10 +19,11 @@
 }
 
 .wrapper th{
-	width: 60px;
+	width: 15rem;
 	font-size: 1.6rem;
     font-weight: 500; 
     padding-right: 15px;
+    background-color:#f7f7fb;
 }
 
 .star-rating{
@@ -137,7 +138,19 @@
     color: red;
 }
 
+.wrapper tr:first-child{
+	border-top: 2px solid #222;
+	border-bottom: 1px solid #d5d5db;
+	margin-top:1rem;
+	margin-bottom:1rem;
+} 
+.wrapper tr{
+	border-top: 1px solid #d5d5db;
+	border-bottom: 1px solid #d5d5db;
+	margin-top:1rem;
+	margin-bottom:1rem;	
+}
 
-
-
-
+.wrapper td{
+	padding:1.2rem;	
+}

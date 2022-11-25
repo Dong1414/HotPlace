@@ -62,7 +62,7 @@ public class RepleController {
     @ResponseBody
     public List<RepleVO> repleInsert(HttpServletRequest request) throws Exception{
     	
-    	List<RepleVO> repleResults = repleService.getRepleList((String)request.getParameter("id"));
+    	List<RepleVO> repleResults = repleService.getRepleList((String)request.getParameter("reviewId"));
   	    
     	return repleResults;
     }

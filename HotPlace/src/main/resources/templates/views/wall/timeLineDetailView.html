@@ -61,7 +61,7 @@
 								<div class="nickname text-left" th:text="${session.loginMember.mberNickName}+님"></div>
 								<textarea class="reple-box" name="repleCts" id="repleCts" maxlength="200" placeholder="댓글을 달아주세요"></textarea>
 								<div class="text-right" >
-									<span class="textCount">0</span>
+									<span class="textCount" id="textCount">0</span>
 									<span class="textTotal">/200</span>
 								</div>
 							</div>
@@ -72,24 +72,29 @@
 						<div th:unless="${session.loginMember != null}" class="bg-white padding-15 mb-4">
 							<a href="/login/loginView.do">댓글을 작성하시려면 로그인 해주세요.</a>
 						</div>
+						
 						<th:block th:if="${repleResults != null}">
-							<div class="space-between mb-3" th:each="reple : ${repleResults}" style="border-bottom: 1px solid #ededed; padding-bottom: 5rem; cursor:auto;">
-								<div class="" style="width:100%; display:flex;">
-									<div class="article-profile-image">
-										<img th:src="|/file/getImage.do?attachFileId=${reple.attachFileId}|"/>
-									</div>
-									<div class="article-profile-left" style="width:100%;">
-										<div style="display:flex; align-items: center; width:100%;">
-											<div class="nickname text-left" th:text="${reple.mberNickName}"></div>
-											<div class="region-name text-left ms-3" th:text="${reple.registDt}"></div>
+							<div class="reples">
+								<div class="reple-h mb-3 reple-area" th:each="reple : ${repleResults}">
+									<div class="w-100 display-flex">
+										<div class="article-profile-image">
+											<img th:src="|/file/getImage.do?attachFileId=${reple.attachFileId}|"/>
 										</div>
-										<div class="region-name" th:text="${reple.repleCts}"></div>	
-									</div>
-									<div th:if="${session.loginMember.mberId == reple.registId}">
-										<button type="button" class="reple-del-area" style="border:0; outline:0;" th:onclick="|fnOption('@{${reple.id}}');|">
-											<i class="fa-solid fa-ellipsis-vertical"></i>
-										</button>
-										<button type="button" class="mini-del" name="mini-del" th:id="|mini-del${reple.id}|" th:onclick="|fnRepleDel('@{${reple.id}}','@{${reple.registId}}');|">삭제하기</button>
+										<div class="article-profile-left w-100">
+											<div class="reple-info">
+												<div class="nickname text-left" th:text="${reple.mberNickName}"></div>
+												<div class="region-name text-left ms-3" th:text="${reple.registDt}"></div>
+											</div>
+											<div class="region-name" th:text="${reple.repleCts}"></div>	
+										</div>
+										<th:block th:if="${session.loginMember != null}">
+											<div th:if="${session.loginMember.mberId == reple.registId}">
+												<button type="button" class="reple-del-area button-none" th:onclick="|fnOption('@{${reple.id}}');|">
+													<i class="fa-solid fa-ellipsis-vertical"></i>
+												</button>
+												<button type="button" class="mini-del" name="mini-del" th:id="|mini-del${reple.id}|" th:onclick="|fnRepleDel('@{${reple.id}}','@{${reple.registId}}');|">삭제하기</button>
+											</div>
+										</th:block>
 									</div>
 								</div>
 							</div>
@@ -165,6 +170,19 @@ $('#repleCts').keyup(function (e) {
 });
 
 function fnRepleInsert(){
+	if(!confirm("등록하시겠습니까?")){
+		return false;
+	}
+	
+	if(!$('#repleCts').val()){
+		alert("댓글을 입력해주세요.");
+		return false;
+	}
+	if ($('#repleCts').val().length > 200) {
+        alert('글자수는 200자까지 입력 가능합니다.');
+        return false;
+    };
+    
 	var formData = new FormData($('#repleInsertForm')[0]);
 	$.ajax({
         type: "post",
@@ -175,6 +193,54 @@ function fnRepleInsert(){
         data: formData,
     }).done(function (data) {
     	alert(data);
+    	if(data == '등록되었습니다.'){
+			var reviewId = $('#reviewId').val();
+			$.ajax({
+	            type: "post",
+	            url: '/reple/getRepleList.do',
+	            data: {
+	            	reviewId: reviewId	
+	            },
+	        }).done(function (data) {
+	        	var html ='';
+	        	var loginId = [[${session.loginMember}]];
+	        	var dataSize = data.length;
+	        	for(var i = 0; i < dataSize; i++){
+	        		html += '<div class="reple-h mb-3 reple-area">';
+	        		html += '<div class="w-100 display-flex">';
+		        	html += '<div class="article-profile-image">';
+		        	html += '<img src="/file/getImage.do?attachFileId='+data[i].attachFileId+'"/>';
+		        	html += '</div>';
+		        	html += '<div class="article-profile-left w-100">';
+		        	html += '<div class="reple-info">';
+		        	html += '<div class="nickname text-left">'+data[i].mberNickName+'</div>';
+		        	html += '<div class="region-name text-left ms-3">'+data[i].registDt+'</div>';
+		        	html += '</div>';
+		        	html += '<div class="region-name">'+data[i].repleCts+'</div>';
+		        	html += '</div>';
+		        	
+		        	if(loginId != null){
+		        		if(loginId.mberId == data[i].registId){
+			             	html += '<div>';
+				        	html += '<button type="button" class="reple-del-area button-none" onclick="fnOption('+data[i].id+');">';
+				        	html += '<i class="fa-solid fa-ellipsis-vertical"></i>';
+				        	html += '</button>';
+				        	html += '<button type="button" class="mini-del" name="mini-del" id="mini-del'+data[i].id+'" onclick="fnRepleDel(\''+data[i].id+'\',\''+data[i].registId+'\');">삭제하기</button>';
+				        	html += '</div>';
+			        	}
+		        	}
+		        	
+		        	html += '</div>';
+		        	html += '</div>';
+		        	html += '</div>';
+	        	}
+	        	$('.reples').empty();
+	        	$('.reples').append(html);	        	
+	        	$('#repleCts').val('');
+	        })
+	        .fail(function() {
+	        })
+		}
     })
     .fail(function() {
     })
@@ -190,6 +256,10 @@ function fnOption(id){
 }
 
 function fnRepleDel(id, mberId){
+	if(!confirm("삭제하시겠습니까?")){
+		return false;
+	}
+	
 	var repleId = id;
 	var mberId = mberId;
 	$.ajax({
@@ -201,6 +271,54 @@ function fnRepleDel(id, mberId){
 		},
     }).done(function (data) {
     	alert(data);
+    	if(data == '삭제되었습니다.'){
+			var reviewId = $('#reviewId').val();
+			$.ajax({
+	            type: "post",
+	            url: '/reple/getRepleList.do',
+	            data: {
+	            	reviewId: reviewId	
+	            },
+	        }).done(function (data) {
+	        	var html ='';
+	        	var loginId = [[${session.loginMember}]];
+	        	var dataSize = data.length;
+	        	for(var i = 0; i < dataSize; i++){
+	        		html += '<div class="reple-h mb-3 reple-area">';
+	        		html += '<div class="w-100 display-flex">';
+		        	html += '<div class="article-profile-image">';
+		        	html += '<img src="/file/getImage.do?attachFileId='+data[i].attachFileId+'"/>';
+		        	html += '</div>';
+		        	html += '<div class="article-profile-left w-100">';
+		        	html += '<div class="reple-info">';
+		        	html += '<div class="nickname text-left">'+data[i].mberNickName+'</div>';
+		        	html += '<div class="region-name text-left ms-3">'+data[i].registDt+'</div>';
+		        	html += '</div>';
+		        	html += '<div class="region-name">'+data[i].repleCts+'</div>';
+		        	html += '</div>';
+		        	
+		        	if(loginId != null){
+		        		if(loginId.mberId == data[i].registId){
+			             	html += '<div>';
+				        	html += '<button type="button" class="reple-del-area button-none" onclick="fnOption('+data[i].id+');">';
+				        	html += '<i class="fa-solid fa-ellipsis-vertical"></i>';
+				        	html += '</button>';
+				        	html += '<button type="button" class="mini-del" name="mini-del" id="mini-del'+data[i].id+'" onclick="fnRepleDel(\''+data[i].id+'\',\''+data[i].registId+'\');">삭제하기</button>';
+				        	html += '</div>';
+			        	}
+		        	}
+		        	
+		        	html += '</div>';
+		        	html += '</div>';
+		        	html += '</div>';
+	        	}
+	        	$('.reples').empty();
+	        	$('.reples').append(html);	        	
+	        	$('#repleCts').val('');
+	        })
+	        .fail(function() {
+	        })
+		}
     })
     .fail(function() {
     })

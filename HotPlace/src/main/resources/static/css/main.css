@@ -195,14 +195,14 @@ input, textarea, select, button, table, select{
     width: 100%;
     height: auto;
     box-sizing: border-box;
-    border: 1px solid #e5e5e5;
+    /* border: 1px solid #585852; */
     padding:1.3rem;
     display: block;
     min-height: 60rem;
 }
 
 .plus-padding{
-	padding: 3rem 1.6rem
+	padding: 2rem 1.6rem
 }
 
 .text-right{
@@ -218,4 +218,12 @@ input, textarea, select, button, table, select{
 .open-area{
 	position:relative;
 	display:inline-block;
+}
+.back-fbf7f2{
+	background-color: #FBF7F2;
+}
+.top-set{
+	padding-top:2rem;
+	margin:0;
+	max-width:100%;
 }

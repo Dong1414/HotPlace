@@ -37,7 +37,7 @@
 			reple tb1
 		where
 			review_id = #{id}
-		order by regist_id desc
+		order by regist_dt desc
 	</select>
 	
 	<delete id="repleDelete" parameterType="com.dylim.hot.reple.RepleVO">
