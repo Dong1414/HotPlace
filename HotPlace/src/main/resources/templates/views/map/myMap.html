@@ -102,6 +102,11 @@ function fnClose(mode){
 }
 
 function fnInsertView(){
+	var loginId = [[${session.loginMemberId}]];
+	if(loginId == null){
+		alert("로그인 후 사용 가능합니다.");
+		return false;
+	}
 	$('.bottom-bar-wrapper').css('display', 'flex');	
 	$('.side-bar-wrapper').css('display', 'none');
 	$('.inser-area-button').css('display', 'none');	

@@ -215,8 +215,9 @@
 
 .request-profile-img{
 	object-fit: cover;
-	width:100%;
+	width:15rem;
 	height:100%;
+	padding: 1rem;
 }
 
 .friend-add-box{

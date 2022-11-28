@@ -117,10 +117,11 @@ input, textarea, select, button, table, select{
 
 
 .main {
-    background-image: url('/images/mainView.png');
+	background: url(/images/notepad.png) no-repeat 50% 0 #f3f1e7;
     width:100%;
     height: 100%;
     background-size: cover;
+    z-index:-1;
  }
 
 .form-wrap{
@@ -148,6 +149,46 @@ input, textarea, select, button, table, select{
     height: 100%;
     align-items: center;
 }
+.main-text-area{
+	display: table;
+	height: 100vh;
+	top: 0;
+	width: 100%;
+}
+.main-text-h{
+	display: table-cell;
+	vertical-align: middle;
+}
+.main-text-sort{
+	margin: 0 auto; 
+	max-width: 978px;     
+	text-align: left;
+}
+.main-text{
+	color:white; 
+	font-size:6.5rem;     
+	font-weight: 600;
+}
+.main-text-explanation{
+	color:#fff; 
+	font-size:2.5rem;
+}
+.start-btn{
+	background-color: rgb(18 59 79 / 0.9);;
+    color: #fff;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Roboto,sans-serif;
+    font-size: 16px;
+    font-weight: 700;
+    letter-spacing: .1em;
+    line-height: 2;
+    margin: 2em auto 3em;
+    padding: 0.8em 2.5em;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
 
 .red{
 	color: red;

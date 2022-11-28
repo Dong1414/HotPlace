@@ -21,7 +21,7 @@
 				<div class="d-flex">
 						<a class="mini-map" th:href="|/map/FriendMapView.do?mberId=@{${result.registId}}|">지도보기</a>
 					<div class="article-profile-image">
-						<img src="/file/getImage.do?attachFileId=1024aa3b-d30b-4e1d-9029-04498ed682a8"/>
+						<img th:src="|/file/getImage.do?attachFileId=${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 					</div>
 					<div class="article-profile-left">
 						<div class="nickname text-left" th:text="${result.mberNickName}"></div>
