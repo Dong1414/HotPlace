@@ -8,6 +8,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -226,11 +228,23 @@ public class MemberController {
   	//sns회원가입
   	@PostMapping("/member/snsSignUp")
   	public ModelAndView snsSignUp(ModelAndView mv, MemberVO memberVO, HttpServletRequest request) throws Exception {
-  		int min_val = 10000000;
-        int max_val = 99999999;
-        SecureRandom rand = new SecureRandom();
-        memberVO.setMberId(rand.nextInt((max_val - min_val) + 1) + min_val + "@" + memberVO.getSnsMod());
-  			
+//  		int min_val = 10000000;
+//        int max_val = 99999999;
+//        SecureRandom rand = new SecureRandom();
+//        memberVO.setMberId(rand.nextInt((max_val - min_val) + 1) + min_val + "@" + memberVO.getSnsMod());
+  		
+        memberVO.setMberId(memberService.signUpGetId(memberVO));
+        
+        if(memberVO.getMberTelNo() != null && !memberVO.getMberTelNo().equals("")) {
+        	String[] phoneArray = phoneNumberSplit(memberVO.getMberTelNo());
+            memberVO.setMberTelNo(phoneArray[0] + "-" + phoneArray[1] + "-" + phoneArray[2]);
+        }
+        
+        if(memberVO.getMberBrthd() != null && !memberVO.getMberBrthd().equals("")) {
+        	String[] phoneArray = brthdSplit(memberVO.getMberBrthd());
+            memberVO.setMberBrthd(phoneArray[0] + "-" + phoneArray[1] + "-" + phoneArray[2]);
+        }
+                
   	    memberService.signUpInsert(memberVO);
   	    
   	    MemberVO loginVO = memberService.loadUserByUserId(memberVO);
@@ -243,6 +257,43 @@ public class MemberController {
 		mv.setViewName("redirect:/"); 
   	    return mv;
   	}
+  	
+  	public static String[] phoneNumberSplit(String phoneNumber) throws Exception{
+
+        Pattern tellPattern = Pattern.compile( "^(01\\d{1}|02|0505|0502|0506|0\\d{1,2})-?(\\d{3,4})-?(\\d{4})");
+
+        Matcher matcher = tellPattern.matcher(phoneNumber);
+        if(matcher.matches()) {
+            //정규식에 적합하면 matcher.group으로 리턴
+            return new String[]{ matcher.group(1), matcher.group(2), matcher.group(3)};
+        }else{
+            //정규식에 적합하지 않으면 substring으로 휴대폰 번호 나누기
+            
+            String str1 = phoneNumber.substring(0, 3);
+            String str2 = phoneNumber.substring(3, 7);
+            String str3 = phoneNumber.substring(7, 11);
+            return new String[]{str1, str2, str3};
+        }
+    }
+  	
+  	public static String[] brthdSplit(String brthd) throws Exception{
+
+        Pattern tellPattern = Pattern.compile( "/^(19[0-9][0-9]|20\\d{2})(0[0-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])$/");
+
+        Matcher matcher = tellPattern.matcher(brthd);
+        if(matcher.matches()) {
+            //정규식에 적합하면 matcher.group으로 리턴
+            return new String[]{ matcher.group(1), matcher.group(2), matcher.group(3)};
+        }else{
+            //정규식에 적합하지 않으면 substring으로 휴대폰 번호 나누기
+            
+            String str1 = brthd.substring(0, 4);
+            String str2 = brthd.substring(4, 6);
+            String str3 = brthd.substring(6, 8);
+            return new String[]{str1, str2, str3};
+        }
+    }
+  	
   	
 	@GetMapping("/member/myPage.do")
   	public ModelAndView myPage(ModelAndView mv, HttpServletRequest request, String searchId) throws Exception {
@@ -290,11 +341,8 @@ public class MemberController {
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);
 		if(!meltipartFile.isEmpty()) {
-			System.out.println("bbb");
-			fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId());
-			System.out.println("ddd");
+			memberVO.setAttachFileMasterId(fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId()));
 			fileUtilService.deleteImage(memberVO.getAttachFileId());
-			System.out.println("Ccc");
     	}
 		
 		memberService.memberModify(memberVO);

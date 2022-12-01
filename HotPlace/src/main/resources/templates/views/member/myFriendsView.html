@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
 	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="/layouts/layout">
+	layout:decorate="layouts/layout">
 
 <th:block layout:fragment="content">
 	<link rel="stylesheet" th:href="@{/css/login.css}" />
@@ -35,7 +35,7 @@
 											<div class="d-flex p-relative">
 												<div class="request-profile-box">
 													<div class="w100 p-relative text-center">
-														<img class="request-profile-img" src="/images/ui_user_profile_avatar_person_icon_208734.png"/>
+														<img class="request-profile-img" th:src="|/file/getImage.do?attachFileId=${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 													</div>
 													<div class="user-name-box">
 														<span th:text="${result.mberNickName}"></span>
@@ -80,7 +80,7 @@
 									<div class="d-flex p-relative">
 										<div class="request-profile-box">
 											<div class="w100 p-relative text-center">
-												<img class="request-profile-img" src="/images/icons8-account-6.png"/>
+												<img class="request-profile-img" th:src="|/file/getImage.do?attachFileId=${member.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 											</div>
 											<div class="user-name-box">
 												<span th:text="${member.mberNickName}"></span>
@@ -110,7 +110,7 @@
 									<div class="d-flex p-relative">
 										<div class="request-profile-box">
 											<div class="w100 p-relative text-center">
-												<img class="request-profile-img" src="/images/ui_user_profile_avatar_person_icon_208734.png"/>
+												<img class="request-profile-img" th:src="|/file/getImage.do?attachFileId=${myFriend.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 											</div>
 											<div class="user-name-box">
 												<span th:text="${myFriend.mberNickName}"></span>

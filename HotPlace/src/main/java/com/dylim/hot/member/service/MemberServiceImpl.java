@@ -144,4 +144,8 @@ public class MemberServiceImpl implements MemberService {
 	public void deleteMember(MemberVO memberVO) throws Exception{
 		memberMapper.deleteMember(memberVO);
 	};
+	
+	public String signUpGetId(MemberVO memberVO) throws Exception{
+		return memberMapper.signUpGetId(memberVO);
+	};
 }

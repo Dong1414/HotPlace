@@ -13,19 +13,7 @@
 			VALUES
 				(
 					null
-					<choose>
-						<when test='snsMod != null'>
-							<if test='snsMod.equals("n")'>
-								,concat(nextval('naver_seq'),"@",#{snsMod})
-							</if>
-							<if test='snsMod.equals("k")'>
-								,concat(nextval('kakao_seq'),"@",#{snsMod}) 
-							</if>
-						</when>
-						<otherwise>
-						,#{mberId}
-						</otherwise>
-					</choose>
+					,#{mberId}
 					,#{mberPassword}
 					,#{mberName}
 					,#{mberBrthd}
@@ -46,6 +34,20 @@
 					
 				)
 	</insert>
+	<select id="signUpGetId" parameterType="com.dylim.hot.member.MemberVO" resultType="string">
+		select 
+			<choose>
+				<when test='snsMod.equals("n")'>
+					concat(nextval('naver_seq'),"@",#{snsMod})
+				</when>
+				<otherwise>
+					concat(nextval('kakao_seq'),"@",#{snsMod})
+				</otherwise>
+			</choose>
+		from
+			dual	
+	</select>
+	
 	<select id="loadUserByUserId" parameterType="com.dylim.hot.member.MemberVO" resultType="com.dylim.hot.member.MemberVO">
 			SELECT 
 				mber_id as mberId,
@@ -120,6 +122,10 @@
 				t1.mber_id as mberId,
 				t1.mber_name as mberName,
 				t1.mber_nick_name as mberNickName,
+				(select attach_file_id 
+					from 
+					attach_file t4
+					where t1.attach_file_master_id = t4.attach_file_master_id and del_yn = 'N') as attachFileId,  
 				t2.relation_type as relationType,
 				t3.relation as relation
 			FROM 
@@ -139,10 +145,14 @@
 	<select id="friendRequestList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
 		<![CDATA[
 			SELECT
-				mber_id as mberId,
-				mber_nick_name as mberNickName
+				tb1.mber_id as mberId,
+				tb1.mber_nick_name as mberNickName,
+				(select attach_file_id 
+					from 
+					attach_file tb2
+					where tb1.attach_file_master_id = tb2.attach_file_master_id and del_yn = 'N') as attachFileId
 			FROM
-				member,
+				member tb1,
 				(
 					SELECT
 						mber_first_id,
@@ -181,8 +191,13 @@
 	<select id="friendtList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
 		<![CDATA[
 			SELECT
-				mber_second_id as mberId,
-				(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName
+				tb1.mber_second_id as mberId,
+				(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName,
+				(select attach_file_id 
+				from 
+					attach_file tb2,
+					(select attach_file_master_id from member where mber_id = tb1.mber_second_id) tb3
+					where tb3.attach_file_master_id = tb2.attach_file_master_id and del_yn = 'N') as attachFileId
 			FROM
 				member_relationship tb1
 			WHERE 
@@ -259,7 +274,8 @@
 				mber_tel_no = #{mberTelNo},
 				mber_email = #{mberEmail},
 				tel_yn = #{telYn},
-				email_yn = #{emailYn}
+				email_yn = #{emailYn},
+				attach_file_master_id = #{attachFileMasterId}
 			WHERE
 				del_yn = "N"
 				and mber_id = #{mberId}			  			

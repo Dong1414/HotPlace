@@ -1,8 +1,10 @@
 package com.dylim.hot.file.service;
 
-import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -22,8 +24,15 @@ import com.dylim.hot.file.mapper.FileUtilMapper;
 @Service
 public class FileUtilServiceImpl implements FileUtilService {
 	//로컬
-	private static final String SAVE_PATH = "/Users/dylim/upload/images/mapImg/";
-	private static final String PREFIX_URL = "/Users/dylim/upload/images/mapImg/";
+	//private static final String SAVE_PATH = "/Users/dylim/upload/images/mapImg/";
+	//private static final String PREFIX_URL = "/Users/dylim/upload/images/mapImg/";
+	
+	//운영
+	private static final String SAVE_PATH = "/home/ubuntu/upload/images/";
+	private static final String PREFIX_URL = "/home/ubuntu/upload/images/";
+	
+	//운영
+	
 	
 	private static final Logger log = LoggerFactory.getLogger(FileUtilController.class);
 	
@@ -188,20 +197,25 @@ public class FileUtilServiceImpl implements FileUtilService {
 	
 	// 파일을 실제로 write 하는 메서드
     public boolean writeFile(MultipartFile multipartFile, String saveFileName)throws IOException {
-    	
-    	String path = SAVE_PATH; //폴더 경로
-    	File Folder = new File(path);
-
+    	//private static final String SAVE_PATH = "/asd/qwe/zxc/sdf/qwe/";
+    	//String path = SAVE_PATH; //폴더 경로
+    	Path path = Paths.get(SAVE_PATH);
     	// 해당 디렉토리가 없다면 디렉토리를 생성.
-    	if (!Folder.exists()) {
-    		try{
-    		    Folder.mkdir(); //폴더 생성합니다. ("새폴더"만 생성)
-    		    System.out.println("폴더생성완료.");
-    	        } 
-    	        catch(Exception e){
-    		    e.getStackTrace();
-    		}        
+//    	if (!Folder.exists()) {
+//    		try{
+//    		    boolean asd = Folder.createDirectories(path); //폴더 생성합니다. ("새폴더"만 생성)
+//    		    System.out.println(Folder.toString());
+//    		    System.out.println("폴더생성완료." + asd);
+//    	        } 
+//    	        catch(Exception e){
+//    		    e.getStackTrace();
+//    		}        
+//        }
+    	
+    	if (Files.notExists(path)) {
+            Files.createDirectories(path);
         }
+    	
         boolean result = false;
         
         byte[] data = multipartFile.getBytes();

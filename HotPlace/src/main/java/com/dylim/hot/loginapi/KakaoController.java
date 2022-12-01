@@ -33,27 +33,26 @@ public class KakaoController {
 	
 	@GetMapping("/oauth")
     public String naverConnect() {
-		System.out.println("aaaaaa");
         StringBuffer url = new StringBuffer();
         url.append("https://kauth.kakao.com/oauth/authorize?");
         url.append("client_id=" + "8daccbe4b0ebc1030985af606321ed80");
-        url.append("&redirect_uri=http://localhost:8082/api/kakao/callback");
+        url.append("&redirect_uri=http://www.tripdiary.site/api/kakao/callback");
         url.append("&response_type=code");
-        System.out.println("dddddd");
         return "redirect:" + url;
     }
 	
 	@RequestMapping(value = "/callback", produces = "application/json", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView kakaoLogin(@RequestParam("code") String code, HttpServletRequest request, ModelAndView mv) throws Exception {
-
+		System.out.println("카카오 콜백");
         String accessToken = getKakaoAccessToken(code);
-        
+        System.out.println("카카오 콜백123");
         MemberVO memberVO = getKakaoUserInfo(accessToken);
         MemberVO loginVO = memberService.snsIdCheck(memberVO);
-        
+        System.out.println("카카오 콜백345");
         if(loginVO == null) {
+        	System.out.println(memberVO.toString());
         	mv.addObject("result", memberVO);
- 	        mv.setViewName("/views/login/connectSignUpView");
+ 	        mv.setViewName("views/login/connectSignUpView");
         }else {
         	HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
  		    session.setAttribute(SessionConstants.LOGIN_MEMBER, loginVO);   // 세션에 로그인 회원 정보 보관
@@ -77,7 +76,7 @@ public class KakaoController {
                 .path("/oauth/token")
                 .queryParam("grant_type", "authorization_code")
                 .queryParam("client_id", "8daccbe4b0ebc1030985af606321ed80")
-                .queryParam("redirect_uri", "http://localhost:8082/api/kakao/callback")
+                .queryParam("redirect_uri", "http://www.tripdiary.site/api/kakao/callback")
                 .queryParam("code", code)
                 .build())
             .retrieve().bodyToMono(JSONObject.class).block();

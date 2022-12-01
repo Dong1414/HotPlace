@@ -207,6 +207,7 @@
 							mber_first_id = #{mberId}
 						)
 					or regist_id = #{mberId}
+					or open_type in(1) 	
 				</when>
 				<otherwise>
 					open_type in(1)

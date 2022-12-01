@@ -41,7 +41,8 @@ public class NaverController {
         url.append("https://nid.naver.com" + "/oauth2.0/authorize?");
         url.append("client_id=" + "BnnFdxOxX_s_KECsc0rX");
         url.append("&response_type=code");
-        url.append("&redirect_uri=http://localhost:8082/api/naver/callback");
+        url.append("&redirect_uri=http://www.tripdiary.site/api/naver/callback");
+//        url.append("&redirect_uri=http://localhost:8080/api/naver/callback");
         url.append("&state=" + state);
 
         return "redirect:" + url;
@@ -50,6 +51,8 @@ public class NaverController {
 	@RequestMapping(value = "/callback", method = {RequestMethod.GET, RequestMethod.POST}, produces = "application/json")
 	    public ModelAndView naverLogin(@RequestParam(value = "code") String code, @RequestParam(value = "state") String state
 	    		,HttpServletRequest request) throws Exception {
+		
+			System.out.println("가나다라마바");
 	        ModelAndView mv = new ModelAndView();
 	        // 네이버에 요청 보내기
 	        WebClient webclient = WebClient.builder()
@@ -75,9 +78,13 @@ public class NaverController {
 	        MemberVO loginVO = memberService.snsIdCheck(resultToken);
 	        
 	        if(loginVO == null) {
+	        	
 	        	mv.addObject("result", resultToken);
-		        mv.setViewName("/views/login/connectSignUpView");
+	        	
+	        	System.out.println("1 실행" + resultToken.toString());
+		        mv.setViewName("views/login/connectSignUpView");
 	        }else {
+	        	System.out.println("2 실행");
 	        	HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
 			    session.setAttribute(SessionConstants.LOGIN_MEMBER, loginVO);   // 세션에 로그인 회원 정보 보관
 			    session.setAttribute(SessionConstants.LOGIN_MEMBER_ID, loginVO.getMberId());

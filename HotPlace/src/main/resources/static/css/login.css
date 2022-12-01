@@ -215,9 +215,10 @@
 
 .request-profile-img{
 	object-fit: cover;
-	width:15rem;
-	height:100%;
-	padding: 1rem;
+    width: 20rem;
+    height: 19rem;
+    padding: 1rem;
+    border-radius: 2rem;
 }
 
 .friend-add-box{

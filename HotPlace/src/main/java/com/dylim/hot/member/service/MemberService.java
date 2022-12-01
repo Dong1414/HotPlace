@@ -42,4 +42,6 @@ public interface MemberService {
 
 	void deleteMember(MemberVO memberVO) throws Exception;
 
+	String signUpGetId(MemberVO memberVO) throws Exception;
+
 }
