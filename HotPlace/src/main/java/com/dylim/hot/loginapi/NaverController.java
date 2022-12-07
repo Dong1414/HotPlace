@@ -42,7 +42,7 @@ public class NaverController {
         url.append("client_id=" + "BnnFdxOxX_s_KECsc0rX");
         url.append("&response_type=code");
         url.append("&redirect_uri=http://www.tripdiary.site/api/naver/callback");
-//        url.append("&redirect_uri=http://localhost:8080/api/naver/callback");
+        //url.append("&redirect_uri=http://localhost:8080/api/naver/callback");
         url.append("&state=" + state);
 
         return "redirect:" + url;
@@ -73,8 +73,11 @@ public class NaverController {
 	            
 	        // 네이버에서 온 응답에서 토큰을 추출
 	        String token = (String) response.get("access_token");
-	        MemberVO resultToken = getUserInfo(token);
 	        
+	        System.out.println(token + "aaaaaaaaaaa");
+	        
+	        MemberVO resultToken = getUserInfo(token);
+	        System.out.println(token + "aaaaaaaaaaa");
 	        MemberVO loginVO = memberService.snsIdCheck(resultToken);
 	        
 	        if(loginVO == null) {
@@ -111,15 +114,15 @@ public class NaverController {
 	        // 원하는 정보 추출하기
 	        Map<String, Object> res = (Map<String, Object>) response.get("response");
 	        MemberVO memberVO = new MemberVO();
-	        String birth = (String)res.get("birthyear") + "-" + (String)res.get("birthday");
-	        String tel = (String)res.get("mobile");
+	        //String birth = (String)res.get("birthyear") + "-" + (String)res.get("birthday");
+	        //String tel = (String)res.get("mobile");
 
 	        memberVO.setNaverConnectId((String)res.get("id"));
 	        memberVO.setMberNickName((String)res.get("nickname"));
-	        memberVO.setMberEmail((String)res.get("email"));
-	        memberVO.setMberName((String)res.get("name"));
-	        memberVO.setMberTelNo(tel.replace("-", ""));
-	        memberVO.setMberBrthd(birth.replace("-", ""));
+	        //memberVO.setMberEmail((String)res.get("email"));
+	        //memberVO.setMberName((String)res.get("name"));
+	        //memberVO.setMberTelNo(tel.replace("-", ""));
+	        //memberVO.setMberBrthd(birth.replace("-", ""));
 	        memberVO.setSnsMod("n");
 	        return memberVO;
 	     }

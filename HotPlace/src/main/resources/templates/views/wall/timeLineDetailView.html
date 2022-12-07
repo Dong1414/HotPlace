@@ -78,7 +78,7 @@
 								<div class="reple-h mb-3 reple-area" th:each="reple : ${repleResults}">
 									<div class="w-100 display-flex">
 										<div class="article-profile-image">
-											<img th:src="|/file/getImage.do?attachFileId=${reple.attachFileId}|"/>
+											<img th:src="|/file/getImage.do?attachFileId=${reple.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';" />
 										</div>
 										<div class="article-profile-left w-100">
 											<div class="reple-info">
@@ -209,7 +209,7 @@ function fnRepleInsert(){
 	        		html += '<div class="reple-h mb-3 reple-area">';
 	        		html += '<div class="w-100 display-flex">';
 		        	html += '<div class="article-profile-image">';
-		        	html += '<img src="/file/getImage.do?attachFileId='+data[i].attachFileId+'"/>';
+		        	html += '<img src="/file/getImage.do?attachFileId='+data[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>';
 		        	html += '</div>';
 		        	html += '<div class="article-profile-left w-100">';
 		        	html += '<div class="reple-info">';
