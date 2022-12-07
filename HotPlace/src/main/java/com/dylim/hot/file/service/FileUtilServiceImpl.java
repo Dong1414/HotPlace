@@ -31,20 +31,20 @@ public class FileUtilServiceImpl implements FileUtilService {
 	private static final String SAVE_PATH = "/home/ubuntu/upload/images/";
 	private static final String PREFIX_URL = "/home/ubuntu/upload/images/";
 	
-	//운영
-	
-	
 	private static final Logger log = LoggerFactory.getLogger(FileUtilController.class);
 	
 	@Autowired
 	private FileUtilMapper fileUtilMapper;
 	
+	
+	//드롭존 파일 업로드 로직
 	public String dropZoneUpload(MultipartHttpServletRequest request, String attachFileMasterId) throws Exception{
 		
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		 
 		String fileMsterId = attachFileMasterId;
 		
+		//파일 마스터 아이디가 없는 경우 새로 생성
 		if(Strings.isEmpty(attachFileMasterId)){
 			fileMsterId = UUID.randomUUID().toString();
 			saveFileMaster(fileMsterId);
@@ -90,14 +90,17 @@ public class FileUtilServiceImpl implements FileUtilService {
         }
 	};
 	
+	//파일 마스터 아이디 저장
 	public void saveFileMaster(String fileMsterId) throws Exception {
 		fileUtilMapper.saveFileMaster(fileMsterId);
 	}
 	
+	//파일저장
 	public void saveFile(FileVO file) throws Exception {
 		fileUtilMapper.saveFile(file);
 	};
 	
+	//멀티파일 업로드
 	public String multiFileUpload(List<MultipartFile> multipartFiles) throws Exception {
 		// upload
         String fileMsterId = UUID.randomUUID().toString();
@@ -145,6 +148,7 @@ public class FileUtilServiceImpl implements FileUtilService {
         }
 	}
 	
+	//단일파일 업로드
 	public String fileUpload(MultipartFile multipartFile, String attachFileMasterId) throws Exception {
 		// upload
 		
