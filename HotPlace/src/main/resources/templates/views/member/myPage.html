@@ -5,7 +5,7 @@
 
 <th:block layout:fragment="content">
 	<link rel="stylesheet" th:href="@{/css/login.css}" />
-	<form id="modifyForm" method="post" enctype="multipart/form-data">
+	<form id="modifyForm" th:method="put" enctype="multipart/form-data">
 	<input type="hidden" id="telNoCheck"/>
 	<input type="hidden" id="emailNoCheck"/>
 	<input type="hidden" id="telYn" name="telYn" th:value="${member.telYn}"/>
@@ -137,8 +137,8 @@
 					</div>
 					<div class="sign-up-input">
 						<div style="text-align: center;">
-							<button type="button" class="btn btn-warning fs-3 ps-4 pe-4" onclick="fnUpdatePassword();">비밀번호변경</button>
 							<button type="button" class="btn btn-primary fs-3 ps-4 pe-4" onclick="fnSingUp();">수정</button>
+							<button type="button" class="btn btn-warning fs-3 ps-4 pe-4" onclick="fnUpdatePassword();">비밀번호변경</button>
 							<button type="button" class="btn btn-secondary fs-3 ps-4 pe-4" onclick="">취소</button>
 						</div>
 					</div>
@@ -352,7 +352,7 @@
 			}
 		}
 		
-		$('#modifyForm').attr('action', '/member/myPage/memberModify.do');
+		$('#modifyForm').attr('action', '/member/mypage/info');
 		$('#modifyForm').submit();
 	}
 	function readURL(input) {
@@ -373,7 +373,8 @@
 	}
 	
 	function fnUpdatePassword(){
-		$('#modifyForm').attr('action', '/member/myPage/memberPwModifyView.do');
+		$('#modifyForm').attr('method', 'get');
+		$('#modifyForm').attr('action', '/member/mypage/pw');
 		$('#modifyForm').submit();
 	}
 </script>

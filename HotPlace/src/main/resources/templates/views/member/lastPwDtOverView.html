@@ -19,7 +19,7 @@
 						</ul>
 					</div>
 					<div class="login-info">
-						<form id="updateForm" method="post">
+						<form id="updateForm" th:method="put">
 							<label class="" for="mberName">현재비밀번호</label>
 							<input class="form-control fs-3 h-55" type="password" id="oldPassword" placeholder="현재 비밀번호를 입력해주세요." onkeyup="return submitName(event);"/>
 							<label for="mberEmail">변경할 비밀번호</label>
@@ -68,12 +68,14 @@ function fnUpdatePw(){
 	
 	var oldPw = $('#oldPassword').val();
 	var flag = false;
+	var obj = {
+			mberPassword: oldPw
+	}
 	$.ajax({
 		type : "post",
-		url : '/member/pwCheck.do',
-		data: {
-        	mberPassword: oldPw
-        },
+		url : '/member/pw/check',
+		data: JSON.stringify(obj),
+		contentType: 'application/json',
         async: false,
 	}).done(function(result) {
 		flag = result;
@@ -84,7 +86,7 @@ function fnUpdatePw(){
 		alert("현재 비밀번호가 일치하지 않습니다.");
 		return false;
 	}
-	$("#updateForm").attr("action", "/member/myPage/memberPwModify.do");
+	$("#updateForm").attr("action", "/member/pw");
 	$('#updateForm').submit();
 }
 

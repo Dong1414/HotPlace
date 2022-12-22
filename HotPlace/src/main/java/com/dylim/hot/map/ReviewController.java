@@ -141,7 +141,7 @@ public class ReviewController {
     	if(Strings.isNotEmpty(result.getAttachFileMasterId()) && result.getAttachFileMasterId() != null) {
     		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
     		for(FileVO file : files) {
-    			file.setUrl("/file/getImage.do?attachFileId=" + file.getAttachFileId());
+    			file.setUrl("/file/" + file.getAttachFileId());
     		}
     		mv.addObject("files", files);
     		mv.addObject("fileCnt", 10 - files.size());

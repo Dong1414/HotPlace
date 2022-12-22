@@ -17,7 +17,7 @@
   				</span>
   			</span>
   			<span>
-   				<button th:if="${session.loginMember == null}" class="login-btn" onclick="location.href='/login/loginView.do'">로그인</button>
+   				<button th:if="${session.loginMember == null}" class="login-btn" onclick="location.href='/auth'">로그인</button>
   				<th:block th:if="${session.loginMember != null}">
   					<button th:text="${session.loginMember.mberNickName}+님" class="login-btn my-menu-on-btn" onclick="fnOnMyMenu();"></button>
   					<div class="my-menu">
@@ -25,13 +25,13 @@
   							<strong class="menu-title">Menu</strong>
   							<ul>
   								<li>
-  									<form id="logoutForm" action="/logout.do" method="post">
+  									<form id="logoutForm" action="/auth/local" th:method="delete">
   										<a href="#" onclick="$('#logoutForm').submit();">로그아웃</a>
   									</form>
   								</li>
-  								<li><a href="/member/myFriendsView.do">내 친구</a></li>
-  								<li><a href="/member/myPage.do">마이페이지</a></li>  								
-  								<li><a href="/member/memberSecessionView.do">회원탈퇴</a></li>
+  								<li><a href="/member/my-friends">내 친구</a></li>
+  								<li><a href="/member/mypage/info">마이페이지</a></li>  								
+  								<li><a href="/member/secession">회원탈퇴</a></li>
   							</ul>
   							<button class="close-btn" onclick="fnOffMyMenu();"></button>
   						</div>

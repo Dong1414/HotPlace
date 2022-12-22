@@ -7,6 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -17,8 +18,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -42,7 +47,8 @@ public class MemberController {
 	private SmsServiceImpl smsServiceImpl;
 	
 	//회원가입
-	@PostMapping("/member/signUpInsert.do")
+	//@PostMapping("/member/signUpInsert.do")
+	@PostMapping("/member")
     public String signUpInsert(MemberVO memberVO, @RequestParam("file") MultipartFile meltipartFile) throws Exception{
 		
 		if(!meltipartFile.isEmpty()) {
@@ -54,23 +60,26 @@ public class MemberController {
     	return "redirect:/map/my-map";
     };
     
-    @GetMapping("/member/idCheck.do")
+    //@GetMapping("/member/idCheck.do")
+    @GetMapping("/member/{id}")
 	@ResponseBody
-	public boolean id(String id) throws Exception{
+	public boolean id(@PathVariable String id) throws Exception{
     	
     	boolean result = memberService.idCheck(id);
     	return result;
     }
     
     //로그인화면
-  	@GetMapping("/login/loginView.do")
+  	//@GetMapping("/login/loginView.do")
+  	@GetMapping("/auth")
   	public ModelAndView loginView(ModelAndView mv) throws Exception{        
   		mv.setViewName("views/login/loginView"); 
   		return mv; 
 	}
 
   	//로그인기능
-  	@PostMapping("/login/loginView/loginAction.do")
+  	//@PostMapping("/login/loginView/loginAction.do")
+  	@PostMapping("/auth/local")
   	public ModelAndView loginAction(ModelAndView mv, MemberVO memberVO, HttpServletRequest request) throws Exception{        
   		
   		MemberVO result = memberService.loadUserByUserId(memberVO);
@@ -96,15 +105,15 @@ public class MemberController {
         LocalDateTime date2 = endDate.atStartOfDay();
         int betweenDays = Math.abs((int) Duration.between(date1, date2).toDays()) ;
   		if(betweenDays > 90) {
-  			mv.setViewName("redirect:/member/lastPwDtOverView.do");
+  			mv.setViewName("redirect:/member/oldpw");
   		}
-        System.out.println(betweenDays + "aaaaaa");
   		return mv;
   	}
   	
   		
   	//회원가입 화면
-  	@GetMapping("/login/signUpView.do")
+  	//@GetMapping("/login/signUpView.do")
+  	@GetMapping("/member/new")
   	public ModelAndView signUpView(ModelAndView mv) throws Exception{        
   		LocalDate now = LocalDate.now();
   		DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy");
@@ -116,7 +125,8 @@ public class MemberController {
       	return mv; 
       }
   	
-  	@PostMapping("/logout.do")
+  	//@PostMapping("/logout.do")
+  	@DeleteMapping("/auth/local")
   	public String logout(HttpServletRequest request) {
   	    HttpSession session = request.getSession(false);
   	    if (session != null) {
@@ -124,7 +134,10 @@ public class MemberController {
   	    } 
   	    return "redirect:/";
   	}
-  	@GetMapping("/member/myFriendsView.do")
+  	
+  	//내 친구 목록 
+  	//@GetMapping("/member/myFriendsView.do")
+  	@GetMapping("/member/my-friends")
   	public ModelAndView myFriends(ModelAndView mv, HttpServletRequest request, String searchId) throws Exception {
   	    HttpSession session = request.getSession(false);
   	    if (session == null) {
@@ -168,57 +181,65 @@ public class MemberController {
   	    return mv;
   	}
   	
-  	@PostMapping("/member/myFriendsView/friendRequest.do")
+  	//친구 신청
+  	//@PostMapping("/member/myFriendsView/friendRequest.do")
+  	@PostMapping("/member/my-friends/request")
   	@ResponseBody
-  	public String friendRequest(HttpServletRequest request) throws Exception {
+  	public String friendRequest(@RequestBody Map<String,String> param, HttpServletRequest request) throws Exception {
   		
   		HttpSession session = request.getSession(false);
   	    //MemberVO loginVO = (MemberVO) session.getAttribute("loginMemberId");
   	    
   	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
-  	    String mberId = request.getParameter("mberId"); //요청 보낼 아이디
+  	    String mberId = param.get("mberId"); //요청 보낼 아이디
   	    
   	    String resultMsg = memberService.friendRequest(loginId, mberId);
   	    
   	    return resultMsg;
   	}
   	
-  	@PostMapping("/member/myFriendsView/friendAccept.do")
+  	//친구 신청 거절
+  	//@PostMapping("/member/myFriendsView/friendNo.do")
+  	@DeleteMapping("/member/my-friends/request")
   	@ResponseBody
-  	public String friendAccept(HttpServletRequest request) throws Exception {
+  	public String friendNo(@RequestBody Map<String,String> param, HttpServletRequest request) throws Exception {
   		
   	    HttpSession session = request.getSession(false);
   	    
   	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
-  	    String mberId = request.getParameter("mberId"); //수락할 아이디
-  	    
-  	    String resultMsg = memberService.friendAccept(loginId, mberId);
-  	    
-  	    return resultMsg;
-  	}
-
-  	@PostMapping("/member/myFriendsView/friendNo.do")
-  	@ResponseBody
-  	public String friendNo(HttpServletRequest request) throws Exception {
-  		
-  	    HttpSession session = request.getSession(false);
-  	    
-  	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
-  	    String mberId = request.getParameter("mberId"); //수락할 아이디
+  	    String mberId = param.get("mberId"); //수락할 아이디
   	    
   	    String resultMsg = memberService.friendNo(loginId, mberId);
   	    
   	    return resultMsg;
   	}
-
-  	@PostMapping("/member/myFriendsView/friendDel.do")
+  	
+  	//친구 신청 수락
+  	//@PostMapping("/member/myFriendsView/friendAccept.do")
+  	@PostMapping("/member/my-friends/new")
   	@ResponseBody
-  	public String friendDel(HttpServletRequest request) throws Exception {
+  	public String friendAccept(@RequestBody Map<String,String> param, HttpServletRequest request) throws Exception {
   		
   	    HttpSession session = request.getSession(false);
   	    
   	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
-  	    String mberId = request.getParameter("mberId"); //수락할 아이디
+  	    String mberId = param.get("mberId"); //수락할 아이디
+  	    
+  	    String resultMsg = memberService.friendAccept(loginId, mberId);
+  	    
+  	    return resultMsg;
+  	}
+  	
+  	//친구 끊기
+  	//@PostMapping("/member/myFriendsView/friendDel.do")
+  	@DeleteMapping("/member/my-friends/new")
+  	@ResponseBody
+  	public String friendDel(@RequestBody Map<String,String> param, HttpServletRequest request) throws Exception {
+  		
+  	    HttpSession session = request.getSession(false);
+  	    
+  	    String loginId = (String) session.getAttribute("loginMemberId"); //내 아이디
+  	    String mberId = param.get("mberId"); //수락할 아이디
   	    
   	    String resultMsg = memberService.friendDel(loginId, mberId);
   	    
@@ -226,7 +247,8 @@ public class MemberController {
   	}  	
   	
   	//sns회원가입
-  	@PostMapping("/member/snsSignUp")
+  	//@PostMapping("/member/snsSignUp")
+  	@PostMapping("/member/sns/new")
   	public ModelAndView snsSignUp(ModelAndView mv, MemberVO memberVO, HttpServletRequest request) throws Exception {
 //  		int min_val = 10000000;
 //        int max_val = 99999999;
@@ -295,8 +317,9 @@ public class MemberController {
     }
   	
   	
-	@GetMapping("/member/myPage.do")
-  	public ModelAndView myPage(ModelAndView mv, HttpServletRequest request, String searchId) throws Exception {
+	//@GetMapping("/member/myPage.do")
+	@GetMapping("/member/mypage/info")
+  	public ModelAndView myPage(ModelAndView mv, HttpServletRequest request) throws Exception {
   	    HttpSession session = request.getSession(false);
   	    if (session == null) {
   	    	mv.setViewName("redirect:/");
@@ -318,7 +341,7 @@ public class MemberController {
 	    	mv.addObject("brthd", brthd);
 	    }
 	    if(!Strings.isEmpty(memberVO.getAttachFileId())) {
-	    	memberVO.setAttachFileUrl("/file/getImage.do?attachFileId="+memberVO.getAttachFileId());
+	    	memberVO.setAttachFileUrl("/file/"+memberVO.getAttachFileId());
 	    }
 	    
 	    LocalDate now = LocalDate.now();
@@ -336,7 +359,8 @@ public class MemberController {
   		
   		
 	//내 정보 수정
-	@PostMapping("/member/myPage/memberModify.do")
+	//@PostMapping("/member/myPage/memberModify.do")
+	@PutMapping("/member/mypage/info")
 	public ModelAndView memberModify(ModelAndView mv, MemberVO memberVO, @RequestParam("file") MultipartFile meltipartFile,
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);
@@ -351,13 +375,17 @@ public class MemberController {
 		    return mv;
 	}
 	
-	@GetMapping("/member/findLoginIdView.do")
+	//아이디 찾기 화면
+	//@GetMapping("/member/findLoginIdView.do")
+	@GetMapping("/member/id")
   	public ModelAndView findLoginIdView(ModelAndView mv) throws Exception {
 		mv.setViewName("views/login/findIdView");
   	    return mv;
   	}
 	
-	@GetMapping("/member/findLoginId.do")
+	//아이디 찾기
+	//@GetMapping("/member/findLoginId.do")
+	@PostMapping("/member/id/info")
   	public ModelAndView findLoginId(ModelAndView mv, MemberVO memberVO) throws Exception {
 		
 		MemberVO result = memberService.findLoginId(memberVO);
@@ -383,13 +411,17 @@ public class MemberController {
   	    return mv;
   	}
 	
-	@GetMapping("/member/findLoginPwView.do")
+	//비밀번호 찾기 화면
+	//@GetMapping("/member/findLoginPwView.do")
+	@GetMapping("/member/pw")
   	public ModelAndView findLoginPwView(ModelAndView mv) throws Exception {
 		mv.setViewName("views/login/findPwView");
   	    return mv;
   	}
-	
-	@PostMapping("/member/findLoginPw.do")
+
+	//비밀번호 찾기
+	//@PostMapping("/member/findLoginPw.do")
+	@PostMapping("/member/pw/info")
   	public ModelAndView findLoginPw(ModelAndView mv, MemberVO memberVO) throws Exception {
 		
 		MemberVO result = memberService.findLoginId(memberVO);
@@ -429,15 +461,19 @@ public class MemberController {
   	    return mv;
   	}
 	
-	@PostMapping("/member/myPage/memberPwModifyView.do")
-  	public ModelAndView memberPwModifyView(ModelAndView mv, MemberVO memberVO) throws Exception {
+	//비밀번호 변경 화면
+	//@PostMapping("/member/myPage/memberPwModifyView.do")
+	@GetMapping("/member/mypage/pw")
+  	public ModelAndView memberPwModifyView(ModelAndView mv) throws Exception {
 		mv.setViewName("views/member/memberPwModifyView");
   	    return mv;
   	}
-
-	@PostMapping("/member/pwCheck.do")
+	
+	//비밀번호 확인
+	//@PostMapping("/member/pwCheck.do")
+	@PostMapping("/member/pw/check")
 	@ResponseBody
-  	public boolean pwCheck(ModelAndView mv, MemberVO memberVO,
+  	public boolean pwCheck(ModelAndView mv, @RequestBody MemberVO memberVO,
   			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);
 		MemberVO result = memberService.loadUserByUserId(memberVO);
@@ -446,11 +482,12 @@ public class MemberController {
 			System.out.println("tlfvo");
 			return false;
 		}
-		System.out.println("akwdma");
   	    return true;
   	}
-
-	@PostMapping("/member/myPage/memberPwModify.do")
+	
+	//비밀번호 변경
+	//@PostMapping("/member/myPage/memberPwModify.do")
+	@PutMapping("/member/pw")
   	public String memberPwModify(MemberVO memberVO, HttpServletRequest request,
   			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);
@@ -462,21 +499,25 @@ public class MemberController {
   	    return "redirect:/";
   	}
 	
-	
-	@GetMapping("/member/lastPwDtOverView.do")
+	//비밀번호 3개월 변경 화면
+	//@GetMapping("/member/lastPwDtOverView.do")
+	@GetMapping("/member/oldpw")
   	public ModelAndView lastPwDtOverView(ModelAndView mv) throws Exception {
 		mv.setViewName("views/member/lastPwDtOverView");
   	    return mv;
   	}
 	
-	@GetMapping("/member/memberSecessionView.do")
+	//회원탈퇴 화면
+	//@GetMapping("/member/memberSecessionView.do")
+	@GetMapping("/member/secession")
   	public ModelAndView memberSecessionView(ModelAndView mv) throws Exception {
 		mv.setViewName("views/member/memberSecessionView");
   	    return mv;
   	}
 	
-	
-	@PostMapping("/member/memberSecessionView.do")
+	//회원탈퇴
+	//@PostMapping("/member/memberSecessionView.do")
+	@DeleteMapping("/member/secession")
   	public String memberSecessionView(MemberVO memberVO, HttpServletRequest request,
   			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);

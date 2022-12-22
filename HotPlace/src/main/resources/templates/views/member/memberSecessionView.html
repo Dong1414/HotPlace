@@ -17,7 +17,7 @@
 						</ul>
 					</div>
 					<div class="login-info">
-						<form id="deleteForm" method="post">
+						<form id="deleteForm" th:method="delete">
 							<label class="" for="mberName">비밀번호</label>
 							<input class="form-control fs-3 h-55" type="password" id="mberPassword" name="mberPassword"placeholder="비밀번호를 입력해주세요." onkeyup="return submitName(event);"/>
 							<button class="login-action-btn btn btn-primary fs-3 ps-4 pe-4 fw-bold"  type="button" onclick="fnMemberSecession();">탈퇴하기</button>
@@ -41,12 +41,14 @@ function fnMemberSecession(){
 	
 	var pw = $('#mberPassword').val();
 	var flag = false;
+	var obj = {
+			mberPassword: pw
+	}
 	$.ajax({
 		type : "post",
-		url : '/member/pwCheck.do',
-		data: {
-        	mberPassword: pw
-        },
+		url : '/member/pw/check',
+		data: JSON.stringify(obj),
+		contentType: 'application/json',
         async: false,
 	}).done(function(result) {
 		flag = result;
@@ -57,7 +59,7 @@ function fnMemberSecession(){
 		alert("비밀번호가 일치하지 않습니다.");
 		return false;
 	}
-	$("#deleteForm").attr("action", "/member/memberSecessionView.do");
+	$("#deleteForm").attr("action", "/member/secession");
 	$('#deleteForm').submit();
 }
 

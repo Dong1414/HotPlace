@@ -1,10 +1,12 @@
 package com.dylim.hot.sms;
 
+import java.util.Map;
 import java.util.Random;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.dylim.hot.sms.service.SmsService;
@@ -16,10 +18,10 @@ public class SmsController {
 	private SmsService smsService;
 
 	//본인확인문자발송
-    @PostMapping("/sms/sendSms.do")    
+    @PostMapping("/sms")    
     @ResponseBody
-    public String sendSms(String phonNum) throws Exception{
-    	
+    public String sendSms(@RequestBody Map<String,String> param) throws Exception{
+    	String phonNum = param.get("phonNum");
     	Random rand  = new Random();
         String numStr = "";
         for(int i=0; i<4; i++) {

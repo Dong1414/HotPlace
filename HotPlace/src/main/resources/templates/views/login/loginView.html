@@ -34,11 +34,11 @@
 						</form>
 					</div>
 					<nav class="member-area">
-						<a href="/login/signUpView.do">회원가입</a>
+						<a href="/member/new">회원가입</a>
 						<nav class="member-find">
 							<ul>
-								<li><a href="/member/findLoginIdView.do">아이디 찾기</a></li>
-								<li><a href="/member/findLoginPwView.do">비밀번호 찾기</a></li>
+								<li><a href="/member/id">아이디 찾기</a></li>
+								<li><a href="/member/pw">비밀번호 찾기</a></li>
 							</ul>
 						</nav>
 					</nav>
@@ -47,26 +47,6 @@
 		</div>
 	</section>
 <script th:inline="javascript">
-
-/* var naver_id_login = new naver_id_login("BnnFdxOxX_s_KECsc0rX", "http://localhost:8082/map/getMyMapView.do");
-var state = naver_id_login.getUniqState();
-naver_id_login.setDomain("http://localhost:8082");
-naver_id_login.setState(state);
-naver_id_login.init_naver_id_login();
- */
- 
-/* var naverLogin = new naver.LoginWithNaverId({
-	 clientId: 'BnnFdxOxX_s_KECsc0rX',
-	 callbackUrl: 'http://localhost:8082/api/naver/callback',
-	 isPopup: false,
-	 loginButton: {color: "green", type: 3, height: 50}		 
-});
-naverLogin.init();
-
-$(document).on("click", "#naverLogin", function(){ 
-	var btnNaverLogin = document.getElementById("naverIdLogin").firstChild;
-	btnNaverLogin.click();
-}); */
  
 function fnNaverLogin(){
 	window.location.href = "/api/naver/oauth";
@@ -85,7 +65,7 @@ function fnLoginAction(){
 		return false;
 	}
 	
-	$('#loginForm').attr('action', '/login/loginView/loginAction.do');
+	$('#loginForm').attr('action', '/auth/local');
 	$('#loginForm').submit();
 }
 </script>

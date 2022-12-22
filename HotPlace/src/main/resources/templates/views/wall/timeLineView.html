@@ -23,7 +23,7 @@
 				<div class="d-flex">
 						<a class="mini-map" th:href="|/map/FriendMapView.do?mberId=@{${result.registId}}|">지도보기</a>
 					<div class="article-profile-image">
-						<img th:src="|/file/getImage.do?attachFileId=${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
+						<img th:src="|/file/${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 					</div>
 					<div class="article-profile-left">
 						<div class="nickname text-left" th:text="${result.mberNickName}"></div>
@@ -37,7 +37,7 @@
 			  	<div class="list-slide swiper">
 				    <ul class="swiper-wrapper">
 				    	<li th:each="file : ${result.files}" class="swiper-slide">
-				    		<img th:src="@{/file/getImage.do?attachFileId=} + ${file.attachFileId}">
+				    		<img th:src="@{/file/} + ${file.attachFileId}">
 				    	</li>
 				    </ul>
 				    <div class="swiper-pagination"></div>
@@ -159,7 +159,7 @@ const GetList = function(currentPage){
 			    	str += '<a href="/map/FriendMapView.do?mberId='+results[i].registId+'">지도보기</a>'
 			    	str += '</div>'
 		    		str += '<div class="article-profile-image">';	    	
-		    		str += '<img src="/file/getImage.do?attachFileId='+results[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>'; 
+		    		str += '<img src="/file/'+results[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>'; 
 			    	str += '</div>';	    		
 			    	if(resultMap.results[i]){
 			    		str += '<div class="article-profile-left">';
@@ -179,7 +179,7 @@ const GetList = function(currentPage){
 				    	for(var j = 0; j <results[i].files.length; j++){
 				    		if(results[i].files[j]){
 				    			str += '<li class="swiper-slide">';
-				    			str += '<img src="/file/getImage.do?attachFileId='+resultMap.results[i].files[j].attachFileId+'">';
+				    			str += '<img src="/file/'+resultMap.results[i].files[j].attachFileId+'">';
 					    		str += '</li>';	
 				    		}
 				    	}

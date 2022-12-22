@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +29,8 @@ public class FileUtilController {
 	@Autowired
 	private FileUtilService fileUtilService;
 	
-	@PostMapping("/file/saveImages.do")
+	//@PostMapping("/file/saveImages.do")
+	@PostMapping("/file")
 	@ResponseBody
 	public FileVO dropZoneUpload(MultipartHttpServletRequest request, String attchFileMasterId) throws Exception {
 		FileVO result = new FileVO();
@@ -40,8 +43,9 @@ public class FileUtilController {
 		return fileUtilService.multiFileUpload(multipartFiles);
     }
 	
-	@GetMapping("/file/getImage.do")
-	public String getImage(String attachFileId, HttpServletResponse response) throws Exception {
+	//@GetMapping("/file/getImage.do")
+	@GetMapping("/file/{attachFileId}")
+	public String getImage(@PathVariable String attachFileId, HttpServletResponse response) throws Exception {
 		
 		if(attachFileId.isEmpty()) {
 			return null;
@@ -63,9 +67,10 @@ public class FileUtilController {
         return null;
 	}
 	
-	@PostMapping("/file/deleteImage.do")
+	//@PostMapping("/file/deleteImage.do")
+	@DeleteMapping("/file/{attachFileId}")
 	@ResponseBody
-	public String deleteImage(String attachFileId) throws Exception {
+	public String deleteImage(@PathVariable String attachFileId) throws Exception {
 		fileUtilService.deleteImage(attachFileId);
         return null;
 	}

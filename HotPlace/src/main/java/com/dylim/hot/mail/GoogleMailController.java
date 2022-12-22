@@ -2,6 +2,7 @@ package com.dylim.hot.mail;
 
 import java.math.BigInteger;
 import java.security.SecureRandom;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.Message;
@@ -16,7 +17,9 @@ import javax.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -27,12 +30,13 @@ import com.dylim.hot.member.service.MemberService;
 public class GoogleMailController {
 	
 	
-	@PostMapping("/gmailSend.do")
+	//@PostMapping("/gmailSend.do")
+	@PostMapping("")
 	@ResponseBody
-	public static String gmailSend(String fromMail) {
+	public static String gmailSend(@RequestBody Map<String,String> param) {
+		String fromMail = param.get("fromMail");
         String user = "ghksrlwja1@gmail.com"; // 네이버일 경우 네이버 계정, gmail경우 gmail 계정
         String password = "uqjsaklleinbjgzt";   // 패스워드
-        System.out.println(fromMail);
         // SMTP 서버 정보를 설정한다.
         Properties prop = new Properties();
         
@@ -79,7 +83,6 @@ public class GoogleMailController {
 	public static String gmailSendPw(String fromMail, String pw) {
         String user = "ghksrlwja1@gmail.com"; // 네이버일 경우 네이버 계정, gmail경우 gmail 계정
         String password = "uqjsaklleinbjgzt";   // 패스워드
-        System.out.println(fromMail);
         // SMTP 서버 정보를 설정한다.
         Properties prop = new Properties();
         

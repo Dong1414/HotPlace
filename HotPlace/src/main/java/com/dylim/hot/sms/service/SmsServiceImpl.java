@@ -31,7 +31,7 @@ public class SmsServiceImpl implements SmsService {
         params.put("type", "SMS");
         params.put("text", "TripDariy 본인인증번호 : 인증번호는" + "["+numStr+"]" + "입니다.");
         params.put("app_version", "test app 1.2"); // application name and version
-
+        System.out.println(params.toString());
         try {
             JSONObject obj = (JSONObject) coolsms.send(params);
             System.out.println(obj.toString());

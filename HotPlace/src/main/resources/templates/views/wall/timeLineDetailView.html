@@ -21,7 +21,7 @@
 				<div class="d-flex">
 						<a class="mini-map" th:href="|/map/FriendMapView.do?mberId=@{${result.registId}}|">지도보기</a>
 					<div class="article-profile-image">
-						<img th:src="|/file/getImage.do?attachFileId=${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
+						<img th:src="|/file/${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 					</div>
 					<div class="article-profile-left">
 						<div class="nickname text-left" th:text="${result.mberNickName}"></div>
@@ -35,7 +35,7 @@
 			  	<div class="list-slide swiper">
 				    <ul class="swiper-wrapper">
 				    	<li th:each="file : ${result.files}" class="swiper-slide">
-				    		<img th:src="@{/file/getImage.do?attachFileId=} + ${file.attachFileId}">
+				    		<img th:src="@{/file/} + ${file.attachFileId}">
 				    	</li>
 				    </ul>
 				    <div class="swiper-pagination"></div>
@@ -70,7 +70,7 @@
 							</div>
 						</div>
 						<div th:unless="${session.loginMember != null}" class="bg-white padding-15 mb-4">
-							<a href="/login/loginView.do">댓글을 작성하시려면 로그인 해주세요.</a>
+							<a href="/auth">댓글을 작성하시려면 로그인 해주세요.</a>
 						</div>
 						
 						<th:block th:if="${repleResults != null}">
@@ -78,7 +78,7 @@
 								<div class="reple-h mb-3 reple-area" th:each="reple : ${repleResults}">
 									<div class="w-100 display-flex">
 										<div class="article-profile-image">
-											<img th:src="|/file/getImage.do?attachFileId=${reple.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';" />
+											<img th:src="|/file/${reple.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';" />
 										</div>
 										<div class="article-profile-left w-100">
 											<div class="reple-info">
@@ -209,7 +209,7 @@ function fnRepleInsert(){
 	        		html += '<div class="reple-h mb-3 reple-area">';
 	        		html += '<div class="w-100 display-flex">';
 		        	html += '<div class="article-profile-image">';
-		        	html += '<img src="/file/getImage.do?attachFileId='+data[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>';
+		        	html += '<img src="/file/'+data[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>';
 		        	html += '</div>';
 		        	html += '<div class="article-profile-left w-100">';
 		        	html += '<div class="reple-info">';
@@ -287,7 +287,7 @@ function fnRepleDel(id, mberId){
 	        		html += '<div class="reple-h mb-3 reple-area">';
 	        		html += '<div class="w-100 display-flex">';
 		        	html += '<div class="article-profile-image">';
-		        	html += '<img src="/file/getImage.do?attachFileId='+data[i].attachFileId+'"/>';
+		        	html += '<img src="/file/'+data[i].attachFileId+'"/>';
 		        	html += '</div>';
 		        	html += '<div class="article-profile-left w-100">';
 		        	html += '<div class="reple-info">';
