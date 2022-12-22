@@ -127,7 +127,7 @@
 		]]>
 	</update>
 
-	<update id="deleteReview" parameterType="com.dylim.hot.map.ReviewVO">
+	<update id="deleteReview" parameterType="string">
 		<![CDATA[     	
 			UPDATE map_review
 			SET

@@ -22,7 +22,7 @@ public interface ReviewMapper {
 
 	void modifyReview(ReviewVO reviewVO) throws Exception;
 
-	void deleteReview(ReviewVO reviewVO) throws Exception;
+	void deleteReview(String reviewId) throws Exception;
 
 	List<ReviewVO> getReviewPaging(ReviewVO reviewVO) throws Exception;
 

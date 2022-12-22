@@ -51,7 +51,7 @@ public class MemberController {
 		
     	memberService.signUpInsert(memberVO);
     		
-    	return "redirect:/map/getMyMapView.do";
+    	return "redirect:/map/my-map";
     };
     
     @GetMapping("/member/idCheck.do")
@@ -86,7 +86,7 @@ public class MemberController {
   		    HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
   		    session.setAttribute(SessionConstants.LOGIN_MEMBER, result);   // 세션에 로그인 회원 정보 보관
   		    session.setAttribute(SessionConstants.LOGIN_MEMBER_ID, result.getMberId());
-  			mv.setViewName("redirect:/map/getMyMapView.do"); 
+  			mv.setViewName("redirect:/map/my-map"); 
   		}
   		
   		DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd"); // 년-월-일로만 Format되게 구현

@@ -15,9 +15,13 @@ import org.apache.groovy.parser.antlr4.util.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -40,7 +44,7 @@ import com.dylim.hot.reple.service.RepleService;
 public class ReviewController {
 	
 	@Autowired
-	private ReviewService seviewService;
+	private ReviewService reviewService;
 	@Autowired
 	private FileUtilService fileUtilService;
 	@Autowired
@@ -54,16 +58,16 @@ public class ReviewController {
     	return "views/main";
     }
 	
-	@GetMapping("/main.do")
+	@GetMapping("/main")
 	public String main() throws Exception{        
     	return "views/main";
     }
 	
 	//지도 보기
-	@GetMapping("/map/getMyMapView.do")
+	//@GetMapping("/map/getMyMapView.do") 
+	@GetMapping("/map/my-map")
 	public ModelAndView getMyMapView(ModelAndView mv, 
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
-		
 		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
 		
 		if(loginMember != null){
@@ -77,14 +81,15 @@ public class ReviewController {
     }
 	
 	//친구 지도 보기
-	@GetMapping("/map/FriendMapView.do")
-	public ModelAndView FriendMapView(ModelAndView mv, MemberVO memberVO,
+	//@GetMapping("/map/FriendMapView.do")
+	@GetMapping("/map/friend-map/{memberId}")
+	public ModelAndView FriendMapView(ModelAndView mv, @PathVariable String memberId,
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception{
-		
 		List<ReviewVO> resultList = new ArrayList<ReviewVO>();
-		
+		MemberVO memberVO = new MemberVO();
 		if(loginMember!=null) {
-			boolean tf = memberservice.friendCheck(loginMember.getMberId(), memberVO.getMberId());
+			boolean tf = memberservice.friendCheck(loginMember.getMberId(), memberId);
+			memberVO.setMberId(memberId);
 			if(tf) {
 				memberVO.setIdentiFication("1");
 				resultList = getReviews(memberVO);
@@ -105,11 +110,12 @@ public class ReviewController {
 	
 	//등록된 리뷰 불러오기
     public List<ReviewVO> getReviews(MemberVO memberVO) throws Exception{
-    	return seviewService.getReviews(memberVO);
+    	return reviewService.getReviews(memberVO);
     }   
     
 	//저장
-    @PostMapping("/map/getMyMapView/saveReview.do")
+    //@PostMapping("/map/getMyMapView/saveReview.do")
+    @PostMapping("/map/my-map/review")
 	@ResponseBody
     public List<ReviewVO> saveReview(@ModelAttribute("searchVO")ReviewVO reviewVO, @RequestParam("attachFileIds") List<MultipartFile> multipartFiles,
     		@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false)MemberVO loginMember) throws Exception{
@@ -119,7 +125,7 @@ public class ReviewController {
     	if(!multipartFiles.get(0).isEmpty()) {
     		reviewVO.setAttachFileMasterId(fileUtilService.multiFileUpload(multipartFiles));
     	}
-    	seviewService.saveReview(reviewVO);
+    	reviewService.saveReview(reviewVO);
     	
     	List<ReviewVO> result = getReviews(loginMember);
     	
@@ -127,10 +133,11 @@ public class ReviewController {
     }
     
     //수정 페이지
-    @PostMapping("/map/updateReview.do")
-    public ModelAndView updateReview(ModelAndView mv, @ModelAttribute("searchVO")ReviewVO reviewVO ) throws Exception{        
+    //@PostMapping("/map/updateReview.do")
+    @GetMapping("/map/my-map/review/{id}")
+    public ModelAndView updateReview(ModelAndView mv, @PathVariable String id) throws Exception{        
 
-    	ReviewVO result = seviewService.getReview(reviewVO.getId());
+    	ReviewVO result = reviewService.getReview(id);
     	if(Strings.isNotEmpty(result.getAttachFileMasterId()) && result.getAttachFileMasterId() != null) {
     		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
     		for(FileVO file : files) {
@@ -148,45 +155,47 @@ public class ReviewController {
     }
      
     //수정 
-    @PostMapping("/map/updateReview/modifyReview.do")    
-    public String modifyReview(ReviewVO reviewVO, HttpServletRequest request) throws Exception{
-    	
+    //@PostMapping("/map/updateReview/modifyReview.do")
+    @PutMapping("/map/my-map/review/{id}")
+    public String modifyReview(@PathVariable String id, @ModelAttribute ReviewVO reviewVO, HttpServletRequest request) throws Exception{
+    	System.out.println("aaaaaaaaaa");
     	HttpSession session = request.getSession(false);
 
     	if(!reviewVO.getRegistId().equals((String) session.getAttribute("loginMemberId"))){
     		return "redirect:" + request.getHeader("Referer");
     	};
     	
-    	seviewService.modifyReview(reviewVO);
-    	return "redirect:/map/getMyMapView.do";
+    	reviewService.modifyReview(reviewVO);
+    	return "redirect:/map/my-map";
     }
     
     //삭제 
-    @PostMapping("/map/updateReview/deleteReview.do")    
-    public String deleteReview(ReviewVO reviewVO, HttpServletRequest request) throws Exception{
+    //@PostMapping("/map/updateReview/deleteReview.do")
+    @DeleteMapping("/map/my-map/review/{id}")
+    public String deleteReview(@PathVariable String id, @ModelAttribute ReviewVO reviewVO, HttpServletRequest request) throws Exception{
     	
     	HttpSession session = request.getSession(false);
 
     	if(!reviewVO.getRegistId().equals((String) session.getAttribute("loginMemberId"))){
     		return "redirect:" + request.getHeader("Referer");
     	};
-    	
-    	
-    	
-    	seviewService.deleteReview(reviewVO);
-    	return "redirect:/map/getMyMapView.do";
+    	reviewService.deleteReview(id);
+    	return "redirect:/map/my-map";
     }
     
     //첫 파일 등록( 수정 시 )
-    @PostMapping("/map/updateReview/firstFile.do")    
+    //@PostMapping("/map/updateReview/firstFile.do")
+    @PostMapping("/map/my-map/reviwew/{id}/file")
     @ResponseBody
-    public String firstFile(ReviewVO reviewVO) throws Exception{
-    	seviewService.firstFile(reviewVO);
+    public String firstFile(@PathVariable String id, @RequestBody ReviewVO reviewVO) throws Exception{
+    	reviewVO.setId(id);
+    	reviewService.firstFile(reviewVO);
     	return null;
     }
     
     //좌표에 해당되는 리뷰 목록 불러오기
-    @GetMapping("/map/getMyMapView/getReview.do")
+    //@GetMapping("/map/getMyMapView/getReview.do")
+    @GetMapping("/map/my-map/reviews")
     @ResponseBody
     public Map<String, Object> getReview(HttpServletRequest request) throws Exception{
     	
@@ -199,8 +208,8 @@ public class ReviewController {
     	}
     	reviewVO.setPageNo(reviewVO.getPageNo());
     	
-    	ReviewVO result = seviewService.getReview(reviewVO); //리뷰 상세 데이터
-    	int resultCnt = seviewService.getReviewCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
+    	ReviewVO result = reviewService.getReview(reviewVO); //리뷰 상세 데이터
+    	int resultCnt = reviewService.getReviewCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
     	
     	int limit = 2;
     	
@@ -218,7 +227,7 @@ public class ReviewController {
         reviewVO.setStartPage(startpage);
         reviewVO.setEndPage(endpage);
 
-    	List<ReviewVO> resultPaging = seviewService.getReviewPaging(reviewVO); //리뷰 데이터 페이징 넘버
+    	List<ReviewVO> resultPaging = reviewService.getReviewPaging(reviewVO); //리뷰 데이터 페이징 넘버
     	
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	if(Strings.isNotEmpty(result.getAttachFileMasterId())) {
@@ -235,7 +244,8 @@ public class ReviewController {
     	return resultMap;
     }  
     
-    @GetMapping("/wall/timeLineView.do")
+    //@GetMapping("/wall/timeLineView.do")
+    @GetMapping("/wall/time-lines")
     public ModelAndView timeLineView(ModelAndView mv,HttpServletRequest request) throws Exception{ 
     	ReviewVO reviewVO = new ReviewVO();	
     	HttpSession session = request.getSession(false);
@@ -243,7 +253,7 @@ public class ReviewController {
   	    	reviewVO.setMberId((String) session.getAttribute("loginMemberId"));  	    	
   	    }
   	    //전체 게시글 수
-  	    int resultCnt = seviewService.getTiemLineReviewsCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
+  	    int resultCnt = reviewService.getTiemLineReviewsCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
   	  
   	  	//페이지당 게시물 갯수
   	    int pageRowCount = 4;
@@ -266,16 +276,13 @@ public class ReviewController {
 	  	reviewVO.setStartRowNum(startRowNum);
 	  	reviewVO.setRowCount(rowCount);
 	  	
-	  	List<ReviewVO> results = seviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
+	  	List<ReviewVO> results = reviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
 	  	
 	  	for(int i = 0; i < results.size(); i++) {
 	  		if(results.get(i).getAttachFileMasterId() != null && !results.get(i).getAttachFileMasterId().equals("")) {
 	  			List<FileVO> files = fileUtilService.getImages(results.get(i).getAttachFileMasterId());
 		  		results.get(i).setFiles(files);
 	  		}
-	  	}
-	  	for( ReviewVO aa : results) {
-	  		System.out.println(aa.getRepleCnt() + "xxxxxxxxxxx");
 	  	}
 	  	mv.addObject("totalPageCount", totalPageCount);
 	  	mv.addObject("results", results);
@@ -289,20 +296,18 @@ public class ReviewController {
     
     
     //ajax
-    @GetMapping("/wall/timeLineAjaxPage.do")
+    //@GetMapping("/wall/timeLineAjaxPage.do")
+    @GetMapping("/wall/api/time-lines/{pageNo}")
     @ResponseBody
-    public Map<String, Object> timeLineAjaxPage(HttpServletRequest request) throws Exception{
+    public Map<String, Object> timeLineAjaxPage(@PathVariable int pageNo) throws Exception{
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	ReviewVO reviewVO = new ReviewVO();	
     	
   	    //전체 게시글 수
-  	    int resultCnt = seviewService.getTiemLineReviewsCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
+  	    int resultCnt = reviewService.getTiemLineReviewsCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
   	  
   	  	//페이지당 게시물 갯수
   	    int pageRowCount = 4;
-  	    //현재 페이지 초기화
-  	    String startpage = request.getParameter("pageNo");
-	  	int pageNo = Integer.parseInt(startpage);
 	  	
 	  	//몇번째 게시글부터 가져올건지
 	  	int startRowNum = 0 + (pageNo-1) * pageRowCount;
@@ -314,7 +319,7 @@ public class ReviewController {
 	  	reviewVO.setStartRowNum(startRowNum);
 	  	reviewVO.setRowCount(rowCount);
 	  	
-	  	List<ReviewVO> results = seviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
+	  	List<ReviewVO> results = reviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
 	  	
 	  	for(int i = 0; i < results.size(); i++) {
 	  		if(results.get(i).getAttachFileMasterId() != null && !results.get(i).getAttachFileMasterId().equals("")) {
@@ -329,15 +334,16 @@ public class ReviewController {
     	return resultMap;
     }
     
-    @GetMapping("/wall/timeLineDetailView.do")
-    public ModelAndView timeLineDetailView(ModelAndView mv,HttpServletRequest request) throws Exception{ 
+    //@GetMapping("/wall/timeLineDetailView.do")
+    @GetMapping("/wall/time-lines/time-line/{id}")
+    public ModelAndView timeLineDetailView(@PathVariable String id, ModelAndView mv,HttpServletRequest request) throws Exception{ 
     	ReviewVO reviewVO = new ReviewVO();	
     	HttpSession session = request.getSession(false);
   	    if(session != null) {
   	    	reviewVO.setMberId((String) session.getAttribute("loginMemberId"));  	    	
   	    }
-	  	reviewVO.setId((String)request.getParameter("id"));
-	  	ReviewVO result = seviewService.getTiemLineReview(reviewVO); //리뷰 상세 데이터
+	  	reviewVO.setId(id);
+	  	ReviewVO result = reviewService.getTiemLineReview(reviewVO); //리뷰 상세 데이터
 	  	
 	  	if(result == null) {
 	  		mv.setViewName("redirect:" + request.getHeader("Referer"));

@@ -24,12 +24,12 @@ import com.dylim.hot.file.mapper.FileUtilMapper;
 @Service
 public class FileUtilServiceImpl implements FileUtilService {
 	//로컬
-	//private static final String SAVE_PATH = "/Users/dylim/upload/images/mapImg/";
-	//private static final String PREFIX_URL = "/Users/dylim/upload/images/mapImg/";
+	private static final String SAVE_PATH = "/Users/dylim/upload/images/mapImg/";
+	private static final String PREFIX_URL = "/Users/dylim/upload/images/mapImg/";
 	
 	//운영
-	private static final String SAVE_PATH = "/home/ubuntu/upload/images/";
-	private static final String PREFIX_URL = "/home/ubuntu/upload/images/";
+	//private static final String SAVE_PATH = "/home/ubuntu/upload/images/";
+	//private static final String PREFIX_URL = "/home/ubuntu/upload/images/";
 	
 	private static final Logger log = LoggerFactory.getLogger(FileUtilController.class);
 	

@@ -22,7 +22,7 @@
 							</div>
 						</div>
 					</form>
-					<form method="get" id="friendMapForm" action="/map/FriendMapView.do">
+					<form method="get" id="friendMapForm" action="/map/friend-map">
 						<input type="hidden" id="mberId" name="mberId" />
 					</form>
 					<th:block th:if="${searchMod != null}">
@@ -248,8 +248,11 @@
 	}
 	
 	function fnFriendMap(mberId){
-		$('#friendMapForm #mberId').val(mberId);
-		$('#friendMapForm').submit();
+		//$('#friendMapForm #mberId').val(mberId);
+		/* $('#friendMapForm').serialize;
+		$('#friendMapForm').attr('action', '/map/friend-map/'+mberId);
+		$('#friendMapForm').submit(); */
+		location.href='/map/friend-map/'+mberId;
 	}
 </script>
 </th:block>

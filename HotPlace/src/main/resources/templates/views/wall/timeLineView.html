@@ -51,8 +51,8 @@
 			<div class="fs-4 text-left" th:text="${result.review}"></div>
 			
 			<div class="repleArea">
-				<a th:if="${result.repleCnt != '' && result.repleCnt != null}" th:href="|/wall/timeLineDetailView.do?id=@{${result.id}}|" th:text="|댓글(${result.repleCnt})|"></a>
-				<a th:unless="${result.repleCnt != '' && result.repleCnt != null}" th:href="|/wall/timeLineDetailView.do?id=@{${result.id}}|">댓글(0)</a>
+				<a th:if="${result.repleCnt != '' && result.repleCnt != null}" th:href="|/wall/time-lines/time-line/@{${result.id}}|" th:text="|댓글(${result.repleCnt})|"></a>
+				<a th:unless="${result.repleCnt != '' && result.repleCnt != null}" th:href="|/wall/time-lines/time-line/@{${result.id}}|">댓글(0)</a>
 			</div>
 		</div>
 	</div>
@@ -136,7 +136,7 @@ var cc = 1;
 const GetList = function(currentPage){
 		$.ajax({
 	        type: "get",
-	        url: '/wall/timeLineAjaxPage.do?pageNo=' + currentPage,
+	        url: '/wall/api/time-lines/'+currentPage,
 	        cache: false,
             contentType: false,
             processData: false,        
@@ -197,9 +197,9 @@ const GetList = function(currentPage){
 				    	str += '<div class="fs-4 text-left">'+resultMap.results[i].review+'<div>';
 				    	str += '<div class="repleArea">'
 				    	if(resultMap>results[i].repleCnt > 0){
-				    		str += '<a href="/wall/timeLineDetailView.do?id='+resultMap.results[i].id+'">댓글('+resultMap.results[i].repleCnt+')</a>'	
+				    		str += '<a href="/wall/time-lines/time-line/'+resultMap.results[i].id+'">댓글('+resultMap.results[i].repleCnt+')</a>'	
 				    	}else{
-				    		str += '<a href="/wall/timeLineDetailView.do?id='+resultMap.results[i].id+'">댓글(0)</a>'
+				    		str += '<a href="/wall/time-lines/time-line/'+resultMap.results[i].id+'">댓글(0)</a>'
 				    	}
 				    	str += '</div>'
 			    	}

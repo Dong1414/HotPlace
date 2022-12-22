@@ -18,7 +18,11 @@
 	<div class="form-view-area plus-padding">
 		<div class="form-area">
 			<div class="sign-up-area">
-			<form id="modifyForm" method="post" action="/map/updateReview/modifyReview.do" enctype="multipart/form-data">
+			<form id="deleteForm" th:method="delete">
+				<input type="hidden" name="id" id="id" th:value="${result.id}" />
+				<input type="hidden" name="registId" id="registId" th:value="${result.registId}" />
+			</form>
+			<form id="modifyForm" th:method="put">
 				<input type="hidden" name="id" id="id" th:value="${result.id}" />
 				<input type="hidden" name="lat" th:value="${result.lat}" />
 				<input type="hidden" name="lng" th:value="${result.lng}" />
@@ -149,11 +153,12 @@ function fnMoidfyReview(){
 	if(!$('#review').text()){
 		alert('후기를 입력해주세요.');
 	}
-		
+	
+	$('#modifyForm').attr('action', '/map/my-map/review/'+$('#id').val());
 	$('#modifyForm').submit();
 }
 function fnClose(){
-	location.href = "/map/getMyMapView.do";
+	location.href = "/map/my-map";
 }
 
 function fnDeleteReview(){
@@ -165,8 +170,8 @@ function fnDeleteReview(){
 		alert('등록자만 삭제 할 수 있습니다.');
 		return false;
 	}
-	$('#modifyForm').attr('action', '/map/updateReview/deleteReview.do');
-	$('#modifyForm').submit();
+	$('#deleteForm').attr('action', '/map/my-map/review/'+$('#deleteForm #id').val());
+	$('#deleteForm').submit();
 }
 
 function fnImgDel(attachFileId){
@@ -218,15 +223,15 @@ var dropzone = new Dropzone("div.dropzone", {
   init: function () {
 		this.on('success', function (file, responseText) {
 			if(!$('#attachFileMasterId').val()){
-				var attachFileMasterId = responseText.attachFileMasterId;
+				var obj = {
+					attachFileMasterId: responseText.attachFileMasterId	
+				}
 				var id = $('#id').val();
 				$.ajax({
 			        type: "post",
-			        url: '/map/updateReview/firstFile.do',
-			        data: {
-			        	attachFileMasterId: attachFileMasterId,
-			        	id: id
-			        },
+			        url: '/map/my-map/reviwew/'+id+'/file',
+			        contentType: 'application/json',
+			        data: JSON.stringify(obj),
 			    }).done(function (resultMap) {
 			    	$('#attachFileMasterId').val(responseText.attachFileMasterId);
 			    })

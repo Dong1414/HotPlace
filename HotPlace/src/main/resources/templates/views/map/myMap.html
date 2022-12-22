@@ -25,7 +25,7 @@
 <div th:id="app">
 	<div id="map" style="width:100%;height:100%;"></div>
 
-	<form id="detailForm" method="post">
+	<form id="detailForm" method="get">
 		<input type="hidden" th:name="id" th:id="id" />
 		<div th:replace="views/map/reviewDetail :: reviewDetail"></div>
 	</form>
@@ -232,8 +232,9 @@ function hideMarker(map, marker) {
 }
 
 function fnModifyReview(){
-	$('#detailForm').attr("action", '/map/updateReview.do');
-	$('#detailForm').submit();
+	location.href = '/map/my-map/review/'+$('#detailForm #id').val();
+	/* $('#detailForm').attr("action", '/map/my-map/review/'+$('#detailForm #id').val());
+	$('#detailForm').submit(); */
 }
 
 //등록
@@ -260,7 +261,7 @@ function fnSaveReview(){
     var formData = new FormData($('#insertForm')[0]);
 	$.ajax({
         type: "post",
-        url: '/map/getMyMapView/saveReview.do',
+        url: '/map/my-map/review',
         cache: false,
         contentType: false,
         processData: false,        
@@ -364,7 +365,7 @@ function getClickHandler(lat, lng, registId) {
     return function(e) {  // 마커를 클릭하는 부분
     	$.ajax({
             type: "get",
-            url: '/map/getMyMapView/getReview.do?lat=' + encodeURI(lat) + "&lng=" + encodeURI(lng)  + "&registId=" + registId,
+            url: '/map/my-map/reviews?lat=' + encodeURI(lat) + "&lng=" + encodeURI(lng)  + "&registId=" + registId,
             cache: false,
             contentType: false,
             processData: false,        
@@ -421,7 +422,7 @@ function getClickHandler(lat, lng, registId) {
 function getReviewByPageNo(lat, lng, pageNo, registId){
 	$.ajax({
         type: "get",
-        url: '/map/getMyMapView/getReview.do?pageNo=' + pageNo + '&lat=' + encodeURI(lat) + '&lng=' + encodeURI(lng) + "&registId=" + registId,
+        url: '/map/my-map/reviews?pageNo=' + pageNo + '&lat=' + encodeURI(lat) + '&lng=' + encodeURI(lng) + "&registId=" + registId,
         cache: false,
         contentType: false,
         processData: false,        

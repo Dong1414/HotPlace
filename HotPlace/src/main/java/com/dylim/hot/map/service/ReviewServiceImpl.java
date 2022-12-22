@@ -39,8 +39,8 @@ public class ReviewServiceImpl implements ReviewService {
 		reviewMapper.modifyReview(reviewVO);
 	};
 	
-	public void deleteReview(ReviewVO reviewVO) throws Exception{
-		reviewMapper.deleteReview(reviewVO);
+	public void deleteReview(String reviewId) throws Exception{
+		reviewMapper.deleteReview(reviewId);
 	};
 	
 	public List<ReviewVO> getReviewPaging(ReviewVO reviewVO) throws Exception{
