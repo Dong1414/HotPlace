@@ -10,9 +10,9 @@
 			VALUES
 			(
 				#{fileMsterId}
-			    ,"등록자"
+			    ,#{loginMemberId}
 			    ,now()
-			    ,"수정자"
+			    ,#{loginMemberId}
 			    ,now()
 			    ,"N"
 			)
@@ -32,9 +32,9 @@
 			    ,#{fileSize}
 			    ,#{savePath}	
 			    ,#{prefixPath}
-			    ,"등록자"
+			    ,#{registId}
 			    ,now()
-			    ,"수정자"
+			    ,#{registId}
 			    ,now()
 			    ,"N"
 			)
@@ -70,9 +70,9 @@
 		<![CDATA[     	
 			update attach_file
 			SET
-				del_yn = "Y",
-				update_id = "수정자",    
-			    update_dt = now()
+				del_yn = "Y"
+				,update_id = #{loginMemberId}    
+			    ,update_dt = now()
 			WHERE
 				attach_file_id = #{attachFileId}
 		]]>

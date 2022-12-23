@@ -71,7 +71,7 @@ if(areaArr.length > 0){
 			draggable: false,
 	        position: new naver.maps.LatLng(areaArr[i].lat , areaArr[i].lng), // 지역구의 위도 경도 넣기
 	        icon: {
-	        	content: '<img src="/file/'+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
+	        	content: '<img src="/file?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
 	            size: new naver.maps.Size(50, 52),
 	        },
 	        seq: areaArr[i].id,
@@ -142,7 +142,7 @@ function fnInitialization(data){
 				draggable: false,
 		        position: new naver.maps.LatLng(areaArr[i].lat , areaArr[i].lng), // 지역구의 위도 경도 넣기
 		        icon: {
-		        	content: '<img src="/file/'+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
+		        	content: '<img src="/file?attachFileId='+ areaArr[i].attachFileId +'" alt="" style="margin: 0px; padding: 0px; border: 0px solid transparent; display: block; max-width: none; max-height: none; -webkit-user-select: none; position: absolute; width: 50px; height: 52px; left: 0px; top: 0px; border: solid deepskyblue; border-radius: 20px;" onerror="this.src=\'/images/noImage.png\'">',
 		            size: new naver.maps.Size(50, 52),
 		        },
 		        seq: areaArr[i].id,
@@ -389,7 +389,7 @@ function getClickHandler(lat, lng, registId) {
     		}else{
     			$('.image-area').css('display', 'block');
     			for(var i = 0; i < resultMap.files.length; i++){
-    				$('.swiper-wrapper').append('<li class="swiper-slide"><a class="w-100 h-100" target="blank" href="/file/' + resultMap.files[i].attachFileId + '"><img src="/file/' + resultMap.files[i].attachFileId + '"/></li></a>');	
+    				$('.swiper-wrapper').append('<li class="swiper-slide"><a class="w-100 h-100" target="blank" href="/file?attachFileId=' + resultMap.files[i].attachFileId + '"><img src="/file?attachFileId=' + resultMap.files[i].attachFileId + '"/></li></a>');	
     			}
     		}
     		if(resultMap.resultCnt > 1){
@@ -446,7 +446,7 @@ function getReviewByPageNo(lat, lng, pageNo, registId){
 		}else{
 			$('.image-area').css('display', 'block');
 			for(var i = 0; i < resultMap.files.length; i++){
-				$('.swiper-wrapper').append('<li class="swiper-slide"><a class="w-100 h-100" target="blank" href="/file/' + resultMap.files[i].attachFileId + '"><img src="/file/' + resultMap.files[i].attachFileId + '"/></li></a>');	
+				$('.swiper-wrapper').append('<li class="swiper-slide"><a class="w-100 h-100" target="blank" href="/file?attachFileId=' + resultMap.files[i].attachFileId + '"><img src="/file?attachFileId=' + resultMap.files[i].attachFileId + '"/></li></a>');	
 			}
 		}
 		if(resultMap.resultCnt > 1){

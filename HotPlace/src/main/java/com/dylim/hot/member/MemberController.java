@@ -52,7 +52,7 @@ public class MemberController {
     public String signUpInsert(MemberVO memberVO, @RequestParam("file") MultipartFile meltipartFile) throws Exception{
 		
 		if(!meltipartFile.isEmpty()) {
-			memberVO.setAttachFileMasterId(fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId()));
+			memberVO.setAttachFileMasterId(fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId(), memberVO.getMberId()));
     	}
 		
     	memberService.signUpInsert(memberVO);
@@ -342,7 +342,7 @@ public class MemberController {
 	    	mv.addObject("brthd", brthd);
 	    }
 	    if(!Strings.isEmpty(memberVO.getAttachFileId())) {
-	    	memberVO.setAttachFileUrl("/file/"+memberVO.getAttachFileId());
+	    	memberVO.setAttachFileUrl("/file?attachFileId="+memberVO.getAttachFileId());
 	    }
 	    
 	    LocalDate now = LocalDate.now();
@@ -366,8 +366,8 @@ public class MemberController {
 			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER_ID, required = false) String loginMemberId) throws Exception {
 		memberVO.setMberId(loginMemberId);
 		if(!meltipartFile.isEmpty()) {
-			memberVO.setAttachFileMasterId(fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId()));
-			fileUtilService.deleteImage(memberVO.getAttachFileId());
+			memberVO.setAttachFileMasterId(fileUtilService.fileUpload(meltipartFile, memberVO.getAttachFileMasterId(), loginMemberId));
+			fileUtilService.deleteImage(memberVO.getAttachFileId(), loginMemberId);
     	}
 		
 		memberService.memberModify(memberVO);

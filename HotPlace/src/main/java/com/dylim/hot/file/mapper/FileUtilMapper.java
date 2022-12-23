@@ -10,7 +10,7 @@ import com.dylim.hot.file.FileVO;
 @Mapper
 public interface FileUtilMapper {
 	
-	void saveFileMaster(String fileMsterId) throws Exception;
+	void saveFileMaster(String fileMsterId,String loginMemberId) throws Exception;
 
 	void saveFile(FileVO file) throws Exception;
 
@@ -18,8 +18,8 @@ public interface FileUtilMapper {
 
 	List<FileVO> getImages(String attachFileMasterId) throws Exception;
 
-	void deleteImage(String attachFileId) throws Exception;
+	void deleteImage(String attachFileId, String loginMemberId) throws Exception;
 
-	void fileModify(MultipartFile meltipartFile, String attachFileMasterId) throws Exception;
+	void fileModify(MultipartFile meltipartFile, String attachFileMasterId, String loginMemberId) throws Exception;
 	
 }

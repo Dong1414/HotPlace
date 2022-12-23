@@ -38,7 +38,7 @@ public class FileUtilServiceImpl implements FileUtilService {
 	
 	
 	//드롭존 파일 업로드 로직
-	public String dropZoneUpload(MultipartHttpServletRequest request, String attachFileMasterId) throws Exception{
+	public String dropZoneUpload(MultipartHttpServletRequest request, String attachFileMasterId, String loginMemberId) throws Exception{
 		
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		 
@@ -47,7 +47,7 @@ public class FileUtilServiceImpl implements FileUtilService {
 		//파일 마스터 아이디가 없는 경우 새로 생성
 		if(Strings.isEmpty(attachFileMasterId)){
 			fileMsterId = UUID.randomUUID().toString();
-			saveFileMaster(fileMsterId);
+			saveFileMaster(fileMsterId, loginMemberId);
 		}
 		
         try {
@@ -72,7 +72,7 @@ public class FileUtilServiceImpl implements FileUtilService {
 	            fileInfo.setPrefixPath(PREFIX_URL + saveFileName);
 	            
 	            // 파일저장
-	            saveFile(fileInfo);
+	            saveFile(fileInfo, loginMemberId);
 	            // 실제 파일 저장
 	            boolean fileSaveYn = writeFile(file, saveFileName);
 	
@@ -91,22 +91,23 @@ public class FileUtilServiceImpl implements FileUtilService {
 	};
 	
 	//파일 마스터 아이디 저장
-	public void saveFileMaster(String fileMsterId) throws Exception {
-		fileUtilMapper.saveFileMaster(fileMsterId);
+	public void saveFileMaster(String fileMsterId, String loginMemberId) throws Exception {
+		fileUtilMapper.saveFileMaster(fileMsterId, loginMemberId);
 	}
 	
 	//파일저장
-	public void saveFile(FileVO file) throws Exception {
+	public void saveFile(FileVO file, String loginMemberId) throws Exception {
+		file.setRegistId(loginMemberId);
 		fileUtilMapper.saveFile(file);
 	};
 	
 	//멀티파일 업로드
-	public String multiFileUpload(List<MultipartFile> multipartFiles) throws Exception {
+	public String multiFileUpload(List<MultipartFile> multipartFiles, String loginMemberId) throws Exception {
 		// upload
         String fileMsterId = UUID.randomUUID().toString();
         try {
         	// 파일마스터 저장
-            saveFileMaster(fileMsterId);
+            saveFileMaster(fileMsterId, loginMemberId);
             for(MultipartFile file : multipartFiles) {
             	log.debug("Uploading.. {}", " / " + file.getOriginalFilename());
 	            // 파일 정보
@@ -129,7 +130,7 @@ public class FileUtilServiceImpl implements FileUtilService {
 	            fileInfo.setPrefixPath(PREFIX_URL + saveFileName);
 	            
 	            // 파일저장
-	            saveFile(fileInfo);
+	            saveFile(fileInfo, loginMemberId);
 	            // 실제 파일 저장
 	            boolean fileSaveYn = writeFile(file, saveFileName);
 	
@@ -149,14 +150,14 @@ public class FileUtilServiceImpl implements FileUtilService {
 	}
 	
 	//단일파일 업로드
-	public String fileUpload(MultipartFile multipartFile, String attachFileMasterId) throws Exception {
+	public String fileUpload(MultipartFile multipartFile, String attachFileMasterId, String loginMemberId) throws Exception {
 		// upload
 		
 		String fileMsterId = attachFileMasterId;
 		System.out.println(attachFileMasterId);
 		if(Strings.isEmpty(fileMsterId)){
 			fileMsterId = UUID.randomUUID().toString();
-			saveFileMaster(fileMsterId);
+			saveFileMaster(fileMsterId, loginMemberId);
 		}
 		
         try {
@@ -181,7 +182,7 @@ public class FileUtilServiceImpl implements FileUtilService {
 	            fileInfo.setPrefixPath(PREFIX_URL + saveFileName);
 	            
 	            // 파일저장
-	            saveFile(fileInfo);
+	            saveFile(fileInfo, loginMemberId);
 	            // 실제 파일 저장
 	            boolean fileSaveYn = writeFile(multipartFile, saveFileName);
 	
@@ -238,12 +239,12 @@ public class FileUtilServiceImpl implements FileUtilService {
     	return fileUtilMapper.getImages(attachFileMasterId);
     };
     
-    public void deleteImage(String attachFileId) throws Exception{
-    	fileUtilMapper.deleteImage(attachFileId);
+    public void deleteImage(String attachFileId, String loginMemberId) throws Exception{
+    	fileUtilMapper.deleteImage(attachFileId, loginMemberId);
     };
     
-    public void fileModify(MultipartFile meltipartFile, String attachFileMasterId) throws Exception{
-    	fileUtilMapper.fileModify(meltipartFile, attachFileMasterId);
+    public void fileModify(MultipartFile meltipartFile, String attachFileMasterId, String loginMemberId) throws Exception{
+    	fileUtilMapper.fileModify(meltipartFile, attachFileMasterId, loginMemberId);
     };
 }
 

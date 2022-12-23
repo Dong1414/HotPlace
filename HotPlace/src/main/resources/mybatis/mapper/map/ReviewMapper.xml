@@ -118,7 +118,7 @@
 				lat = #{lat},
 				lng = #{lng},
 				visit_dt = #{visitDt},
-				update_id = "수정자",
+				update_id = "#{mberId}",
 				update_dt = now(),
 				attach_file_master_id = #{attachFileMasterId},
 				open_type = #{openType}
@@ -127,12 +127,12 @@
 		]]>
 	</update>
 
-	<update id="deleteReview" parameterType="string">
+	<update id="deleteReview" parameterType="com.dylim.hot.map.ReviewVO">
 		<![CDATA[     	
 			UPDATE map_review
 			SET
 				del_yn = "Y",
-				update_id = "수정자",
+				update_id = "${mberId}",
 				update_dt = now()
 			WHERE
 				id = #{id}
@@ -213,6 +213,7 @@
 					open_type in(1)
 				</otherwise>
 			</choose>
+			and del_yn = "N"
 		order by 
 			regist_dt desc 
 		limit #{startRowNum}, #{rowCount};
@@ -225,6 +226,7 @@
 			map_review 
 		where 
 			open_type = '1' 
+			and del_yn = "N"
 	</select>
 	
 	<select id="getTiemLineReview" parameterType="com.dylim.hot.map.ReviewVO" resultType="com.dylim.hot.map.ReviewVO">
@@ -259,6 +261,7 @@
 				</otherwise>
 			</choose>
 			and id = #{id}
+			and del_yn = "N"
 	</select>
 	
 </mapper>

@@ -190,18 +190,27 @@
 	</insert>	
 	<select id="friendtList" parameterType="String" resultType="com.dylim.hot.member.MemberVO">
 		<![CDATA[
-			SELECT
-				tb1.mber_second_id as mberId,
-				(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName,
-				(select attach_file_id 
-				from 
-					attach_file tb2,
-					(select attach_file_master_id from member where mber_id = tb1.mber_second_id) tb3
-					where tb3.attach_file_master_id = tb2.attach_file_master_id and del_yn = 'N') as attachFileId
-			FROM
-				member_relationship tb1
-			WHERE 
-				mber_first_id = #{loginId}
+		select
+			tb4.mber_id as mberId,
+			tb4.mber_nick_name as mberNickName,
+			(select mber_nick_name from member where mber_id = mber_second_id) as mberNickName,
+			(select attach_file_id 
+			from 
+				attach_file tb2,
+				(select attach_file_master_id from member where mber_id = tb2.mber_second_id) tb3
+				where tb3.attach_file_master_id = tb2.attach_file_master_id and del_yn = 'N') as attachFileId
+		from (
+				SELECT
+					tb1.mber_second_id
+				FROM
+					member_relationship tb1
+				WHERE 
+					mber_first_id = #{loginId}
+			) tb2,
+			member tb4
+		where
+			tb4.mber_id = tb2.mber_second_id
+			and tb4.del_yn = 'N';
 		]]>
 	</select>	
 	<delete id="friendDelHistory" parameterType="String">
@@ -342,4 +351,25 @@
 				del_yn = "N"
 				and mber_id = #{mberId}			  			
 	</update>
+	
+	<delete id="deleteMemberRelationship" parameterType="com.dylim.hot.member.MemberVO">
+		DELETE FROM tb1, tb2
+			using
+			member_relationship AS tb1
+		    left join member_relationship_history AS tb2		    
+		    on tb2.mber_first_id = #{mberId}
+		    or tb2.mber_second_id = #{mberId}
+		WHERE tb1.mber_first_id = #{mberId} or tb1.mber_second_id = #{mberId};
+	</delete>
+	
+	<update id="deleteMemberArticle" parameterType="com.dylim.hot.member.MemberVO">
+		UPDATE attach_file AS tb1, attach_file_master AS tb2, map_review AS tb3, reple as tb4
+		      SET  tb1.del_yn = 'Y',
+		           tb2.del_yn = 'Y',
+				tb3.del_yn = 'Y',
+		        tb4.del_yn = 'Y'    
+		WHERE  tb1.regist_id = "test123" and tb2.regist_id = "test123" and tb3.regist_id = "test123" and tb4.regist_id = "test123";
+	</update>
+	
+	
 </mapper>

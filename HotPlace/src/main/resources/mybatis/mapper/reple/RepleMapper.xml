@@ -16,6 +16,7 @@
 			,now()
 			,#{registId}
 			,now()
+			,'N'
 		)
 	</insert>
 	
@@ -37,11 +38,15 @@
 			reple tb1
 		where
 			review_id = #{id}
+			and del_yn = "N"
 		order by regist_dt desc
 	</select>
 	
-	<delete id="repleDelete" parameterType="com.dylim.hot.reple.RepleVO">
-		delete from reple where id = #{id} and regist_id = #{registId}
-	</delete>
+	<update id="repleDelete" parameterType="com.dylim.hot.reple.RepleVO">
+		update reple 
+		set 
+			del_yn = "Y"
+		where id = #{id} and regist_id = #{registId}
+	</update>
 	
 </mapper>

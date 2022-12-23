@@ -47,4 +47,8 @@ public interface MemberMapper {
 
 	String signUpGetId(MemberVO memberVO) throws Exception;
 
+	void deleteMemberArticle(MemberVO memberVO) throws Exception;
+
+	void deleteMemberRelationship(MemberVO memberVO) throws Exception;
+
 }

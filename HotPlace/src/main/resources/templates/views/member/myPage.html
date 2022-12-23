@@ -148,7 +148,16 @@
 	</section>
 	</form>
 <script th:inline="javascript">
-
+	$(function(){
+		if([[${member.telYn}]] == "Y"){
+			$("#telNoCheck").val([[${member.mberTelNo}]])
+		}
+		if([[${member.emailYn}]] == "Y"){
+			$("#emailNoCheck").val([[${member.mberEmail}]])
+		}
+		
+	});
+	
 	function fnValidNNCheck(){
 		var nick = $("#mberNickName").val();
 		
@@ -185,16 +194,17 @@
 			return false;
 		};
 		
-		var fromMail = $('#mberEmail').val();
+		var fromMail = {
+				fromMail: $('#mberEmail').val()
+			}
 
 		counterFn(15,2);
 
 		$.ajax({
 			type : "post",
-			url : '/mail/gmailSend.do',
-			data : {
-				fromMail: fromMail
-			}
+			url : '/mail',
+			data : JSON.stringify(fromMail),
+			contentType: 'application/json',
 		}).done(function(res) {
 			alert("인증번호가 전송되었습니다.");
 			$('#emailChkArea').css("display", "flex");
@@ -202,7 +212,7 @@
                    if($.trim(res) == $('#emailChk').val()){
 					alert('이메일 인증이 정상적으로 완료되었습니다.');
 					$('#emailChk').attr('disabled', true);
-					$('#emailNoCheck').val(fromMail);
+					$('#emailNoCheck').val($('#mberEmail').val());
 					$('#emailYn').val("Y");
                    }else{
                    	alert('인증번호가 올바르지 않습니다!');
@@ -222,13 +232,17 @@
 			return false;
 		}
 		var phonNum = $('#telNm1').val() + '-' +$('#telNm2').val()+ '-' +$('#telNm3').val();
+		
+		var data = {
+				phonNum: phonNum
+		}
+		
 		counterFn(15, 1);
 		$.ajax({
 			type : "post",
-			url : '/sms/sendSms.do',
-			data : {
-				phonNum: phonNum
-			}
+			url : '/sms',
+			data : JSON.stringify(data),
+			contentType : 'application/json',
 		}).done(function(res) {
 			alert("인증번호가 전송되었습니다.");
 			$('#phonChkArea').css("display", "flex");
@@ -319,12 +333,9 @@
 			$('#mberBrthd').val($("#selYear option:selected").val()+'-' +$("#selMon option:selected").val()+'-' +$("#selDay option:selected").val())
 		}
 		
-		if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
-			alert('휴대폰 번호를 입력해주세요.');
-			$('#telNm1').focus();
-			return false;
+		if ($('#telNm1').val() && $('#telNm2').val() && $('#telNm3').val()) {
+			$('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val()+ '-' + $('#telNm3').val());
 		}
-		$('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val()+ '-' + $('#telNm3').val());
 		
 		if($('#telNoCheck').val()){
 			if(!fnValTelNoCheck($('#mberTelNo').val())){
@@ -334,15 +345,17 @@
 			}	
 		}
 		
-		if(!$('#mberEmail').val() || $('#mberEmail').val()==''){
+		/* if(!$('#mberEmail').val() || $('#mberEmail').val()==''){
 			alert('이메일을 입력해주세요.');
 			$('#mberEmail').focus();
 			return false;
+		} */
+		
+		if($('#mberEmail').val() || !$('#mberEmail').val()==''){
+			if(!fnEmailCheck($('#mberEmail').val())){
+				return false;
+			};
 		}
-
-		if(!fnEmailCheck($('#mberEmail').val())){
-			return false;
-		};
 		
 		if($('#emailNoCheck').val()){
 			if(!fnValEmailNoCheck($('#mberEmail').val())){
@@ -350,6 +363,11 @@
 				$('#mberEmail').focus();
 				return false;
 			}
+		}
+		
+		if($('#emailYn').val() == 'N' && $('#telYn').val() == 'N'){
+			alert('추후 수월한 아이디/비밀번호 찾기를 위해 이메일, 휴대폰 중 하나는 인증을 받아야합니다.');
+			return false;
 		}
 		
 		$('#modifyForm').attr('action', '/member/mypage/info');

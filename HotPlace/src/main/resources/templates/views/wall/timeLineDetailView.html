@@ -21,7 +21,7 @@
 				<div class="d-flex">
 						<a class="mini-map" th:href="|/map/FriendMapView.do?mberId=@{${result.registId}}|">지도보기</a>
 					<div class="article-profile-image">
-						<img th:src="|/file/${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
+						<img th:src="|/file?attachFileId=${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 					</div>
 					<div class="article-profile-left">
 						<div class="nickname text-left" th:text="${result.mberNickName}"></div>
@@ -35,7 +35,7 @@
 			  	<div class="list-slide swiper">
 				    <ul class="swiper-wrapper">
 				    	<li th:each="file : ${result.files}" class="swiper-slide">
-				    		<img th:src="@{/file/} + ${file.attachFileId}">
+				    		<img th:src="@{/file?attachFileId=} + ${file.attachFileId}">
 				    	</li>
 				    </ul>
 				    <div class="swiper-pagination"></div>
@@ -45,14 +45,14 @@
 			</div>
 		</div>
 		<div class="article-description">
-			<div th:text="${result.review}">
+			<div class="fs-3" th:text="${result.review}">
 			</div>
 			<form method="post" id="repleInsertForm">
 			<input type="hidden" name="reviewId" id="reviewId" th:value="${result.id}"/>
 			<div class="repleArea">
 				<div>
-					<a th:if="${repleResults != null}" th:text="|댓글(${repleResults.size})|"></a>
-					<a th:unless="${repleResults != null}">댓글(0)</a>
+					<span class="reple-cnt" th:if="${repleResults != null}" th:text="|댓글(${repleResults.size})|"></span>
+					<span class="reple-cnt" th:unless="${repleResults != null}">댓글(0)</span>
 				</div>
 				<div style="background-color: rgba(233, 233, 233, 0.5);">
 					<div class="article-profile padding-15">
@@ -74,35 +74,39 @@
 						</div>
 						
 						<th:block th:if="${repleResults != null}">
-							<div class="reples">
-								<div class="reple-h mb-3 reple-area" th:each="reple : ${repleResults}">
-									<div class="w-100 display-flex">
-										<div class="article-profile-image">
-											<img th:src="|/file/${reple.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';" />
-										</div>
-										<div class="article-profile-left w-100">
-											<div class="reple-info">
-												<div class="nickname text-left" th:text="${reple.mberNickName}"></div>
-												<div class="region-name text-left ms-3" th:text="${reple.registDt}"></div>
+							<div class="reple-wrap">
+								<div class="reples">
+									<div class="reple-h mb-3 reple-area" th:each="reple : ${repleResults}">
+										<div class="w-100 display-flex">
+											<div class="article-profile-image">
+												<img th:src="|/file?attachFileId=${reple.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';" />
 											</div>
-											<div class="region-name" th:text="${reple.repleCts}"></div>	
-										</div>
-										<th:block th:if="${session.loginMember != null}">
-											<div th:if="${session.loginMember.mberId == reple.registId}">
-												<button type="button" class="reple-del-area button-none" th:onclick="|fnOption('@{${reple.id}}');|">
-													<i class="fa-solid fa-ellipsis-vertical"></i>
-												</button>
-												<button type="button" class="mini-del" name="mini-del" th:id="|mini-del${reple.id}|" th:onclick="|fnRepleDel('@{${reple.id}}','@{${reple.registId}}');|">삭제하기</button>
+											<div class="article-profile-left w-100">
+												<div class="reple-info">
+													<div class="nickname text-left" th:text="${reple.mberNickName}"></div>
+													<div class="region-name text-left ms-3" th:text="${reple.registDt}"></div>
+												</div>
+												<div class="region-name" th:text="${reple.repleCts}"></div>	
 											</div>
-										</th:block>
+											<th:block th:if="${session.loginMember != null}">
+												<div th:if="${session.loginMember.mberId == reple.registId}">
+													<button type="button" class="reple-del-area button-none" th:onclick="|fnOption('@{${reple.id}}');|">
+														<i class="fa-solid fa-ellipsis-vertical"></i>
+													</button>
+													<button type="button" class="mini-del" name="mini-del" th:id="|mini-del${reple.id}|" th:onclick="|fnRepleDel('@{${reple.id}}','@{${reple.registId}}');|">삭제하기</button>
+												</div>
+											</th:block>
+										</div>
 									</div>
 								</div>
 							</div>
 						</th:block>
 						<th:block th:unless="${repleResults != null}">
-							<div class="space-between" th:each="reple : repleResults">
-								<div class="d-flex">
-									등록된 댓글이 없습니다.
+							<div class="reple-wrap">
+								<div class="reples" style="height:41.48px;">
+									<div class="d-flex">
+										등록된 댓글이 없습니다.
+									</div>
 								</div>
 							</div>
 						</th:block>
@@ -224,10 +228,11 @@ function fnRepleInsert(){
 	        	var loginId = [[${session.loginMember}]];
 	        	var dataSize = data.length;
 	        	for(var i = 0; i < dataSize; i++){
+	        		html += '<div class="reples">';
 	        		html += '<div class="reple-h mb-3 reple-area">';
 	        		html += '<div class="w-100 display-flex">';
 		        	html += '<div class="article-profile-image">';
-		        	html += '<img src="/file/'+data[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>';
+		        	html += '<img src="/file?attachFileId='+data[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>';
 		        	html += '</div>';
 		        	html += '<div class="article-profile-left w-100">';
 		        	html += '<div class="reple-info">';
@@ -251,9 +256,11 @@ function fnRepleInsert(){
 		        	html += '</div>';
 		        	html += '</div>';
 		        	html += '</div>';
+		        	html += '</div>';
 	        	}
-	        	$('.reples').empty();
-	        	$('.reples').append(html);	        	
+	        	$('.reple-wrap').empty();
+	        	$('.reple-wrap').append(html);	        
+	        	$('.reple-cnt').text("댓글("+ dataSize +")");
 	        	$('#repleCts').val('');
 	        })
 	        .fail(function() {
@@ -302,10 +309,11 @@ function fnRepleDel(id, mberId){
 	        	var loginId = [[${session.loginMember}]];
 	        	var dataSize = data.length;
 	        	for(var i = 0; i < dataSize; i++){
+	        		html += '<div class="reples">';
 	        		html += '<div class="reple-h mb-3 reple-area">';
 	        		html += '<div class="w-100 display-flex">';
 		        	html += '<div class="article-profile-image">';
-		        	html += '<img src="/file/'+data[i].attachFileId+'"/>';
+		        	html += '<img src="/file?attachFileId='+data[i].attachFileId+'"/>';
 		        	html += '</div>';
 		        	html += '<div class="article-profile-left w-100">';
 		        	html += '<div class="reple-info">';
@@ -329,9 +337,11 @@ function fnRepleDel(id, mberId){
 		        	html += '</div>';
 		        	html += '</div>';
 		        	html += '</div>';
+		        	html += '</div>';
 	        	}
-	        	$('.reples').empty();
-	        	$('.reples').append(html);	        	
+	        	$('.reple-wrap').empty();
+	        	$('.reple-wrap').append(html);
+	        	$('.reple-cnt').text("댓글("+ dataSize +")");
 	        	$('#repleCts').val('');
 	        })
 	        .fail(function() {

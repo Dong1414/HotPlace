@@ -9,13 +9,13 @@ import com.dylim.hot.file.FileVO;
 
 public interface FileUtilService {
 
-	void saveFileMaster(String fileMsterId) throws Exception;
+	void saveFileMaster(String fileMsterId, String loginMemberId) throws Exception;
 
-	void saveFile(FileVO file) throws Exception;
+	void saveFile(FileVO file, String loginMemberId) throws Exception;
 	
-	String multiFileUpload(List<MultipartFile> multipartFiles) throws Exception;
+	String multiFileUpload(List<MultipartFile> multipartFiles, String loginMemberId) throws Exception;
 	
-	String fileUpload(MultipartFile multipartFile, String attachFileMasterId) throws Exception;
+	String fileUpload(MultipartFile multipartFile, String attachFileMasterId, String loginMemberId) throws Exception;
 	
 	boolean writeFile(MultipartFile multipartFile, String saveFileName) throws Exception;
 
@@ -23,8 +23,8 @@ public interface FileUtilService {
 
 	List<FileVO> getImages(String attachFileMasterId) throws Exception;
 
-	void deleteImage(String attachFileId) throws Exception;
+	void deleteImage(String attachFileId, String loginMemberId) throws Exception;
 
-	String dropZoneUpload(MultipartHttpServletRequest request, String attachFileMasterId) throws Exception;
+	String dropZoneUpload(MultipartHttpServletRequest request, String attachFileMasterId, String loginMemberId) throws Exception;
 
 }

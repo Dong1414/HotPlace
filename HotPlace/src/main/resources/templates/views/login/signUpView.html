@@ -340,7 +340,7 @@
                     if($.trim(res) == $('#emailChk').val()){
                         alert('이메일 인증이 정상적으로 완료되었습니다.');
                         $('#emailChk').attr('disabled', true);
-        				$('#emailNoCheck').val(fromMail);
+        				$('#emailNoCheck').val($('#mberEmail').val());
         				$('#emailYn').val("Y");
                     }else{
                     	alert('인증번호가 올바르지 않습니다!');
@@ -430,6 +430,15 @@
 	        return true;
 		}
 		
+		function fnValEmailCheck(email){
+			console.log(email);
+			console.log($("#emailNoCheck").val());
+			if(email != $("#emailNoCheck").val()) {
+	            return false;            
+	        }
+	        return true;
+		}
+		
 		function fnEmailCheck(email) {
 
 			var reg = /^[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_\.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
@@ -489,15 +498,12 @@
 			}
 			
 			
-			/* if (!$('#telNm1').val() || !$('#telNm2').val() || !$('#telNm3').val()) {
-				alert('휴대폰 번호를 입력해주세요.');
-				$('#telNm1').focus();
-				return false;
+			if ($('#telNm1').val() && $('#telNm2').val() && $('#telNm3').val()) {
+				$('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val()+ '-' + $('#telNm3').val());
 			}
-			 */
 			
-			 $('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val() + '-' + $('#telNm3').val());
 			if($('#telYn').val() == 'Y'){
+			 	$('#mberTelNo').val($('#telNm1').val() + '-' + $('#telNm2').val() + '-' + $('#telNm3').val());
 				if(!fnValTelNoCheck($('#mberTelNo').val())){
 					alert('입력된 번호가 인증받은 번호와 다릅니다.');
 					$('#telNm1').focus();
@@ -518,7 +524,7 @@
 			}
 			
 			if($('#emailYn').val() == 'Y'){
-				if(!fnValTelNoCheck($('#mberTelNo').val())){
+				if(!fnValEmailCheck($('#mberEmail').val())){
 					alert('입력된 이메일이 인증받은 이메일과 다릅니다.');
 					$('#mberEmail').focus();
 					return false;

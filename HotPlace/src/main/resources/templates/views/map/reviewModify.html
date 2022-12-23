@@ -180,7 +180,7 @@ function fnImgDel(attachFileId){
 	}
 	$.ajax({
         type: "delete",
-        url: '/file/'+attachFileId,
+        url: '/file?attachFileId='+attachFileId,
     }).done(function (resultMap) {
     	alert('삭제되었습니다.');
     	$('#'+attachFileId).closest('div').remove();

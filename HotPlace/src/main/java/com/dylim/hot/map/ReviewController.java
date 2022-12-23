@@ -123,7 +123,7 @@ public class ReviewController {
     	reviewVO.setRegistId(loginMember.getMberId());
     	
     	if(!multipartFiles.get(0).isEmpty()) {
-    		reviewVO.setAttachFileMasterId(fileUtilService.multiFileUpload(multipartFiles));
+    		reviewVO.setAttachFileMasterId(fileUtilService.multiFileUpload(multipartFiles, loginMember.getMberId()));
     	}
     	reviewService.saveReview(reviewVO);
     	
@@ -141,7 +141,7 @@ public class ReviewController {
     	if(Strings.isNotEmpty(result.getAttachFileMasterId()) && result.getAttachFileMasterId() != null) {
     		List<FileVO> files = fileUtilService.getImages(result.getAttachFileMasterId());
     		for(FileVO file : files) {
-    			file.setUrl("/file/" + file.getAttachFileId());
+    			file.setUrl("/file?attachFileId=" + file.getAttachFileId());
     		}
     		mv.addObject("files", files);
     		mv.addObject("fileCnt", 10 - files.size());
@@ -158,13 +158,12 @@ public class ReviewController {
     //@PostMapping("/map/updateReview/modifyReview.do")
     @PutMapping("/map/my-map/review/{id}")
     public String modifyReview(@PathVariable String id, @ModelAttribute ReviewVO reviewVO, HttpServletRequest request) throws Exception{
-    	System.out.println("aaaaaaaaaa");
     	HttpSession session = request.getSession(false);
 
     	if(!reviewVO.getRegistId().equals((String) session.getAttribute("loginMemberId"))){
     		return "redirect:" + request.getHeader("Referer");
     	};
-    	
+    	reviewVO.setMberId((String)session.getAttribute("loginMemberId"));
     	reviewService.modifyReview(reviewVO);
     	return "redirect:/map/my-map";
     }
@@ -179,7 +178,9 @@ public class ReviewController {
     	if(!reviewVO.getRegistId().equals((String) session.getAttribute("loginMemberId"))){
     		return "redirect:" + request.getHeader("Referer");
     	};
-    	reviewService.deleteReview(id);
+    	reviewVO.setMberId((String)session.getAttribute("loginMemberId"));
+    	reviewVO.setId(id);
+    	reviewService.deleteReview(reviewVO);
     	return "redirect:/map/my-map";
     }
     
