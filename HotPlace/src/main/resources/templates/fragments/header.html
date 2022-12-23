@@ -25,12 +25,12 @@
   							<strong class="menu-title">Menu</strong>
   							<ul>
   								<li>
-  									<form id="logoutForm" action="/auth/local" th:method="delete">
-  										<a href="#" onclick="$('#logoutForm').submit();">로그아웃</a>
+  									<form id="logoutForm" th:method="delete">
+  										<a href="#" onclick="fnLogout();">로그아웃</a>
   									</form>
   								</li>
   								<li><a href="/member/my-friends">내 친구</a></li>
-  								<li><a href="/member/mypage/info">마이페이지</a></li>  								
+  								<li><a href="/member/mypage/info">마이페이지</a></li>  			
   								<li><a href="/member/secession">회원탈퇴</a></li>
   							</ul>
   							<button class="close-btn" onclick="fnOffMyMenu();"></button>
@@ -45,7 +45,15 @@
 		$(document).ajaxSend(function(event, request, settings) {
 			request.setRequestHeader('AJAX', 'true');
 		});
-		
+		function fnLogout(){
+			var type = [[${session.loginMember}]];
+			if(type.kakaoConnectId != null && type.kakaoConnectId != ''){
+				$('#logoutForm').attr('action', '/api/kakao/oauth/logout');	
+			}else{
+				$('#logoutForm').attr('action', '/auth/local');
+			}
+			$('#logoutForm').submit();
+		}
 		//ajax 에러처리
 		$(document).ajaxError(function(event, request, settings, thrownError) {
 			console.log(request.responseJSON.status);

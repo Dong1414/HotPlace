@@ -11,9 +11,12 @@ import javax.servlet.http.HttpSession;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
@@ -33,18 +36,13 @@ import com.dylim.hot.reple.service.RepleService;
 public class RepleController {
 	
 	@Autowired
-	private ReviewService seviewService;
-	@Autowired
-	private FileUtilService fileUtilService;
-	@Autowired
-	private MemberService memberservice;
-	@Autowired
 	private RepleService repleService;
 	
 	//등록 
-    @PostMapping("/reple/repleInsert.do")    
+    //@PostMapping("/reple/repleInsert.do")
+    @PostMapping("/reple")
     @ResponseBody
-    public String repleInsert(RepleVO repleVO, HttpServletRequest request) throws Exception{
+    public String repleInsert(@RequestBody RepleVO repleVO, HttpServletRequest request) throws Exception{
     	
     	HttpSession session = request.getSession(false);
   	    if(session == null) {
@@ -58,19 +56,21 @@ public class RepleController {
     }
     
     //ajax 조회 
-    @PostMapping("/reple/getRepleList.do")    
+    //@PostMapping("/reple/getRepleList.do")
+    @GetMapping("/reple/{reviewId}")
     @ResponseBody
-    public List<RepleVO> repleInsert(HttpServletRequest request) throws Exception{
+    public List<RepleVO> repleInsert(@PathVariable String reviewId) throws Exception{
     	
-    	List<RepleVO> repleResults = repleService.getRepleList((String)request.getParameter("reviewId"));
+    	List<RepleVO> repleResults = repleService.getRepleList(reviewId);
   	    
     	return repleResults;
     }
     
     
-	@PostMapping("/reple/repleDelete.do")    
+	//@PostMapping("/reple/repleDelete.do")
+	@DeleteMapping("/reple")
     @ResponseBody
-    public String repleDelete(RepleVO repleVO, HttpServletRequest request) throws Exception{
+    public String repleDelete(@RequestBody RepleVO repleVO, HttpServletRequest request) throws Exception{
 		
 		HttpSession session = request.getSession(false);
   	    if(session == null) {

@@ -125,6 +125,7 @@ public class MemberController {
       	return mv; 
       }
   	
+  	//로그아웃
   	//@PostMapping("/logout.do")
   	@DeleteMapping("/auth/local")
   	public String logout(HttpServletRequest request) {
@@ -510,7 +511,9 @@ public class MemberController {
 	//회원탈퇴 화면
 	//@GetMapping("/member/memberSecessionView.do")
 	@GetMapping("/member/secession")
-  	public ModelAndView memberSecessionView(ModelAndView mv) throws Exception {
+  	public ModelAndView memberSecessionView(ModelAndView mv, 
+  			@SessionAttribute(name = SessionConstants.LOGIN_MEMBER, required = false) MemberVO loginMember) throws Exception {
+		System.out.println(loginMember.getKakaoConnectId() + "aaaaaaaaaaaaa");
 		mv.setViewName("views/member/memberSecessionView");
   	    return mv;
   	}

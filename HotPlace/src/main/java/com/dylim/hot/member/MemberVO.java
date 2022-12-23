@@ -240,6 +240,12 @@ public class MemberVO{
 		return "MemberVO [id=" + id + ", mberId=" + mberId + ", mberPassword=" + mberPassword + ", mberName=" + mberName
 				+ ", mberBrthd=" + mberBrthd + ", mberTelNo=" + mberTelNo + ", mberEmail=" + mberEmail + ", registId="
 				+ registId + ", registDt=" + registDt + ", updateId=" + updateId + ", updateDt=" + updateDt + ", delYn="
-				+ delYn + "]";
+				+ delYn + ", mberAuth=" + mberAuth + ", mberNickName=" + mberNickName + ", attachFileMasterId="
+				+ attachFileMasterId + ", attachFileId=" + attachFileId + ", attachFileUrl=" + attachFileUrl
+				+ ", loginId=" + loginId + ", relationType=" + relationType + ", relation=" + relation
+				+ ", mberFirstId=" + mberFirstId + ", mberSecondId=" + mberSecondId + ", identiFication="
+				+ identiFication + ", kakaoConnectId=" + kakaoConnectId + ", naverConnectId=" + naverConnectId
+				+ ", snsMod=" + snsMod + ", emailYn=" + emailYn + ", telYn=" + telYn + ", lastPwDt=" + lastPwDt + "]";
 	}
+	
 }

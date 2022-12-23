@@ -30,7 +30,7 @@
 				</div>
 			</div>
 		</div>
-		<div th:if="${result.files != null}" class="article-images">
+		<div th:if="${result.files != null && result.files.size != 0}" class="article-images">
 			<div class="mt-4">	
 			  	<div class="list-slide swiper">
 				    <ul class="swiper-wrapper">
@@ -150,6 +150,26 @@ function fnSwSet(){
 	});
 }
 
+$.fn.serializeObject = function() {
+	  "use strict"
+	  var result = {}
+	  var extend = function(i, element) {
+	    var node = result[element.name]
+	    if ("undefined" !== typeof node && node !== null) {
+	      if ($.isArray(node)) {
+	        node.push(element.value)
+	      } else {
+	        result[element.name] = [node, element.value]
+	      }
+	    } else {
+	      result[element.name] = element.value
+	    }
+	  }
+
+	  $.each(this.serializeArray(), extend)
+	  return result
+	}
+	
 $('#repleCts').keyup(function (e) {
 	let content = $(this).val();
     
@@ -183,24 +203,22 @@ function fnRepleInsert(){
         return false;
     };
     
-	var formData = new FormData($('#repleInsertForm')[0]);
+	//var formData = new FormData($('#repleInsertForm')[0]);
+	var formData = $('#repleInsertForm').serializeObject();
 	$.ajax({
         type: "post",
-        url: '/reple/repleInsert.do',
+        url: '/reple',
         cache: false,
-        contentType: false,
+        contentType: 'application/json',
         processData: false,        
-        data: formData,
+        data: JSON.stringify(formData),
     }).done(function (data) {
     	alert(data);
     	if(data == '등록되었습니다.'){
-			var reviewId = $('#reviewId').val();
+    		var reviewId = $('#reviewId').val();
 			$.ajax({
-	            type: "post",
-	            url: '/reple/getRepleList.do',
-	            data: {
-	            	reviewId: reviewId	
-	            },
+	            type: "get",
+	            url: '/reple/'+reviewId,
 	        }).done(function (data) {
 	        	var html ='';
 	        	var loginId = [[${session.loginMember}]];
@@ -262,23 +280,23 @@ function fnRepleDel(id, mberId){
 	
 	var repleId = id;
 	var mberId = mberId;
+	var obj = {
+		id : repleId,
+       	registId: mberId		
+	}
 	$.ajax({
-        type: "post",
-        url: '/reple/repleDelete.do',
-        data: {
-        	id : repleId,
-        	registId: mberId
-		},
+        type: "delete",
+        url: '/reple',
+        data: JSON.stringify(obj),
+        contentType: 'application/json',
     }).done(function (data) {
     	alert(data);
     	if(data == '삭제되었습니다.'){
 			var reviewId = $('#reviewId').val();
+			
 			$.ajax({
-	            type: "post",
-	            url: '/reple/getRepleList.do',
-	            data: {
-	            	reviewId: reviewId	
-	            },
+	            type: "get",
+	            url: '/reple/'+reviewId,
 	        }).done(function (data) {
 	        	var html ='';
 	        	var loginId = [[${session.loginMember}]];

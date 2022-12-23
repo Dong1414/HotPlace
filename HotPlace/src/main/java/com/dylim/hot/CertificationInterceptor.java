@@ -31,7 +31,7 @@ public class CertificationInterceptor implements HandlerInterceptor{
                     response.sendError(-1);
                     return false;
                 } else {
-                	response.sendRedirect("/login/loginView.do");
+                	response.sendRedirect("/auth");
                     return false;
                 }
             }else{ 
@@ -43,7 +43,7 @@ public class CertificationInterceptor implements HandlerInterceptor{
                 response.sendError(-1);
                 return false;
             } else {
-            	response.sendRedirect("/login/loginView.do");
+            	response.sendRedirect("/auth");
                 return false;
             }
         }

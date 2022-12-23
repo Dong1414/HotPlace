@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,23 +33,43 @@ public class KakaoController {
 	private MemberService memberService;
 	
 	@GetMapping("/oauth")
-    public String naverConnect() {
+    public String kakaoConnect() {
         StringBuffer url = new StringBuffer();
         url.append("https://kauth.kakao.com/oauth/authorize?");
         url.append("client_id=" + "8daccbe4b0ebc1030985af606321ed80");
         url.append("&redirect_uri=http://www.tripdiary.site/api/kakao/callback");
+        //url.append("&redirect_uri=http://localhost:8080/api/kakao/callback");
         url.append("&response_type=code");
         return "redirect:" + url;
     }
 	
+	@DeleteMapping("/oauth/logout")
+	public String kakaoLogoutConnect() {
+		///oauth/logout?client_id=${REST_API_KEY}
+		StringBuffer url = new StringBuffer();
+		url.append("https://kauth.kakao.com/oauth/logout?");
+        url.append("client_id=" + "8daccbe4b0ebc1030985af606321ed80");
+        url.append("&logout_redirect_uri=http://www.tripdiary.site/api/kakao/auth/logout/callback");
+        //url.append("&logout_redirect_uri=http://localhost:8080/api/kakao/auth/logout/callback");
+        
+        return "redirect:" + url;
+	}
+	
+	@RequestMapping("/auth/logout/callback")
+	public ModelAndView kakaoLogout(ModelAndView mv, HttpServletRequest request){
+		HttpSession session = request.getSession(false);
+  	    if (session != null) {
+  	        session.invalidate();   // 세션 날림
+  	    }
+  	    mv.setViewName("redirect:/");
+  	    return mv;
+	}
+	
 	@RequestMapping(value = "/callback", produces = "application/json", method = {RequestMethod.GET,RequestMethod.POST})
     public ModelAndView kakaoLogin(@RequestParam("code") String code, HttpServletRequest request, ModelAndView mv) throws Exception {
-		System.out.println("카카오 콜백");
         String accessToken = getKakaoAccessToken(code);
-        System.out.println("카카오 콜백123");
         MemberVO memberVO = getKakaoUserInfo(accessToken);
         MemberVO loginVO = memberService.snsIdCheck(memberVO);
-        System.out.println("카카오 콜백345");
         if(loginVO == null) {
         	System.out.println(memberVO.toString());
         	mv.addObject("result", memberVO);
@@ -57,7 +78,7 @@ public class KakaoController {
         	HttpSession session = request.getSession();                         // 세션이 있으면 있는 세션 반환, 없으면 신규 세션을 생성하여 반환
  		    session.setAttribute(SessionConstants.LOGIN_MEMBER, loginVO);   // 세션에 로그인 회원 정보 보관
  		    session.setAttribute(SessionConstants.LOGIN_MEMBER_ID, loginVO.getMberId());
- 		    session.setAttribute("access_token", accessToken); // 로그아웃할 때 사용된다 (카카오용)
+ 		    //session.setAttribute("access_token", accessToken); // 로그아웃할 때 사용된다 (카카오용)
  	        mv.setViewName("redirect:/");
         }
         return mv;
@@ -76,6 +97,7 @@ public class KakaoController {
                 .path("/oauth/token")
                 .queryParam("grant_type", "authorization_code")
                 .queryParam("client_id", "8daccbe4b0ebc1030985af606321ed80")
+                //.queryParam("redirect_uri", "http://www.tripdiary.site/api/kakao/callback")
                 .queryParam("redirect_uri", "http://www.tripdiary.site/api/kakao/callback")
                 .queryParam("code", code)
                 .build())

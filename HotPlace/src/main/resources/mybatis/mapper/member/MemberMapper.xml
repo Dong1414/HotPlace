@@ -231,7 +231,9 @@
 				mber_nick_name as mberNickName,
 				mber_brthd as mberBrthd,
 				mber_tel_no as mberTelNo,
-				mber_email as mberEmail
+				mber_email as mberEmail,
+				naver_connect_id as naverConnectId,
+				kakao_connect_id as kakaoConnectId
 			FROM
 				member
 			WHERE
