@@ -19,7 +19,7 @@
 		<div class="article-profile">
 			<div class="space-between">
 				<div class="d-flex">
-						<a class="mini-map" th:href="|/map/FriendMapView.do?mberId=@{${result.registId}}|">지도보기</a>
+						<a class="mini-map" th:href="|/map/friend-map/@{${result.registId}}|">지도보기</a>
 					<div class="article-profile-image">
 						<img th:src="|/file?attachFileId=${result.attachFileId}|" onerror="this.src='/images/ui_user_profile_avatar_person_icon_208734.png';"/>
 					</div>
