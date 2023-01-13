@@ -156,7 +156,7 @@ const GetList = function(currentPage){
 		    		str += '<div class="space-between">'; 
 			    	str += '<div class="d-flex">'; 	    		
 			    	str += '<div class="mini-map" id='+results[i].id+'>'
-			    	str += '<a href="/map/FriendMapView.do?mberId='+results[i].registId+'">지도보기</a>'
+			    	str += '<a href="/map/friend-map/'+results[i].registId+'">지도보기</a>'
 			    	str += '</div>'
 		    		str += '<div class="article-profile-image">';	    	
 		    		str += '<img src="/file?attachFileId='+results[i].attachFileId+'" onerror="this.src=\'/images/ui_user_profile_avatar_person_icon_208734.png\'"/>'; 

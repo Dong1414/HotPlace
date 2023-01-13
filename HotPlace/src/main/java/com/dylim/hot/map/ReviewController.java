@@ -104,7 +104,7 @@ public class ReviewController {
 		
 		mv.addObject("resultList", resultList);
 		mv.addObject("mberId", memberVO.getMberId());
-		mv.setViewName("views/map/FriendMapView");
+		mv.setViewName("views/map/friendMapView");
     	return mv;
     }
 	
