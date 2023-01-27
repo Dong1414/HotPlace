@@ -185,7 +185,7 @@
 		    ,tb3.regist_id as registId
 		    ,DATE_FORMAT(tb3.regist_dt, "%Y-%m-%d") as registDt
 			,tb3.attach_file_master_id as attachFileMasterId 
-			,(select count(id) from reple where review_id = tb3.id) as repleCnt
+			,(select count(id) from reple where review_id = tb3.id and del_yn != 'Y') as repleCnt
 			,(select attach_file_id 
 				from 
 					attach_file tb4,

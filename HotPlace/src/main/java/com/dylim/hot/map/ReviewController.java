@@ -276,7 +276,6 @@ public class ReviewController {
 	  	
 	  	reviewVO.setStartRowNum(startRowNum);
 	  	reviewVO.setRowCount(rowCount);
-	  	
 	  	List<ReviewVO> results = reviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
 	  	
 	  	for(int i = 0; i < results.size(); i++) {
@@ -300,10 +299,15 @@ public class ReviewController {
     //@GetMapping("/wall/timeLineAjaxPage.do")
     @GetMapping("/wall/api/time-lines/{pageNo}")
     @ResponseBody
-    public Map<String, Object> timeLineAjaxPage(@PathVariable int pageNo) throws Exception{
+    public Map<String, Object> timeLineAjaxPage(@PathVariable int pageNo, HttpServletRequest request) throws Exception{
     	Map<String, Object> resultMap = new HashMap<String, Object>();
     	ReviewVO reviewVO = new ReviewVO();	
     	
+    	HttpSession session = request.getSession(false);
+  	    if(session != null) {
+  	    	reviewVO.setMberId((String) session.getAttribute("loginMemberId"));  	    	
+  	    }
+  	    
   	    //전체 게시글 수
   	    int resultCnt = reviewService.getTiemLineReviewsCnt(reviewVO); //해당 좌표 리뷰 전체 데이터 수
   	  
@@ -319,7 +323,6 @@ public class ReviewController {
 	  	
 	  	reviewVO.setStartRowNum(startRowNum);
 	  	reviewVO.setRowCount(rowCount);
-	  	
 	  	List<ReviewVO> results = reviewService.getTiemLineReviews(reviewVO); //리뷰 상세 데이터
 	  	
 	  	for(int i = 0; i < results.size(); i++) {
